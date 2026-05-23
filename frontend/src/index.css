@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  color-scheme: light dark;
+  background-color: #f9fafb; /* Light Gray */
+  color: #1f2937;
+}
+
+@theme {
+  --color-primary: #10b981; /* Green */
+  --color-primary-dark: #059669;
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Date Picker Enhancements */
+input[type="date"] {
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 5px;
+  filter: invert(0.5);
+  transition: filter 0.2s;
+}
+
+input[type="date"]:hover::-webkit-calendar-picker-indicator {
+  filter: invert(0.2);
+}
