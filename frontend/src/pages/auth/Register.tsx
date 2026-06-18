@@ -38,8 +38,8 @@ const Register: React.FC = () => {
       });
 
       navigate('/');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create an account');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create an account');
     } finally {
       setLoading(false);
     }

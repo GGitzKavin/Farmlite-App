@@ -116,9 +116,9 @@ const EditLivestock: React.FC = () => {
 
       console.log("Livestock updated successfully");
       navigate(`/livestock/${id}`);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error updating livestock: ", err);
-      setError(err.message || 'Failed to update livestock');
+      setError(err instanceof Error ? err.message : 'Failed to update livestock');
     } finally {
       setSaving(false);
     }

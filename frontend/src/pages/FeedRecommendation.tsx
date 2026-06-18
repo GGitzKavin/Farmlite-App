@@ -62,9 +62,13 @@ const FeedRecommendation: React.FC = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/ai/feed-recommendation', formData);
       setRecommendation(response.data);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.response?.data?.error || 'Failed to connect to the AI service. Ensure the Flask backend is running.');
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || 'Failed to connect to the AI service. Ensure the Flask backend is running.');
+      } else {
+        setError('Failed to connect to the AI service. Ensure the Flask backend is running.');
+      }
     } finally {
       setLoading(false);
     }
