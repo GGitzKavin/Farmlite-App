@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Plus, Users, Tag, Info, Activity } from 'lucide-react';
+import { Save, Tag, Info, Activity } from 'lucide-react';
 
 interface BatchEntryFormProps {
   onSave: (data: any) => Promise<void>;

@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LivestockTable from './LivestockTable';
 import BatchManagement from './BatchManagement';
-import { Tractor, Users, Search, Filter, CheckCircle, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Tractor, Users, Search, CheckCircle, AlertCircle } from 'lucide-react';
 import ErrorBoundary from '../../components/ErrorBoundary';
-import { useAuth } from '../../context/AuthContext';
 
 const LivestockList: React.FC = () => {
-  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState<'individual' | 'batch'>('individual');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSpecies, setFilterSpecies] = useState('');

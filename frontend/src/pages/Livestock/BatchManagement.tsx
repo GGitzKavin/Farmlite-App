@@ -4,17 +4,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { Users, Plus, ShieldCheck, Wheat, Trash2 } from 'lucide-react';
 import BatchEntryForm from './BatchEntryForm';
-
-interface Batch {
-  id: string;
-  batchName: string;
-  species: string;
-  headCount: number;
-  healthStatus: string;
-  vaccinationStatus: string;
-  feedType: string;
-  createdAt: any;
-}
+import type { Batch } from '../../types';
 
 interface BatchManagementProps {
   searchTerm: string;
@@ -181,7 +171,7 @@ const BatchCard: React.FC<{
       </div>
       
       <div className="bg-gray-50 px-5 py-3 border-t border-gray-100 flex justify-between items-center mt-auto">
-        <span className="text-[10px] text-gray-400">Created: {batch?.createdAt?.seconds ? new Date(batch.createdAt.seconds * 1000).toLocaleDateString() : 'Just now'}</span>
+        <span className="text-[10px] text-gray-400">Created: {(batch?.createdAt as any)?.seconds ? new Date((batch.createdAt as any).seconds * 1000).toLocaleDateString() : 'Just now'}</span>
         
         <div className="flex items-center gap-3">
           <button

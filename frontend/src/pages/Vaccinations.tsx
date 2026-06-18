@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, addDoc, doc, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
-import type { Vaccination, Livestock } from '../types';
+import type { Vaccination, Livestock, Batch } from '../types';
 import { Syringe, Plus, Search, Calendar, Eye, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ const VaccinationManagement: React.FC = () => {
   const navigate = useNavigate();
   const [vaccinations, setVaccinations] = useState<Vaccination[]>([]);
   const [livestockList, setLivestockList] = useState<Livestock[]>([]);
-  const [batchesList, setBatchesList] = useState<any[]>([]);
+  const [batchesList, setBatchesList] = useState<Batch[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -73,8 +73,8 @@ const VaccinationManagement: React.FC = () => {
           where('userId', '==', currentUser.uid)
         );
         const batchesSnapshot = await getDocs(qBatches);
-        const batchesData: any[] = [];
-        batchesSnapshot.forEach((doc) => batchesData.push({ id: doc.id, ...doc.data() }));
+        const batchesData: Batch[] = [];
+        batchesSnapshot.forEach((doc) => batchesData.push({ id: doc.id, ...doc.data() } as Batch));
         setBatchesList(batchesData);
 
       } catch (error) {
@@ -212,7 +212,7 @@ const VaccinationManagement: React.FC = () => {
     return animal ? `${animal.animalName} (${animal.animalId})` : 'Unknown Animal';
   };
 
-  const isOverdue = (dateString: string) => {
+  const isOverdue = (dateString: string | undefined) => {
     if (!dateString) return false;
     return new Date(dateString) < new Date();
   };

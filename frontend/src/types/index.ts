@@ -62,3 +62,14 @@ export interface HealthRecord {
   createdAt: Timestamp | Date;
   userId: string;
 }
+
+export interface Batch {
+  id: string;
+  batchName: string;
+  species: string;
+  headCount: number;
+  healthStatus: string;
+  vaccinationStatus: string;
+  feedType: string;
+  createdAt: Timestamp | Date;
+}

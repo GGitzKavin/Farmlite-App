@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { doc, getDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
-import type { Livestock } from '../../types';
+import type { Livestock, HealthRecord, Vaccination } from '../../types';
 import { ArrowLeft, Trash2, Activity, Syringe, Wheat, FileText } from 'lucide-react';
 
 const LivestockDetail: React.FC = () => {
@@ -11,8 +11,8 @@ const LivestockDetail: React.FC = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [animal, setAnimal] = useState<Livestock | null>(null);
-  const [healthRecords, setHealthRecords] = useState<any[]>([]);
-  const [vaccinations, setVaccinations] = useState<any[]>([]);
+  const [healthRecords, setHealthRecords] = useState<HealthRecord[]>([]);
+  const [vaccinations, setVaccinations] = useState<Vaccination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('details'); // details, health, feed
@@ -35,8 +35,8 @@ const LivestockDetail: React.FC = () => {
             where('userId', '==', currentUser.uid)
           );
           const hrSnap = await getDocs(hrQuery);
-          const hrData: any[] = [];
-          hrSnap.forEach(doc => hrData.push({ id: doc.id, ...doc.data() }));
+          const hrData: HealthRecord[] = [];
+          hrSnap.forEach(doc => hrData.push({ id: doc.id, ...doc.data() } as HealthRecord));
           setHealthRecords(hrData);
 
           // Fetch Vaccinations for this animal
@@ -46,8 +46,8 @@ const LivestockDetail: React.FC = () => {
             where('userId', '==', currentUser.uid)
           );
           const vacSnap = await getDocs(vacQuery);
-          const vacData: any[] = [];
-          vacSnap.forEach(doc => vacData.push({ id: doc.id, ...doc.data() }));
+          const vacData: Vaccination[] = [];
+          vacSnap.forEach(doc => vacData.push({ id: doc.id, ...doc.data() } as Vaccination));
           setVaccinations(vacData);
 
         } else {

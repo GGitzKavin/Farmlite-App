@@ -9,7 +9,6 @@ import {
   Bell, 
   Settings, 
   User, 
-  Users,
   LogOut,
   Menu,
   X,

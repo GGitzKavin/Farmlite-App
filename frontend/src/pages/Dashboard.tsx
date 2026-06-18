@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { Tractor, Syringe, Wheat, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
+import type { Livestock } from '../types';
+
+interface FeedChartData {
+  name: string;
+  quantity: number;
+  threshold: number;
+}
 
 const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -16,8 +23,8 @@ const Dashboard: React.FC = () => {
     sickAnimals: 0
   });
 
-  const [feedData, setFeedData] = useState<any[]>([]);
-  const [recentAnimals, setRecentAnimals] = useState<any[]>([]);
+  const [feedData, setFeedData] = useState<FeedChartData[]>([]);
+  const [recentAnimals, setRecentAnimals] = useState<Livestock[]>([]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -27,15 +34,15 @@ const Dashboard: React.FC = () => {
         const lsQuery = query(collection(db, 'livestock'), where('userId', '==', currentUser.uid));
         const lsSnapshot = await getDocs(lsQuery);
         let sickCount = 0;
-        const animals: any[] = [];
+        const animals: Livestock[] = [];
         lsSnapshot.forEach((doc) => {
           const data = doc.data();
           if (data.healthStatus === 'Sick' || data.healthStatus === 'Critical') sickCount++;
-          animals.push({ id: doc.id, ...data });
+          animals.push({ id: doc.id, ...data } as Livestock);
         });
         
         // Sort for recent animals (newest first)
-        animals.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+        animals.sort((a, b) => ((b.createdAt as Timestamp)?.toMillis?.() || 0) - ((a.createdAt as Timestamp)?.toMillis?.() || 0));
         setRecentAnimals(animals.slice(0, 5));
 
         // Fetch Vaccinations
@@ -50,7 +57,7 @@ const Dashboard: React.FC = () => {
         const feedQuery = query(collection(db, 'feedInventory'), where('userId', '==', currentUser.uid));
         const feedSnapshot = await getDocs(feedQuery);
         let lowFeedCount = 0;
-        const chartData: any[] = [];
+        const chartData: FeedChartData[] = [];
         feedSnapshot.forEach((doc) => {
           const data = doc.data();
           if (data.stockLevel === 'Low' || data.stockLevel === 'Out of Stock') lowFeedCount++;
