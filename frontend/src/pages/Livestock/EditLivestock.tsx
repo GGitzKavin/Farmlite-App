@@ -29,6 +29,20 @@ const EditLivestock: React.FC = () => {
     notes: ''
   });
 
+  const calculateAgeInMonths = (birthDateString: string) => {
+    if (!birthDateString) return null;
+    const birth = new Date(birthDateString);
+    const now = new Date();
+    
+    let months = (now.getFullYear() - birth.getFullYear()) * 12;
+    months += now.getMonth() - birth.getMonth();
+    
+    if (now.getDate() < birth.getDate()) {
+      months--;
+    }
+    return Math.max(0, months);
+  };
+
   useEffect(() => {
     const fetchAnimal = async () => {
       if (!id || !currentUser) return;
@@ -68,20 +82,6 @@ const EditLivestock: React.FC = () => {
     };
     fetchAnimal();
   }, [id, currentUser]);
-
-  const calculateAgeInMonths = (birthDateString: string) => {
-    if (!birthDateString) return null;
-    const birth = new Date(birthDateString);
-    const now = new Date();
-    
-    let months = (now.getFullYear() - birth.getFullYear()) * 12;
-    months += now.getMonth() - birth.getMonth();
-    
-    if (now.getDate() < birth.getDate()) {
-      months--;
-    }
-    return Math.max(0, months);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -226,7 +226,7 @@ const EditLivestock: React.FC = () => {
                     value={formData.birthDate} 
                     onChange={handleChange} 
                     className="block w-full pl-10 rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm cursor-pointer" 
-                    onClick={(e) => (e.target as any).showPicker?.()}
+                    onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.showPicker?.()}
                   />
                 </div>
               </div>

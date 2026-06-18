@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import type { Livestock } from '../../types';
 import { Link } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
-import AnimalEntryForm from './AnimalEntryForm';
+import AnimalEntryForm, { type AnimalFormSubmission } from './AnimalEntryForm';
 
 interface LivestockTableProps {
   searchTerm: string;
@@ -21,8 +21,7 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
 
   useEffect(() => {
     if (!currentUser?.uid) return;
-    
-    setLoading(true);
+
     const q = query(
       collection(db, 'livestock'),
       where('userId', '==', currentUser.uid),
@@ -44,7 +43,7 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
     return () => unsubscribe();
   }, [currentUser?.uid]);
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: AnimalFormSubmission) => {
     if (!currentUser?.uid) return;
     setSaving(true);
     try {

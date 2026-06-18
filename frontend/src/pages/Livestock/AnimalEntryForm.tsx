@@ -1,23 +1,45 @@
 import React, { useState } from 'react';
 import { Save, Calendar, Weight, Activity, Tag, Info } from 'lucide-react';
 
+type AnimalHealthStatus = 'Healthy' | 'Sick' | 'Under Treatment' | 'Quarantined';
+type AnimalVaccinationStatus = 'Up to date' | 'Pending' | 'Overdue';
+
+interface AnimalFormValues {
+  animalId: string;
+  animalName: string;
+  species: string;
+  breed: string;
+  birthDate: string;
+  weight: string;
+  healthStatus: AnimalHealthStatus;
+  feedType: string;
+  vaccinationStatus: AnimalVaccinationStatus;
+}
+
+export interface AnimalFormSubmission extends Omit<AnimalFormValues, 'weight'> {
+  age: number;
+  weight: number;
+}
+
 interface AnimalEntryFormProps {
-  onSave: (data: any) => Promise<void>;
+  onSave: (data: AnimalFormSubmission) => Promise<void>;
   saving: boolean;
 }
 
+const createInitialAnimalForm = (): AnimalFormValues => ({
+  animalId: '',
+  animalName: '',
+  species: 'Cattle (Beef)',
+  breed: '',
+  birthDate: '',
+  weight: '',
+  healthStatus: 'Healthy',
+  feedType: '',
+  vaccinationStatus: 'Up to date'
+});
+
 const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => {
-  const [formData, setFormData] = useState({
-    animalId: '',
-    animalName: '',
-    species: 'Cattle (Beef)',
-    breed: '',
-    birthDate: '',
-    weight: '',
-    healthStatus: 'Healthy',
-    feedType: '',
-    vaccinationStatus: 'Up to date'
-  });
+  const [formData, setFormData] = useState<AnimalFormValues>(createInitialAnimalForm);
 
   const calculateAgeInMonths = (birthDate: string) => {
     if (!birthDate) return 0;
@@ -40,17 +62,7 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
       age: ageInMonths,
       weight: Number(formData.weight)
     });
-    setFormData({
-      animalId: '',
-      animalName: '',
-      species: 'Cattle (Beef)',
-      breed: '',
-      birthDate: '',
-      weight: '',
-      healthStatus: 'Healthy',
-      feedType: '',
-      vaccinationStatus: 'Up to date'
-    });
+    setFormData(createInitialAnimalForm());
   };
 
   return (
@@ -106,7 +118,7 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
                 value={formData.birthDate} 
                 onChange={handleFormChange} 
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white cursor-pointer" 
-                onClick={(e) => (e.target as any).showPicker?.()}
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.showPicker?.()}
               />
             </div>
           </div>

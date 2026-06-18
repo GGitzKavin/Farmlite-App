@@ -6,12 +6,19 @@ import { useSearchParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
+interface FeedRecommendationResult {
+  recommendedFeed: string;
+  quantity: number;
+  nutritionScore: number;
+  summary: string;
+}
+
 const FeedRecommendation: React.FC = () => {
   const { currentUser } = useAuth();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [recommendation, setRecommendation] = useState<any>(null);
+  const [recommendation, setRecommendation] = useState<FeedRecommendationResult | null>(null);
 
   const [formData, setFormData] = useState({
     breed: 'Holstein',
@@ -60,7 +67,7 @@ const FeedRecommendation: React.FC = () => {
     setRecommendation(null);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/ai/feed-recommendation', formData);
+      const response = await axios.post<FeedRecommendationResult>('http://localhost:5000/api/ai/feed-recommendation', formData);
       setRecommendation(response.data);
     } catch (err) {
       console.error(err);

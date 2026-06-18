@@ -5,6 +5,26 @@ import { useAuth } from '../context/AuthContext';
 import type { HealthRecord, Livestock } from '../types';
 import { Activity, Plus, Search } from 'lucide-react';
 
+interface HealthRecordFormData {
+  livestockId: string;
+  diseaseType: string;
+  symptoms: string;
+  treatment: string;
+  medicine: string;
+  vetNotes: string;
+  recoveryStatus: HealthRecord['recoveryStatus'];
+}
+
+const createInitialHealthRecordForm = (): HealthRecordFormData => ({
+  livestockId: '',
+  diseaseType: '',
+  symptoms: '',
+  treatment: '',
+  medicine: '',
+  vetNotes: '',
+  recoveryStatus: 'In Treatment'
+});
+
 const HealthTracking: React.FC = () => {
   const { currentUser } = useAuth();
   const [healthRecords, setHealthRecords] = useState<HealthRecord[]>([]);
@@ -13,15 +33,7 @@ const HealthTracking: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [formData, setFormData] = useState({
-    livestockId: '',
-    diseaseType: '',
-    symptoms: '',
-    treatment: '',
-    medicine: '',
-    vetNotes: '',
-    recoveryStatus: 'In Treatment'
-  });
+  const [formData, setFormData] = useState<HealthRecordFormData>(createInitialHealthRecordForm);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,18 +79,18 @@ const HealthTracking: React.FC = () => {
         userId: currentUser.uid,
         createdAt: serverTimestamp()
       });
-      
-      setHealthRecords([{ id: docRef.id, ...formData, animalName: animal.animalName, userId: currentUser.uid } as any, ...healthRecords]);
+
+      const newRecord: HealthRecord = {
+        id: docRef.id,
+        ...formData,
+        animalName: animal.animalName,
+        userId: currentUser.uid,
+        createdAt: new Date()
+      };
+
+      setHealthRecords([newRecord, ...healthRecords]);
       setShowAddForm(false);
-      setFormData({
-        livestockId: '',
-        diseaseType: '',
-        symptoms: '',
-        treatment: '',
-        medicine: '',
-        vetNotes: '',
-        recoveryStatus: 'In Treatment'
-      });
+      setFormData(createInitialHealthRecordForm());
     } catch (error) {
       console.error("Error adding health record: ", error);
       alert("Failed to add health record.");

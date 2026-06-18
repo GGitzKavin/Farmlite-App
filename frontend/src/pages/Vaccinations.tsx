@@ -6,6 +6,29 @@ import type { Vaccination, Livestock, Batch } from '../types';
 import { Syringe, Plus, Search, Calendar, Eye, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+type VaccinationTargetType = 'Individual Animal' | 'Batch';
+
+interface VaccinationFormData {
+  vaccineName: string;
+  vaccinationDate: string;
+  nextDueDate: string;
+  reminderStatus: Vaccination['reminderStatus'];
+  notes: string;
+}
+
+interface VaccinationPayload {
+  vaccineName: string;
+  vaccinationDate: string;
+  nextDueDate: string | null;
+  reminderStatus: Vaccination['reminderStatus'];
+  notes: string;
+  targetType: VaccinationTargetType;
+  userId: string;
+  livestockId: string;
+  batchId: string;
+  createdAt?: ReturnType<typeof serverTimestamp>;
+}
+
 const VaccinationManagement: React.FC = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +38,7 @@ const VaccinationManagement: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [targetType, setTargetType] = useState<'Individual Animal' | 'Batch'>('Individual Animal');
+  const [targetType, setTargetType] = useState<VaccinationTargetType>('Individual Animal');
   const [selectedAnimalId, setSelectedAnimalId] = useState('');
   const [selectedBatchId, setSelectedBatchId] = useState('');
   const [editingRecord, setEditingRecord] = useState<Vaccination | null>(null);
@@ -28,12 +51,34 @@ const VaccinationManagement: React.FC = () => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  const [formData, setFormData] = useState({
+  const createInitialVaccinationForm = (): VaccinationFormData => ({
     vaccineName: '',
     vaccinationDate: getTodayDateString(),
     nextDueDate: '',
     reminderStatus: 'Active',
     notes: ''
+  });
+
+  const [formData, setFormData] = useState<VaccinationFormData>(createInitialVaccinationForm);
+
+  const sortVaccinationsByDueDate = (records: Vaccination[]) =>
+    [...records].sort((a, b) => {
+      if (!a.nextDueDate) return 1;
+      if (!b.nextDueDate) return -1;
+      return new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime();
+    });
+
+  const toVaccinationRecord = (id: string, payload: VaccinationPayload): Vaccination => ({
+    id,
+    vaccineName: payload.vaccineName,
+    vaccinationDate: payload.vaccinationDate,
+    nextDueDate: payload.nextDueDate ?? undefined,
+    livestockId: payload.livestockId || undefined,
+    batchId: payload.batchId || undefined,
+    targetType: payload.targetType,
+    reminderStatus: payload.reminderStatus,
+    notes: payload.notes,
+    userId: payload.userId
   });
 
   useEffect(() => {
@@ -49,13 +94,7 @@ const VaccinationManagement: React.FC = () => {
         const vacSnapshot = await getDocs(qVac);
         const vacData: Vaccination[] = [];
         vacSnapshot.forEach((doc) => vacData.push({ id: doc.id, ...doc.data() } as Vaccination));
-        // Sort by next due date manually as it's a string, or simple date sorting
-        vacData.sort((a, b) => {
-          if (!a.nextDueDate) return 1;
-          if (!b.nextDueDate) return -1;
-          return new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime();
-        });
-        setVaccinations(vacData);
+        setVaccinations(sortVaccinationsByDueDate(vacData));
 
         // Fetch Livestock for dropdown
         const qLs = query(
@@ -95,13 +134,7 @@ const VaccinationManagement: React.FC = () => {
   const handleCloseForm = () => {
     setShowAddForm(false);
     setEditingRecord(null);
-    setFormData({
-      vaccineName: '',
-      vaccinationDate: getTodayDateString(),
-      nextDueDate: '',
-      reminderStatus: 'Active',
-      notes: ''
-    });
+    setFormData(createInitialVaccinationForm());
     setSelectedAnimalId('');
     setSelectedBatchId('');
     setTargetType('Individual Animal');
@@ -139,14 +172,16 @@ const VaccinationManagement: React.FC = () => {
     if (!currentUser) return;
     
     try {
-      const payload: any = {
+      const payload: VaccinationPayload = {
         vaccineName: formData.vaccineName,
         vaccinationDate: formData.vaccinationDate,
         nextDueDate: formData.nextDueDate || null,
         notes: formData.notes,
         reminderStatus: formData.reminderStatus,
         targetType: targetType,
-        userId: currentUser.uid
+        userId: currentUser.uid,
+        livestockId: '',
+        batchId: ''
       };
 
       if (targetType === 'Individual Animal') {
@@ -159,26 +194,19 @@ const VaccinationManagement: React.FC = () => {
 
       if (editingRecord && editingRecord.id) {
         // Update existing document
-        await updateDoc(doc(db, 'vaccinations', editingRecord.id), payload);
-        
-        setVaccinations(prev => 
-          prev.map(vac => vac.id === editingRecord.id ? { ...vac, ...payload } : vac)
-            .sort((a, b) => {
-              if (!a.nextDueDate) return 1;
-              if (!b.nextDueDate) return -1;
-              return new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime();
-            })
+        await updateDoc(doc(db, 'vaccinations', editingRecord.id), { ...payload });
+
+        const updatedRecord = toVaccinationRecord(editingRecord.id, payload);
+        setVaccinations(prev =>
+          sortVaccinationsByDueDate(prev.map(vac => vac.id === editingRecord.id ? updatedRecord : vac))
         );
       } else {
         // Create new document
         payload.createdAt = serverTimestamp();
-        const docRef = await addDoc(collection(db, 'vaccinations'), payload);
-        
-        setVaccinations(prev => [...prev, { id: docRef.id, ...payload } as Vaccination].sort((a, b) => {
-          if (!a.nextDueDate) return 1;
-          if (!b.nextDueDate) return -1;
-          return new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime();
-        }));
+        const docRef = await addDoc(collection(db, 'vaccinations'), { ...payload });
+
+        const newRecord = toVaccinationRecord(docRef.id, payload);
+        setVaccinations(prev => sortVaccinationsByDueDate([...prev, newRecord]));
       }
 
       // Automatically update the health status of the target to "Under Treatment"
@@ -203,7 +231,7 @@ const VaccinationManagement: React.FC = () => {
     }
   };
 
-  const getTargetName = (vac: Vaccination | any) => {
+  const getTargetName = (vac: Vaccination) => {
     if (vac.targetType === 'Batch' || vac.batchId) {
       const batch = batchesList.find(b => b.id === vac.batchId);
       return batch ? `Batch: ${batch.batchName}` : 'Unknown Batch';
@@ -255,7 +283,7 @@ const VaccinationManagement: React.FC = () => {
                 <select 
                   required 
                   value={targetType} 
-                  onChange={(e) => setTargetType(e.target.value as any)} 
+                  onChange={(e) => setTargetType(e.target.value as VaccinationTargetType)} 
                   className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                 >
                   <option value="Individual Animal">Individual Animal</option>
@@ -315,11 +343,11 @@ const VaccinationManagement: React.FC = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Vaccination Date</label>
-                <input required type="date" name="vaccinationDate" value={formData.vaccinationDate} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm cursor-pointer" onClick={(e) => (e.target as any).showPicker?.()} />
+                <input required type="date" name="vaccinationDate" value={formData.vaccinationDate} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm cursor-pointer" onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.showPicker?.()} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Next Due Date (Optional)</label>
-                <input type="date" name="nextDueDate" value={formData.nextDueDate} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm cursor-pointer" onClick={(e) => (e.target as any).showPicker?.()} />
+                <input type="date" name="nextDueDate" value={formData.nextDueDate} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm cursor-pointer" onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.showPicker?.()} />
               </div>
             </div>
             <div>

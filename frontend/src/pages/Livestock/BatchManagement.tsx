@@ -3,7 +3,7 @@ import { collection, query, where, onSnapshot, orderBy, addDoc, doc, deleteDoc, 
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { Users, Plus, ShieldCheck, Wheat, Trash2 } from 'lucide-react';
-import BatchEntryForm from './BatchEntryForm';
+import BatchEntryForm, { type BatchFormSubmission } from './BatchEntryForm';
 import type { Batch } from '../../types';
 
 interface BatchManagementProps {
@@ -24,12 +24,19 @@ const BatchCard: React.FC<{
   const [editHealth, setEditHealth] = useState(batch.healthStatus);
   const [savingInline, setSavingInline] = useState(false);
 
-  useEffect(() => {
+  const formatCreatedAt = (createdAt: Batch['createdAt'] | null | undefined) => {
+    if (!createdAt) return 'Just now';
+    if (createdAt instanceof Date) return createdAt.toLocaleDateString();
+    return createdAt.toDate().toLocaleDateString();
+  };
+
+  const beginInlineEdit = () => {
     setEditName(batch.batchName);
     setEditCount(batch.headCount);
     setEditFeed(batch.feedType);
     setEditHealth(batch.healthStatus);
-  }, [batch]);
+    setIsEditingInline(true);
+  };
 
   const handleSaveInline = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,11 +178,11 @@ const BatchCard: React.FC<{
       </div>
       
       <div className="bg-gray-50 px-5 py-3 border-t border-gray-100 flex justify-between items-center mt-auto">
-        <span className="text-[10px] text-gray-400">Created: {(batch?.createdAt as any)?.seconds ? new Date((batch.createdAt as any).seconds * 1000).toLocaleDateString() : 'Just now'}</span>
+        <span className="text-[10px] text-gray-400">Created: {formatCreatedAt(batch.createdAt)}</span>
         
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setIsEditingInline(true)}
+            onClick={beginInlineEdit}
             className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
             title="Edit Batch"
           >
@@ -224,7 +231,7 @@ const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpe
     return () => unsubscribe();
   }, [currentUser?.uid]);
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: BatchFormSubmission) => {
     if (!currentUser?.uid) return;
     setSaving(true);
     try {

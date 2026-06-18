@@ -1,44 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Save, Tag, Info, Activity } from 'lucide-react';
 
+type BatchHealthStatus = 'Healthy' | 'Sick' | 'Under Treatment' | 'Quarantined';
+type BatchVaccinationStatus = 'Up to date' | 'Pending' | 'Overdue';
+
+interface BatchFormValues {
+  batchName: string;
+  species: string;
+  headCount: string;
+  feedType: string;
+  vaccinationStatus: BatchVaccinationStatus;
+  healthStatus: BatchHealthStatus;
+}
+
+export interface BatchFormSubmission extends Omit<BatchFormValues, 'headCount'> {
+  headCount: number;
+}
+
 interface BatchEntryFormProps {
-  onSave: (data: any) => Promise<void>;
+  onSave: (data: BatchFormSubmission) => Promise<void>;
   saving: boolean;
-  initialData?: any;
+  initialData?: Partial<BatchFormSubmission>;
   onCancel?: () => void;
 }
 
-const BatchEntryForm: React.FC<BatchEntryFormProps> = ({ onSave, saving, initialData, onCancel }) => {
-  const [batchForm, setBatchForm] = useState({
-    batchName: '',
-    species: 'Cattle (Beef)',
-    headCount: 1,
-    feedType: '',
-    vaccinationStatus: 'Up to date',
-    healthStatus: 'Healthy'
-  });
+const createInitialBatchForm = (initialData?: Partial<BatchFormSubmission>): BatchFormValues => ({
+  batchName: initialData?.batchName ?? '',
+  species: initialData?.species ?? 'Cattle (Beef)',
+  headCount: String(initialData?.headCount ?? 1),
+  feedType: initialData?.feedType ?? '',
+  vaccinationStatus: initialData?.vaccinationStatus ?? 'Up to date',
+  healthStatus: initialData?.healthStatus ?? 'Healthy'
+});
 
-  useEffect(() => {
-    if (initialData) {
-      setBatchForm({
-        batchName: initialData.batchName || '',
-        species: initialData.species || 'Cattle (Beef)',
-        headCount: initialData.headCount || 1,
-        feedType: initialData.feedType || '',
-        vaccinationStatus: initialData.vaccinationStatus || 'Up to date',
-        healthStatus: initialData.healthStatus || 'Healthy'
-      });
-    } else {
-      setBatchForm({
-        batchName: '',
-        species: 'Cattle (Beef)',
-        headCount: 1,
-        feedType: '',
-        vaccinationStatus: 'Up to date',
-        healthStatus: 'Healthy'
-      });
-    }
-  }, [initialData]);
+const BatchEntryForm: React.FC<BatchEntryFormProps> = ({ onSave, saving, initialData, onCancel }) => {
+  const [batchForm, setBatchForm] = useState<BatchFormValues>(() => createInitialBatchForm(initialData));
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -51,14 +47,10 @@ const BatchEntryForm: React.FC<BatchEntryFormProps> = ({ onSave, saving, initial
       ...batchForm,
       headCount: Number(batchForm.headCount)
     });
-    setBatchForm({
-      batchName: '',
-      species: 'Cattle (Beef)',
-      headCount: 1,
-      feedType: '',
-      vaccinationStatus: 'Up to date',
-      healthStatus: 'Healthy'
-    });
+
+    if (!initialData) {
+      setBatchForm(createInitialBatchForm());
+    }
   };
 
   return (
