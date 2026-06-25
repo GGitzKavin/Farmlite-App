@@ -1,5 +1,14 @@
 import { Timestamp } from 'firebase/firestore';
 
+export type HealthRecordRecoveryStatus =
+  | 'Recovered'
+  | 'Healthy'
+  | 'In Treatment'
+  | 'Under Treatment'
+  | 'Critical'
+  | 'Sick'
+  | 'Recovering';
+
 export interface User {
   uid: string;
   name: string;
@@ -17,11 +26,9 @@ export interface Livestock {
   age: number; // in months or years, specify in UI
   weight: number; // in kg or lbs
   birthDate: string;
-  vaccinationStatus: 'Up to date' | 'Pending' | 'Overdue';
-  healthStatus: 'Healthy' | 'Sick' | 'Recovering';
-  feedType: string;
-  notes: string;
-  createdAt: Timestamp | Date;
+  notes?: string;
+  createdAt?: Timestamp | Date;
+  updatedAt?: Timestamp | Date;
   userId: string; // to scope records per user if necessary, though it's single user, it's good practice. Wait, prompt says "single user type only... every registered user has access to all available features without separate admin permissions". We'll tie records to the user who created them or make them global if everyone is one farm. Let's tie it to `userId` so each farmer has their own farm data.
 }
 
@@ -58,8 +65,9 @@ export interface HealthRecord {
   treatment: string;
   medicine: string;
   vetNotes: string;
-  recoveryStatus: 'Recovered' | 'In Treatment' | 'Critical';
-  createdAt: Timestamp | Date;
+  recoveryStatus: HealthRecordRecoveryStatus;
+  createdAt?: Timestamp | Date;
+  updatedAt?: Timestamp | Date;
   userId: string;
 }
 
@@ -68,8 +76,9 @@ export interface Batch {
   batchName: string;
   species: string;
   headCount: number;
-  healthStatus: string;
-  vaccinationStatus: string;
-  feedType: string;
-  createdAt: Timestamp | Date;
+  healthStatus?: string;
+  vaccinationStatus?: string;
+  feedType?: string;
+  createdAt?: Timestamp | Date;
+  userId?: string;
 }

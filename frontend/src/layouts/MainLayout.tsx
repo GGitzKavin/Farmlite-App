@@ -7,7 +7,6 @@ import {
   Wheat, 
   Activity, 
   Bell, 
-  Settings, 
   User, 
   LogOut,
   Menu,
@@ -43,7 +42,6 @@ const MainLayout: React.FC = () => {
   ];
 
   const bottomNavItems = [
-    { name: 'Settings', path: '/settings', icon: Settings },
     { name: 'Profile', path: '/profile', icon: User },
   ];
 
@@ -59,14 +57,14 @@ const MainLayout: React.FC = () => {
 
       {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex flex-col items-center justify-center pt-12 pb-8 px-4 mb-10 border-b border-gray-200 relative text-center">
+        <div className="flex flex-col items-center justify-center pt-10 pb-8 px-4 mb-8 border-b border-gray-200 relative text-center">
           <img 
             src={logo} 
-            alt="Framlite Logo" 
-            className="h-24 w-24 object-contain mb-6" 
-            style={{ imageRendering: '-webkit-optimize-contrast' }}
+            alt="FarmLite Logo" 
+            className="w-32 h-auto object-contain mx-auto mb-4"
+            loading="eager"
           />
-          <span className="text-5xl font-extrabold leading-tight text-green-900 tracking-tight">
+          <span className="text-4xl font-extrabold tracking-tight leading-tight text-green-900">
             FarmLite
           </span>
           <button 
@@ -140,8 +138,8 @@ const MainLayout: React.FC = () => {
           <div className="flex items-center">
             <img 
               src={logo} 
-              alt="Framlite Logo" 
-              className="h-12 w-12 object-contain mr-3" 
+              alt="FarmLite Logo" 
+              className="h-14 w-14 object-contain mr-3" 
             />
             <span className="text-2xl font-bold text-gray-800">FarmLite</span>
           </div>

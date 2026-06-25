@@ -76,6 +76,12 @@ const Login: React.FC = () => {
             </div>
           </div>
 
+          <div className="flex justify-end">
+            <Link to="/forgot-password" className="text-sm font-medium text-green-600 hover:text-green-500">
+              Forgot Password?
+            </Link>
+          </div>
+
           <div>
             <button
               type="submit"

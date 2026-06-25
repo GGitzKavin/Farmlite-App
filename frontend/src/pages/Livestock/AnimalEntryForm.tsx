@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Save, Calendar, Weight, Activity, Tag, Info } from 'lucide-react';
-
-type AnimalHealthStatus = 'Healthy' | 'Sick' | 'Under Treatment' | 'Quarantined';
-type AnimalVaccinationStatus = 'Up to date' | 'Pending' | 'Overdue';
+import { Save, Calendar, Weight, Tag, Info } from 'lucide-react';
+import { calculateAgeInMonths } from '../../utils/livestockStatus';
 
 interface AnimalFormValues {
   animalId: string;
@@ -10,13 +8,12 @@ interface AnimalFormValues {
   species: string;
   breed: string;
   birthDate: string;
+  age: string;
   weight: string;
-  healthStatus: AnimalHealthStatus;
-  feedType: string;
-  vaccinationStatus: AnimalVaccinationStatus;
 }
 
-export interface AnimalFormSubmission extends Omit<AnimalFormValues, 'weight'> {
+export interface AnimalFormSubmission
+  extends Omit<AnimalFormValues, 'age' | 'weight'> {
   age: number;
   weight: number;
 }
@@ -32,34 +29,41 @@ const createInitialAnimalForm = (): AnimalFormValues => ({
   species: 'Cattle (Beef)',
   breed: '',
   birthDate: '',
+  age: '',
   weight: '',
-  healthStatus: 'Healthy',
-  feedType: '',
-  vaccinationStatus: 'Up to date'
 });
 
 const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => {
   const [formData, setFormData] = useState<AnimalFormValues>(createInitialAnimalForm);
-
-  const calculateAgeInMonths = (birthDate: string) => {
-    if (!birthDate) return 0;
-    const birth = new Date(birthDate);
-    const today = new Date();
-    return (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
-  };
-
-  const ageInMonths = calculateAgeInMonths(formData.birthDate);
+  const ageInMonths = formData.birthDate
+    ? calculateAgeInMonths(formData.birthDate) ?? 0
+    : null;
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (name === 'birthDate') {
+      const nextAge = value ? calculateAgeInMonths(value) ?? 0 : formData.age;
+      setFormData((prev) => ({
+        ...prev,
+        birthDate: value,
+        age: value ? String(nextAge) : prev.age,
+      }));
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const resolvedAge = formData.birthDate
+      ? calculateAgeInMonths(formData.birthDate) ?? 0
+      : Number(formData.age) || 0;
+
     await onSave({
       ...formData,
-      age: ageInMonths,
+      age: resolvedAge,
       weight: Number(formData.weight)
     });
     setFormData(createInitialAnimalForm());
@@ -67,7 +71,7 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
 
   return (
     <form onSubmit={handleSubmit} className="p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_220px]">
         {/* Basic Info */}
         <div className="space-y-4">
           <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
@@ -125,7 +129,20 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-gray-500 mb-1">Age (Months)</label>
-              <input disabled type="text" value={ageInMonths} className="block w-full bg-gray-50 border border-gray-200 rounded-md p-2 text-sm text-gray-500 font-bold" />
+              <input
+                type="number"
+                min="0"
+                name="age"
+                value={formData.birthDate ? String(ageInMonths ?? 0) : formData.age}
+                onChange={handleFormChange}
+                readOnly={Boolean(formData.birthDate)}
+                placeholder={formData.birthDate ? 'Auto-calculated' : 'Enter age in months'}
+                className={`block w-full rounded-md p-2 text-sm font-bold ${
+                  formData.birthDate
+                    ? 'bg-gray-50 border border-gray-200 text-gray-500'
+                    : 'border-gray-300 border focus:ring-green-500 focus:border-green-500 shadow-sm'
+                }`}
+              />
             </div>
             <div>
               <label className="block text-xs font-bold text-gray-500 mb-1">Weight (kg)</label>
@@ -137,29 +154,9 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
           </div>
         </div>
 
-        {/* Health & Feed */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-            <Activity className="w-3 h-3" /> Health & Feed
-          </h3>
-          <div>
-            <label className="block text-xs font-bold text-gray-500 mb-1">Health Status</label>
-            <select name="healthStatus" value={formData.healthStatus} onChange={handleFormChange} className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white font-bold text-green-700">
-              <option value="Healthy">Healthy</option>
-              <option value="Sick">Sick</option>
-              <option value="Under Treatment">Under Treatment</option>
-              <option value="Quarantined">Quarantined</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-gray-500 mb-1">Primary Feed Type</label>
-            <input type="text" name="feedType" value={formData.feedType} onChange={handleFormChange} placeholder="e.g., Grain Mix" className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" />
-          </div>
-        </div>
-
         {/* Save Button */}
-        <div className="flex items-end lg:pb-0">
-          <button disabled={saving} type="submit" className="w-full inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-md text-sm font-bold hover:bg-green-700 shadow-md transition-all disabled:bg-green-400 h-[42px] mt-auto">
+        <div className="flex items-end lg:justify-end">
+          <button disabled={saving} type="submit" className="w-full inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-md text-sm font-bold hover:bg-green-700 shadow-md transition-all disabled:bg-green-400 h-[42px] lg:min-w-[220px]">
             {saving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Save Livestock</>}
           </button>
         </div>

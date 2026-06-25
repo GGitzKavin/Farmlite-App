@@ -20,8 +20,8 @@ const BatchCard: React.FC<{
   const [isEditingInline, setIsEditingInline] = useState(false);
   const [editName, setEditName] = useState(batch.batchName);
   const [editCount, setEditCount] = useState(batch.headCount);
-  const [editFeed, setEditFeed] = useState(batch.feedType);
-  const [editHealth, setEditHealth] = useState(batch.healthStatus);
+  const [editFeed, setEditFeed] = useState(batch.feedType ?? '');
+  const [editHealth, setEditHealth] = useState(batch.healthStatus ?? 'Healthy');
   const [savingInline, setSavingInline] = useState(false);
 
   const formatCreatedAt = (createdAt: Batch['createdAt'] | null | undefined) => {
@@ -33,8 +33,8 @@ const BatchCard: React.FC<{
   const beginInlineEdit = () => {
     setEditName(batch.batchName);
     setEditCount(batch.headCount);
-    setEditFeed(batch.feedType);
-    setEditHealth(batch.healthStatus);
+    setEditFeed(batch.feedType ?? '');
+    setEditHealth(batch.healthStatus ?? 'Healthy');
     setIsEditingInline(true);
   };
 
@@ -163,7 +163,7 @@ const BatchCard: React.FC<{
             <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Vaccinations</p>
             <div className="flex items-center gap-2 text-blue-600">
               <ShieldCheck className="w-3 h-3" />
-              <span className="text-xs font-bold">{batch?.vaccinationStatus}</span>
+              <span className="text-xs font-bold">{batch?.vaccinationStatus || 'No records'}</span>
             </div>
           </div>
         </div>

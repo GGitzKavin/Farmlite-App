@@ -1,2 +1,37 @@
-# Python virtual environment
+# ===========================
+# Python
+# ===========================
 backend/flask_api/venv/
+backend/flask_api/__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# ===========================
+# Node
+# ===========================
+frontend/node_modules/
+frontend/dist/
+
+# ===========================
+# Environment
+# ===========================
+.env
+.env.local
+frontend/.env
+backend/.env
+
+# ===========================
+# Logs
+# ===========================
+*.log
+
+# ===========================
+# OS
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Personal Notes
+# ===========================
+PROJECT_STATUS_FOR_CHATGPT.md

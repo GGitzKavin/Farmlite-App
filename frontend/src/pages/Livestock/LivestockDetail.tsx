@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import type { Livestock, HealthRecord, Vaccination } from '../../types';
 import { ArrowLeft, Trash2, Activity, Syringe, Wheat, FileText } from 'lucide-react';
+import {
+  getDerivedHealthStatus,
+  getHealthBadgeStyle,
+  parseDateValue,
+  getVaccinationStatus,
+  getVaccinationStatusStyle,
+} from '../../utils/livestockStatus';
 
 const LivestockDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,7 +26,13 @@ const LivestockDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchAnimalAndRecords = async () => {
-      if (!id || !currentUser) return;
+      if (!id || !currentUser) {
+        setLoading(false);
+        return;
+      }
+
+      let canLoadRelatedRecords = false;
+
       try {
         setLoading(true);
         const docRef = doc(db, 'livestock', id);
@@ -27,37 +40,56 @@ const LivestockDetail: React.FC = () => {
         
         if (docSnap.exists() && docSnap.data().userId === currentUser.uid) {
           setAnimal({ id: docSnap.id, ...docSnap.data() } as Livestock);
-          
-          // Fetch Health Records for this animal
-          const hrQuery = query(
-            collection(db, 'healthRecords'), 
-            where('livestockId', '==', id),
-            where('userId', '==', currentUser.uid)
-          );
-          const hrSnap = await getDocs(hrQuery);
-          const hrData: HealthRecord[] = [];
-          hrSnap.forEach(doc => hrData.push({ id: doc.id, ...doc.data() } as HealthRecord));
-          setHealthRecords(hrData);
-
-          // Fetch Vaccinations for this animal
-          const vacQuery = query(
-            collection(db, 'vaccinations'), 
-            where('livestockId', '==', id),
-            where('userId', '==', currentUser.uid)
-          );
-          const vacSnap = await getDocs(vacQuery);
-          const vacData: Vaccination[] = [];
-          vacSnap.forEach(doc => vacData.push({ id: doc.id, ...doc.data() } as Vaccination));
-          setVaccinations(vacData);
-
+          canLoadRelatedRecords = true;
         } else {
           setError('Animal not found or you do not have permission.');
+          setAnimal(null);
+          setHealthRecords([]);
+          setVaccinations([]);
+          return;
         }
       } catch (err) {
         console.error(err);
         setError('Failed to fetch animal details.');
+        setAnimal(null);
+        setHealthRecords([]);
+        setVaccinations([]);
       } finally {
         setLoading(false);
+      }
+
+      if (!canLoadRelatedRecords) {
+        return;
+      }
+
+      try {
+        const healthSnapshot = await getDocs(collection(db, 'healthRecords'));
+        const healthData = healthSnapshot.docs
+          .map((document) => ({ id: document.id, ...document.data() }) as HealthRecord)
+          .filter(
+            (record) =>
+              record.livestockId === id &&
+              (!record.userId || record.userId === currentUser.uid)
+          );
+        setHealthRecords(healthData);
+      } catch (healthError) {
+        console.error('Failed to load animal health records:', healthError);
+        setHealthRecords([]);
+      }
+
+      try {
+        const vaccinationSnapshot = await getDocs(collection(db, 'vaccinations'));
+        const vaccinationData = vaccinationSnapshot.docs
+          .map((document) => ({ id: document.id, ...document.data() }) as Vaccination)
+          .filter(
+            (record) =>
+              record.livestockId === id &&
+              (!record.userId || record.userId === currentUser.uid)
+          );
+        setVaccinations(vaccinationData);
+      } catch (vaccinationError) {
+        console.error('Failed to load animal vaccinations:', vaccinationError);
+        setVaccinations([]);
       }
     };
     fetchAnimalAndRecords();
@@ -66,10 +98,32 @@ const LivestockDetail: React.FC = () => {
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this livestock record?')) return;
     try {
-      if (id) {
-        await deleteDoc(doc(db, 'livestock', id));
-        navigate('/livestock');
-      }
+      if (!id || !currentUser) return;
+
+      const [healthSnapshot, vaccinationSnapshot] = await Promise.all([
+        getDocs(
+          query(
+            collection(db, 'healthRecords'),
+            where('livestockId', '==', id),
+            where('userId', '==', currentUser.uid)
+          )
+        ),
+        getDocs(
+          query(
+            collection(db, 'vaccinations'),
+            where('livestockId', '==', id),
+            where('userId', '==', currentUser.uid)
+          )
+        ),
+      ]);
+
+      const batch = writeBatch(db);
+      batch.delete(doc(db, 'livestock', id));
+      healthSnapshot.forEach((record) => batch.delete(record.ref));
+      vaccinationSnapshot.forEach((record) => batch.delete(record.ref));
+
+      await batch.commit();
+      navigate('/livestock');
     } catch (err) {
       console.error(err);
       alert('Failed to delete livestock');
@@ -78,6 +132,25 @@ const LivestockDetail: React.FC = () => {
 
   if (loading) return <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div></div>;
   if (error || !animal) return <div className="text-center p-12 text-red-600">{error || 'Not found'}</div>;
+
+  const derivedHealthStatus = getDerivedHealthStatus(healthRecords, 'Healthy');
+  const derivedVaccinationStatus = getVaccinationStatus(vaccinations);
+  const sortedVaccinations = [...vaccinations].sort((left, right) => {
+    const leftTime = parseDateValue(left.vaccinationDate)?.getTime() ?? 0;
+    const rightTime = parseDateValue(right.vaccinationDate)?.getTime() ?? 0;
+    return rightTime - leftTime;
+  });
+  const sortedHealthRecords = [...healthRecords].sort((left, right) => {
+    const leftTime =
+      parseDateValue(left.updatedAt)?.getTime() ??
+      parseDateValue(left.createdAt)?.getTime() ??
+      0;
+    const rightTime =
+      parseDateValue(right.updatedAt)?.getTime() ??
+      parseDateValue(right.createdAt)?.getTime() ??
+      0;
+    return rightTime - leftTime;
+  });
 
   return (
     <div className="space-y-6">
@@ -169,16 +242,16 @@ const LivestockDetail: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><Activity className="w-5 h-5 mr-2 text-gray-400" /> Health Status</h3>
-                <div className={`p-4 rounded-md border ${animal.healthStatus === 'Healthy' ? 'bg-green-50 border-green-200' : animal.healthStatus === 'Sick' ? 'bg-red-50 border-red-200' : 'bg-yellow-50 border-yellow-200'}`}>
-                  <p className="text-lg font-bold">{animal.healthStatus}</p>
-                  <p className="text-sm mt-1 text-gray-600">Current overall health status.</p>
+                <div className={`p-4 rounded-md border ${getHealthBadgeStyle(derivedHealthStatus, 'card')}`}>
+                  <p className="text-lg font-bold">{derivedHealthStatus}</p>
+                  <p className="text-sm mt-1 text-gray-600">Based on the latest health tracking record when available.</p>
                 </div>
               </div>
               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><Syringe className="w-5 h-5 mr-2 text-gray-400" /> Vaccination Status</h3>
-                <div className={`p-4 rounded-md border ${animal.vaccinationStatus === 'Up to date' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-                  <p className="text-lg font-bold">{animal.vaccinationStatus}</p>
-                  <p className="text-sm mt-1 text-gray-600">Overall vaccination compliance.</p>
+                <div className={`p-4 rounded-md border ${getVaccinationStatusStyle(derivedVaccinationStatus, 'card')}`}>
+                  <p className="text-lg font-bold">{derivedVaccinationStatus}</p>
+                  <p className="text-sm mt-1 text-gray-600">Derived from this animal&apos;s vaccination records when available.</p>
                 </div>
               </div>
             </div>
@@ -188,7 +261,7 @@ const LivestockDetail: React.FC = () => {
                 {vaccinations.length > 0 ? (
                   <div className="overflow-hidden bg-white border border-gray-200 rounded-md">
                     <ul className="divide-y divide-gray-200">
-                      {vaccinations.map((vac) => (
+                      {sortedVaccinations.map((vac) => (
                         <li key={vac.id} className="p-4 hover:bg-gray-50">
                           <div className="flex justify-between">
                             <p className="text-sm font-medium text-green-600">{vac.vaccineName}</p>
@@ -208,7 +281,7 @@ const LivestockDetail: React.FC = () => {
                 <h3 className="text-md font-bold text-gray-900 mb-4 flex items-center"><Activity className="w-5 h-5 mr-2 text-red-600" /> Medical History</h3>
                 {healthRecords.length > 0 ? (
                   <div className="space-y-4">
-                    {healthRecords.map((hr) => (
+                    {sortedHealthRecords.map((hr) => (
                       <div key={hr.id} className="p-4 border border-gray-200 rounded-md bg-white shadow-sm">
                         <div className="flex justify-between items-start">
                           <p className="text-sm font-bold text-gray-900">{hr.diseaseType}</p>
@@ -232,10 +305,6 @@ const LivestockDetail: React.FC = () => {
         {activeTab === 'feed' && (
           <div className="p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><Wheat className="w-5 h-5 mr-2 text-gray-400" /> Feed Information</h3>
-            <div className="bg-gray-50 p-4 rounded-md mb-6">
-              <p className="text-sm font-medium text-gray-500">Current Primary Feed</p>
-              <p className="mt-1 text-xl font-medium text-gray-900">{animal.feedType || 'Not specified'}</p>
-            </div>
             <div className="bg-green-50 p-6 rounded-lg border border-green-200 text-center">
               <Wheat className="w-12 h-12 text-green-600 mx-auto mb-4" />
               <h4 className="text-lg font-medium text-green-900 mb-2">Optimize Feeding with AI</h4>

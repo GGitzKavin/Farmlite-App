@@ -3,8 +3,10 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Bot, Activity, Wheat, AlertCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import type { HealthRecord } from '../types';
+import { getDerivedHealthStatus } from '../utils/livestockStatus';
 
 interface FeedRecommendationResult {
   recommendedFeed: string;
@@ -37,10 +39,25 @@ const FeedRecommendation: React.FC = () => {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists() && docSnap.data().userId === currentUser.uid) {
             const data = docSnap.data();
+            let relatedHealthRecords: Array<Partial<HealthRecord> & Record<string, unknown>> = [];
+
+            try {
+              const healthSnapshot = await getDocs(collection(db, 'healthRecords'));
+              relatedHealthRecords = healthSnapshot.docs
+                .map((document) => ({ id: document.id, ...document.data() }) as Partial<HealthRecord> & Record<string, unknown>)
+                .filter(
+                  (record) =>
+                    record.livestockId === animalId &&
+                    (!record.userId || record.userId === currentUser.uid)
+                );
+            } catch (healthError) {
+              console.error('Error loading health status for feed recommendation:', healthError);
+            }
+
             setFormData({
               breed: data.breed || 'Holstein',
               weight: data.weight?.toString() || '',
-              healthStatus: data.healthStatus || 'Healthy',
+              healthStatus: getDerivedHealthStatus(relatedHealthRecords, 'Healthy'),
               age: data.age?.toString() || '',
               milkProductionStage: data.species.includes('Dairy') ? 'Lactating' : 'Dry'
             });
@@ -137,7 +154,9 @@ const FeedRecommendation: React.FC = () => {
               <select name="healthStatus" value={formData.healthStatus} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                 <option>Healthy</option>
                 <option>Sick</option>
+                <option>Under Treatment</option>
                 <option>Recovering</option>
+                <option>Critical</option>
               </select>
             </div>
 

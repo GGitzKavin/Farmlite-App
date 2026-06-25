@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { Tractor, Syringe, Wheat, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
-import type { Livestock } from '../types';
+import type { HealthRecord, Livestock } from '../types';
+import {
+  getDerivedHealthStatus,
+  getHealthBadgeStyle,
+  parseDateValue,
+  toText,
+  type DerivedHealthStatus,
+} from '../utils/livestockStatus';
 
 interface FeedChartData {
   name: string;
   quantity: number;
   threshold: number;
+}
+
+interface RecentAnimalSummary {
+  animal: Livestock;
+  healthStatus: DerivedHealthStatus;
 }
 
 const Dashboard: React.FC = () => {
@@ -24,53 +36,104 @@ const Dashboard: React.FC = () => {
   });
 
   const [feedData, setFeedData] = useState<FeedChartData[]>([]);
-  const [recentAnimals, setRecentAnimals] = useState<Livestock[]>([]);
+  const [recentAnimals, setRecentAnimals] = useState<RecentAnimalSummary[]>([]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      if (!currentUser) return;
-      try {
-        // Fetch Livestock
-        const lsQuery = query(collection(db, 'livestock'), where('userId', '==', currentUser.uid));
-        const lsSnapshot = await getDocs(lsQuery);
-        let sickCount = 0;
-        const animals: Livestock[] = [];
-        lsSnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.healthStatus === 'Sick' || data.healthStatus === 'Critical') sickCount++;
-          animals.push({ id: doc.id, ...data } as Livestock);
+      const currentUserId = currentUser?.uid;
+      if (!currentUserId) {
+        setStats({
+          totalLivestock: 0,
+          vaccinationsDue: 0,
+          lowFeedAlerts: 0,
+          sickAnimals: 0,
         });
+        setFeedData([]);
+        setRecentAnimals([]);
+        setLoading(false);
+        return;
+      }
+
+      const fetchUserCollection = async <T extends { id: string }>(
+        collectionName: string
+      ): Promise<T[]> => {
+        try {
+          const snapshot = await getDocs(collection(db, collectionName));
+          return snapshot.docs
+            .map((document) => ({
+              id: document.id,
+              ...document.data(),
+            }) as T)
+            .filter((record) => {
+              const userId = toText((record as Record<string, unknown>).userId);
+              return !userId || userId === currentUserId;
+            });
+        } catch (collectionError) {
+          console.error(`Error fetching ${collectionName}:`, collectionError);
+          return [];
+        }
+      };
+
+      try {
+        const [animals, healthRecords, vaccinations, feedItems] = await Promise.all([
+          fetchUserCollection<Livestock>('livestock'),
+          fetchUserCollection<(Partial<HealthRecord> & Record<string, unknown>) & { id: string }>('healthRecords'),
+          fetchUserCollection<Record<string, unknown> & { id: string }>('vaccinations'),
+          fetchUserCollection<Record<string, unknown> & { id: string }>('feedInventory'),
+        ]);
+
+        const healthRecordsByAnimalId: Record<string, Array<Partial<HealthRecord> & Record<string, unknown>>> = {};
+        healthRecords.forEach((record) => {
+          const livestockId = toText(record.livestockId);
+          if (!livestockId) return;
+
+          if (!healthRecordsByAnimalId[livestockId]) {
+            healthRecordsByAnimalId[livestockId] = [];
+          }
+
+          healthRecordsByAnimalId[livestockId].push(record);
+        });
+
+        const animalsWithStatus = animals.map((animal) => ({
+          animal,
+          healthStatus: getDerivedHealthStatus(
+            healthRecordsByAnimalId[animal.id] ?? [],
+            'Healthy'
+          ),
+        }));
+        const sickCount = animalsWithStatus.filter(
+          ({ healthStatus }) =>
+            healthStatus !== 'Healthy' && healthStatus !== 'No Health Records'
+        ).length;
         
         // Sort for recent animals (newest first)
-        animals.sort((a, b) => ((b.createdAt as Timestamp)?.toMillis?.() || 0) - ((a.createdAt as Timestamp)?.toMillis?.() || 0));
-        setRecentAnimals(animals.slice(0, 5));
+        animalsWithStatus.sort(
+          (left, right) =>
+            (parseDateValue(right.animal.createdAt)?.getTime() ?? 0) -
+            (parseDateValue(left.animal.createdAt)?.getTime() ?? 0)
+        );
+        setRecentAnimals(animalsWithStatus.slice(0, 5));
 
-        // Fetch Vaccinations
-        const vacQuery = query(collection(db, 'vaccinations'), where('userId', '==', currentUser.uid));
-        const vacSnapshot = await getDocs(vacQuery);
         let dueCount = 0;
-        vacSnapshot.forEach((doc) => {
-          if (new Date(doc.data().nextDueDate) < new Date()) dueCount++;
+        vaccinations.forEach((record) => {
+          const nextDueDate = parseDateValue(record.nextDueDate);
+          if (nextDueDate && nextDueDate < new Date()) dueCount++;
         });
 
-        // Fetch Feed
-        const feedQuery = query(collection(db, 'feedInventory'), where('userId', '==', currentUser.uid));
-        const feedSnapshot = await getDocs(feedQuery);
         let lowFeedCount = 0;
         const chartData: FeedChartData[] = [];
-        feedSnapshot.forEach((doc) => {
-          const data = doc.data();
+        feedItems.forEach((data) => {
           if (data.stockLevel === 'Low' || data.stockLevel === 'Out of Stock') lowFeedCount++;
           chartData.push({
-            name: data.feedName,
-            quantity: data.quantity,
-            threshold: data.lowStockThreshold
+            name: toText(data.feedName) || 'Feed item',
+            quantity: Number(data.quantity) || 0,
+            threshold: Number(data.lowStockThreshold) || 0
           });
         });
         setFeedData(chartData);
 
         setStats({
-          totalLivestock: lsSnapshot.size,
+          totalLivestock: animals.length,
           vaccinationsDue: dueCount,
           lowFeedAlerts: lowFeedCount,
           sickAnimals: sickCount
@@ -200,21 +263,18 @@ const Dashboard: React.FC = () => {
           <div className="flow-root">
             <ul className="-my-5 divide-y divide-gray-200">
               {recentAnimals.length > 0 ? recentAnimals.map((animal) => (
-                <li key={animal.id} className="py-4">
+                <li key={animal.animal.id} className="py-4">
                   <div className="flex items-center space-x-4">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">
-                        {animal.animalName}
+                        {animal.animal.animalName}
                       </p>
                       <p className="text-sm text-gray-500 truncate">
-                        ID: {animal.animalId} &bull; {animal.species}
+                        ID: {animal.animal.animalId} &bull; {animal.animal.species}
                       </p>
                     </div>
                     <div>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        animal.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' : 
-                        animal.healthStatus === 'Sick' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getHealthBadgeStyle(animal.healthStatus)}`}>
                         {animal.healthStatus}
                       </span>
                     </div>

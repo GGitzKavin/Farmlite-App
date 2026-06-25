@@ -4,6 +4,19 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Save, Calendar } from 'lucide-react';
+import { calculateAgeInMonths } from '../../utils/livestockStatus';
+
+interface EditLivestockFormData {
+  animalId: string;
+  animalName: string;
+  species: string;
+  breed: string;
+  gender: string;
+  age: string;
+  weight: string;
+  birthDate: string;
+  notes: string;
+}
 
 const EditLivestock: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,34 +27,17 @@ const EditLivestock: React.FC = () => {
   const [error, setError] = useState('');
   const [calculatedAge, setCalculatedAge] = useState<number | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EditLivestockFormData>({
     animalId: '',
     animalName: '',
     species: 'Cattle (Beef)',
     breed: '',
     gender: 'Male',
-    age: 0,
+    age: '',
     weight: '',
     birthDate: '',
-    vaccinationStatus: 'Up to date',
-    healthStatus: 'Healthy',
-    feedType: '',
     notes: ''
   });
-
-  const calculateAgeInMonths = (birthDateString: string) => {
-    if (!birthDateString) return null;
-    const birth = new Date(birthDateString);
-    const now = new Date();
-    
-    let months = (now.getFullYear() - birth.getFullYear()) * 12;
-    months += now.getMonth() - birth.getMonth();
-    
-    if (now.getDate() < birth.getDate()) {
-      months--;
-    }
-    return Math.max(0, months);
-  };
 
   useEffect(() => {
     const fetchAnimal = async () => {
@@ -58,12 +54,9 @@ const EditLivestock: React.FC = () => {
             species: data.species || 'Cattle (Beef)',
             breed: data.breed || '',
             gender: data.gender || 'Male',
-            age: data.age || 0,
+            age: data.age?.toString() || '',
             weight: data.weight?.toString() || '',
             birthDate: data.birthDate || '',
-            vaccinationStatus: data.vaccinationStatus || 'Up to date',
-            healthStatus: data.healthStatus || 'Healthy',
-            feedType: data.feedType || '',
             notes: data.notes || ''
           });
           
@@ -88,11 +81,11 @@ const EditLivestock: React.FC = () => {
     
     if (name === 'birthDate') {
       const age = calculateAgeInMonths(value);
-      setCalculatedAge(age);
+      setCalculatedAge(value ? age : null);
       setFormData(prev => ({ 
         ...prev, 
-        [name]: value,
-        age: age || 0
+        birthDate: value,
+        age: value ? String(age ?? 0) : prev.age
       }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -108,13 +101,17 @@ const EditLivestock: React.FC = () => {
 
     try {
       const docRef = doc(db, 'livestock', id);
+      const resolvedAge = formData.birthDate
+        ? calculateAgeInMonths(formData.birthDate) ?? 0
+        : Number(formData.age) || 0;
+
       await updateDoc(docRef, {
         ...formData,
+        age: resolvedAge,
         weight: Number(formData.weight),
         updatedAt: new Date()
       });
 
-      console.log("Livestock updated successfully");
       navigate(`/livestock/${id}`);
     } catch (err) {
       console.error("Error updating livestock: ", err);
@@ -209,9 +206,9 @@ const EditLivestock: React.FC = () => {
               </div>
             </div>
 
-            {/* Physical & Health */}
+            {/* Physical Details */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900 border-b pb-2">Physical & Health Details</h3>
+              <h3 className="text-lg font-medium text-gray-900 border-b pb-2">Physical Details</h3>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700">Birth Date</label>
@@ -220,7 +217,6 @@ const EditLivestock: React.FC = () => {
                     <Calendar className="h-5 w-5 text-gray-400" />
                   </div>
                   <input 
-                    required 
                     type="date" 
                     name="birthDate" 
                     value={formData.birthDate} 
@@ -235,13 +231,20 @@ const EditLivestock: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Age (Months)</label>
                   <input 
-                    readOnly 
-                    type="text" 
-                    value={calculatedAge !== null ? `${calculatedAge} Months` : ''} 
-                    placeholder="Auto-calculated" 
-                    className="mt-1 block w-full rounded-md border-gray-200 border p-2 bg-gray-50 text-gray-500 sm:text-sm cursor-not-allowed" 
+                    type="number"
+                    min="0"
+                    name="age"
+                    value={formData.birthDate ? String(calculatedAge ?? 0) : formData.age}
+                    onChange={handleChange}
+                    readOnly={Boolean(formData.birthDate)}
+                    placeholder={formData.birthDate ? 'Auto-calculated' : 'Enter age in months'}
+                    className={`mt-1 block w-full rounded-md p-2 sm:text-sm ${
+                      formData.birthDate
+                        ? 'border-gray-200 border bg-gray-50 text-gray-500 cursor-not-allowed'
+                        : 'border-gray-300 border shadow-sm focus:border-green-500 focus:ring-green-500'
+                    }`}
                   />
-                  <p className="mt-1 text-[10px] text-gray-400 italic font-medium">calculated from birth date</p>
+                  <p className="mt-1 text-[10px] text-gray-400 italic font-medium">calculated from birth date when available</p>
                 </div>
 
                 <div>
@@ -257,36 +260,6 @@ const EditLivestock: React.FC = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm" 
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Vaccination Status</label>
-                <select name="vaccinationStatus" value={formData.vaccinationStatus} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
-                  <option>Up to date</option>
-                  <option>Pending</option>
-                  <option>Overdue</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Health Status</label>
-                <select name="healthStatus" value={formData.healthStatus} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
-                  <option>Healthy</option>
-                  <option>Sick</option>
-                  <option>Recovering</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Feed Type</label>
-                <input 
-                  type="text" 
-                  name="feedType" 
-                  value={formData.feedType} 
-                  onChange={handleChange} 
-                  className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm" 
-                  placeholder="e.g., Alfalfa, Corn, or local forage" 
-                />
               </div>
             </div>
           </div>

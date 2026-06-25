@@ -3,13 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDA0sRURtRS8NMpsjUn7wGwHHrgdJBRBwM",
-  authDomain: "farmlite-66288.firebaseapp.com",
-  projectId: "farmlite-66288",
-  storageBucket: "farmlite-66288.firebasestorage.app",
-  messagingSenderId: "193083325494",
-  appId: "1:193083325494:web:096c28a14f1728ee396c97",
-  measurementId: "G-NJTENYHBBR"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import type { HealthRecord, Livestock } from '../types';
@@ -25,40 +33,253 @@ const createInitialHealthRecordForm = (): HealthRecordFormData => ({
   recoveryStatus: 'In Treatment'
 });
 
+interface LivestockDropdownOption {
+  id: string;
+  animalName: string;
+  animalId: string;
+}
+
+interface HealthRecordListItem {
+  id: string;
+  livestockId: string;
+  animalName: string;
+  diseaseType: string;
+  symptoms: string;
+  treatment: string;
+  medicine: string;
+  vetNotes: string;
+  recoveryStatus: string;
+  createdAt?: unknown;
+  updatedAt?: unknown;
+  userId: string;
+}
+
+interface StatusMessage {
+  type: 'success' | 'error';
+  text: string;
+}
+
+const toText = (value: unknown) => {
+  if (typeof value === 'string') return value.trim();
+  if (typeof value === 'number') return String(value);
+  return '';
+};
+
+const parseDateValue = (value: unknown): Date | null => {
+  if (!value) return null;
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    const timestampLike = value as {
+      toDate?: () => Date;
+      seconds?: number;
+    };
+
+    if (typeof timestampLike.toDate === 'function') {
+      const parsed = timestampLike.toDate();
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    if (typeof timestampLike.seconds === 'number') {
+      return new Date(timestampLike.seconds * 1000);
+    }
+  }
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  return null;
+};
+
+const normalizeHealthRecord = (
+  recordId: string,
+  data: Partial<HealthRecord> & Record<string, unknown>
+): HealthRecordListItem => ({
+  id: recordId,
+  livestockId: toText(data.livestockId),
+  animalName: toText(data.animalName) || 'Unknown Animal',
+  diseaseType: toText(data.diseaseType) || 'Unspecified Issue',
+  symptoms: toText(data.symptoms),
+  treatment: toText(data.treatment),
+  medicine: toText(data.medicine),
+  vetNotes: toText(data.vetNotes),
+  recoveryStatus: toText(data.recoveryStatus) || 'In Treatment',
+  createdAt: data.createdAt,
+  updatedAt: data.updatedAt,
+  userId: toText(data.userId),
+});
+
+const normalizeLivestockRecord = (recordId: string, data: Partial<Livestock> & Record<string, unknown>): LivestockDropdownOption | null => {
+  const animalName =
+    toText(data.animalName) ||
+    toText(data.name);
+  const animalId =
+    toText(data.animalId) ||
+    toText(data.tagId) ||
+    toText(data.tagID);
+
+  if (!animalName && !animalId) {
+    return null;
+  }
+
+  return {
+    id: recordId,
+    animalName: animalName || 'Unnamed Animal',
+    animalId: animalId || recordId,
+  };
+};
+
+const createHealthRecordFormFromRecord = (
+  record: HealthRecordListItem
+): HealthRecordFormData => ({
+  livestockId: record.livestockId,
+  diseaseType: record.diseaseType,
+  symptoms: record.symptoms,
+  treatment: record.treatment,
+  medicine: record.medicine,
+  vetNotes: record.vetNotes,
+  recoveryStatus: (record.recoveryStatus as HealthRecord['recoveryStatus']) || 'In Treatment',
+});
+
 const HealthTracking: React.FC = () => {
   const { currentUser } = useAuth();
-  const [healthRecords, setHealthRecords] = useState<HealthRecord[]>([]);
-  const [livestockList, setLivestockList] = useState<Livestock[]>([]);
+  const [healthRecords, setHealthRecords] = useState<HealthRecordListItem[]>([]);
+  const [livestockList, setLivestockList] = useState<LivestockDropdownOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState('');
+  const [editingRecord, setEditingRecord] = useState<HealthRecordListItem | null>(null);
+  const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
   const [formData, setFormData] = useState<HealthRecordFormData>(createInitialHealthRecordForm);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!currentUser) return;
-      
-      try {
-        const qHR = query(collection(db, 'healthRecords'), where('userId', '==', currentUser.uid), orderBy('createdAt', 'desc'));
-        const hrSnapshot = await getDocs(qHR);
-        const hrData: HealthRecord[] = [];
-        hrSnapshot.forEach((doc) => hrData.push({ id: doc.id, ...doc.data() } as HealthRecord));
-        setHealthRecords(hrData);
+  const fetchHealthRecords = useCallback(async () => {
+    const currentUserId = currentUser?.uid;
+    if (!currentUserId) {
+      setHealthRecords([]);
+      setLoading(false);
+      return;
+    }
 
-        const qLs = query(collection(db, 'livestock'), where('userId', '==', currentUser.uid));
-        const lsSnapshot = await getDocs(qLs);
-        const lsData: Livestock[] = [];
-        lsSnapshot.forEach((doc) => lsData.push({ id: doc.id, ...doc.data() } as Livestock));
-        setLivestockList(lsData);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      } finally {
-        setLoading(false);
+    setLoading(true);
+
+    try {
+      const snapshot = await getDocs(collection(db, 'healthRecords'));
+      const nextHealthRecords = snapshot.docs
+        .map((document) =>
+          normalizeHealthRecord(
+            document.id,
+            document.data() as Partial<HealthRecord> & Record<string, unknown>
+          )
+        )
+        .filter((record) => !record.userId || record.userId === currentUserId)
+        .sort((left, right) => {
+          const leftTime =
+            parseDateValue(left.createdAt)?.getTime() ??
+            parseDateValue(left.updatedAt)?.getTime() ??
+            0;
+          const rightTime =
+            parseDateValue(right.createdAt)?.getTime() ??
+            parseDateValue(right.updatedAt)?.getTime() ??
+            0;
+          return rightTime - leftTime;
+        });
+
+      setHealthRecords(nextHealthRecords);
+      setError('');
+    } catch (fetchError) {
+      console.error('Failed to load health records:', fetchError);
+      setHealthRecords([]);
+      setError('Unable to load health records right now. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [currentUser?.uid]);
+
+  const fetchLivestock = useCallback(async () => {
+    const currentUserId = currentUser?.uid;
+    if (!currentUserId) {
+      setLivestockList([]);
+      return;
+    }
+
+    try {
+      const snapshot = await getDocs(collection(db, 'livestock'));
+      const livestockData = snapshot.docs
+        .map((document) => ({
+          id: document.id,
+          ...document.data(),
+        }) as Partial<Livestock> & Record<string, unknown>)
+        .filter((animal) => {
+          const userId = toText(animal.userId);
+          return !userId || userId === currentUserId;
+        })
+        .map((animal) => normalizeLivestockRecord(animal.id as string, animal))
+        .filter((animal): animal is LivestockDropdownOption => animal !== null);
+
+      setLivestockList(livestockData);
+    } catch (fetchError) {
+      console.error('Failed to load livestock:', fetchError);
+      setLivestockList([]);
+    }
+  }, [currentUser?.uid]);
+
+  useEffect(() => {
+    const currentUserId = currentUser?.uid;
+    if (!currentUserId) {
+      setHealthRecords([]);
+      setLivestockList([]);
+      setLoading(false);
+      return;
+    }
+
+    void fetchHealthRecords();
+    void fetchLivestock();
+  }, [currentUser?.uid, fetchHealthRecords, fetchLivestock]);
+
+  const handleCloseForm = () => {
+    setShowAddForm(false);
+    setEditingRecord(null);
+    setFormData(createInitialHealthRecordForm());
+  };
+
+  const handleEdit = (record: HealthRecordListItem) => {
+    setEditingRecord(record);
+    setFormData(createHealthRecordFormFromRecord(record));
+    setShowAddForm(true);
+    setStatusMessage(null);
+  };
+
+  const handleDelete = async (record: HealthRecordListItem) => {
+    if (!record.id) return;
+    if (!window.confirm('Are you sure you want to delete this health record?')) return;
+
+    try {
+      await deleteDoc(doc(db, 'healthRecords', record.id));
+
+      if (editingRecord?.id === record.id) {
+        handleCloseForm();
       }
-    };
-    fetchData();
-  }, [currentUser]);
+
+      await fetchHealthRecords();
+      setStatusMessage({
+        type: 'success',
+        text: 'Health record deleted successfully.',
+      });
+    } catch (deleteError) {
+      console.error('Error deleting health record: ', deleteError);
+      setStatusMessage({
+        type: 'error',
+        text: 'Failed to delete health record.',
+      });
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -70,37 +291,70 @@ const HealthTracking: React.FC = () => {
     if (!currentUser) return;
 
     const animal = livestockList.find(a => a.id === formData.livestockId);
-    if (!animal) return;
+    if (!animal && !editingRecord) {
+      setStatusMessage({
+        type: 'error',
+        text: 'Please select an animal before saving this health record.',
+      });
+      return;
+    }
+
+    const animalName = animal?.animalName || editingRecord?.animalName || 'Unknown Animal';
 
     try {
-      const docRef = await addDoc(collection(db, 'healthRecords'), {
-        ...formData,
-        animalName: animal.animalName,
-        userId: currentUser.uid,
-        createdAt: serverTimestamp()
-      });
+      if (editingRecord?.id) {
+        await updateDoc(doc(db, 'healthRecords', editingRecord.id), {
+          ...formData,
+          animalName,
+          userId: currentUser.uid,
+          updatedAt: serverTimestamp(),
+        });
+        setStatusMessage({
+          type: 'success',
+          text: 'Health record updated successfully.',
+        });
+      } else {
+        await addDoc(collection(db, 'healthRecords'), {
+          ...formData,
+          animalName,
+          userId: currentUser.uid,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+        setStatusMessage({
+          type: 'success',
+          text: 'Health record added successfully.',
+        });
+      }
 
-      const newRecord: HealthRecord = {
-        id: docRef.id,
-        ...formData,
-        animalName: animal.animalName,
-        userId: currentUser.uid,
-        createdAt: new Date()
-      };
-
-      setHealthRecords([newRecord, ...healthRecords]);
-      setShowAddForm(false);
-      setFormData(createInitialHealthRecordForm());
+      handleCloseForm();
+      await fetchHealthRecords();
     } catch (error) {
       console.error("Error adding health record: ", error);
-      alert("Failed to add health record.");
+      setStatusMessage({
+        type: 'error',
+        text: editingRecord
+          ? 'Failed to update health record.'
+          : 'Failed to add health record.',
+      });
     }
   };
 
-  const filteredRecords = healthRecords.filter(hr => 
-    hr.animalName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    hr.diseaseType.toLowerCase().includes(searchTerm.toLowerCase())
+  const searchValue = searchTerm.toLowerCase();
+  const filteredRecords = healthRecords.filter((record) =>
+    record.animalName.toLowerCase().includes(searchValue) ||
+    record.diseaseType.toLowerCase().includes(searchValue) ||
+    record.symptoms.toLowerCase().includes(searchValue) ||
+    record.treatment.toLowerCase().includes(searchValue) ||
+    record.medicine.toLowerCase().includes(searchValue)
   );
+
+  const hasAnimals = livestockList.length > 0;
+  const canSubmit = hasAnimals || Boolean(editingRecord);
+  const activeLivestockIds = new Set(livestockList.map((animal) => animal.id));
+  const selectedAnimalMissing =
+    Boolean(editingRecord?.livestockId) &&
+    !livestockList.some((animal) => animal.id === formData.livestockId);
 
   return (
     <div className="space-y-6">
@@ -110,22 +364,70 @@ const HealthTracking: React.FC = () => {
           Health Tracking
         </h1>
         <button
-          onClick={() => setShowAddForm(!showAddForm)}
+          onClick={() => {
+            if (showAddForm) {
+              handleCloseForm();
+              return;
+            }
+
+            setShowAddForm(true);
+            setEditingRecord(null);
+            setFormData(createInitialHealthRecordForm());
+            setStatusMessage(null);
+          }}
           className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           {showAddForm ? 'Cancel' : <><Plus className="-ml-1 mr-2 h-5 w-5" /> Add Record</>}
         </button>
       </div>
 
+      {statusMessage ? (
+        <div
+          className={`border-l-4 p-4 ${
+            statusMessage.type === 'success'
+              ? 'bg-green-50 border-green-400'
+              : 'bg-red-50 border-red-400'
+          }`}
+        >
+          <p
+            className={`text-sm ${
+              statusMessage.type === 'success' ? 'text-green-700' : 'text-red-700'
+            }`}
+          >
+            {statusMessage.text}
+          </p>
+        </div>
+      ) : null}
+
       {showAddForm && (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-green-200">
-          <h2 className="text-lg font-medium mb-4">New Health Record</h2>
+          <h2 className="text-lg font-medium mb-4">
+            {editingRecord ? 'Edit Health Record' : 'New Health Record'}
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Animal</label>
-                <select required name="livestockId" value={formData.livestockId} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
-                  <option value="">Select an animal...</option>
+                <select
+                  required
+                  name="livestockId"
+                  value={formData.livestockId}
+                  onChange={handleChange}
+                  disabled={!canSubmit}
+                  className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                >
+                  <option value="">
+                    {hasAnimals
+                      ? 'Select an animal...'
+                      : editingRecord
+                        ? 'Animal unavailable'
+                        : 'No animals available'}
+                  </option>
+                  {selectedAnimalMissing ? (
+                    <option value={formData.livestockId}>
+                      {(editingRecord?.animalName || 'Unknown Animal')} (Animal deleted)
+                    </option>
+                  ) : null}
                   {livestockList.map(a => (
                     <option key={a.id} value={a.id}>{a.animalName} ({a.animalId})</option>
                   ))}
@@ -139,7 +441,11 @@ const HealthTracking: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700">Recovery Status</label>
                 <select name="recoveryStatus" value={formData.recoveryStatus} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                   <option>In Treatment</option>
+                  <option>Under Treatment</option>
+                  <option>Sick</option>
                   <option>Recovered</option>
+                  <option>Recovering</option>
+                  <option>Healthy</option>
                   <option>Critical</option>
                 </select>
               </div>
@@ -165,8 +471,8 @@ const HealthTracking: React.FC = () => {
             </div>
 
             <div className="flex justify-end">
-              <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
-                Save Health Record
+              <button type="submit" disabled={!canSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400">
+                {editingRecord ? 'Update Health Record' : 'Save Health Record'}
               </button>
             </div>
           </form>
@@ -189,6 +495,12 @@ const HealthTracking: React.FC = () => {
         </div>
       </div>
 
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
@@ -198,28 +510,33 @@ const HealthTracking: React.FC = () => {
           {filteredRecords.length > 0 ? filteredRecords.map((record) => (
             <div key={record.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-5">
+                {record.livestockId && !activeLivestockIds.has(record.livestockId) && (
+                  <div className="mb-3 text-xs font-medium text-gray-500">
+                    Archived record - animal deleted
+                  </div>
+                )}
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900">{record.animalName}</h3>
-                    <p className="text-sm font-medium text-red-600">{record.diseaseType}</p>
+                    <h3 className="text-lg font-bold text-gray-900">{record.animalName || 'Unknown Animal'}</h3>
+                    <p className="text-sm font-medium text-red-600">{record.diseaseType || 'Unspecified Issue'}</p>
                   </div>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                     record.recoveryStatus === 'Recovered' ? 'bg-green-100 text-green-800' : 
                     record.recoveryStatus === 'Critical' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                   }`}>
-                    {record.recoveryStatus}
+                    {record.recoveryStatus || 'In Treatment'}
                   </span>
                 </div>
                 
                 <div className="space-y-3">
                   <div>
                     <h4 className="text-xs font-medium text-gray-500 uppercase">Symptoms</h4>
-                    <p className="mt-1 text-sm text-gray-900">{record.symptoms}</p>
+                    <p className="mt-1 text-sm text-gray-900">{record.symptoms || 'Not provided'}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <h4 className="text-xs font-medium text-gray-500 uppercase">Treatment</h4>
-                      <p className="mt-1 text-sm text-gray-900">{record.treatment}</p>
+                      <p className="mt-1 text-sm text-gray-900">{record.treatment || 'Not provided'}</p>
                     </div>
                     <div>
                       <h4 className="text-xs font-medium text-gray-500 uppercase">Medicine</h4>
@@ -232,11 +549,30 @@ const HealthTracking: React.FC = () => {
                     </div>
                   )}
                 </div>
+
+                <div className="mt-4 flex justify-end gap-3 border-t border-gray-100 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(record)}
+                    className="text-sm font-medium text-green-700 hover:text-green-800"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleDelete(record)}
+                    className="text-sm font-medium text-red-600 hover:text-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           )) : (
             <div className="col-span-full text-center py-12 bg-white rounded-lg border border-gray-200 border-dashed">
-              <p className="text-gray-500">No health records found.</p>
+              <p className="text-gray-500">
+                {healthRecords.length === 0 ? 'No health records found.' : 'No health records match your search.'}
+              </p>
             </div>
           )}
         </div>

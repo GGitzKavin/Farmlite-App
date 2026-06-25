@@ -209,21 +209,6 @@ const VaccinationManagement: React.FC = () => {
         setVaccinations(prev => sortVaccinationsByDueDate([...prev, newRecord]));
       }
 
-      // Automatically update the health status of the target to "Under Treatment"
-      try {
-        if (targetType === 'Individual Animal' && selectedAnimalId) {
-          await updateDoc(doc(db, 'livestock', selectedAnimalId), {
-            healthStatus: 'Under Treatment'
-          });
-        } else if (targetType === 'Batch' && selectedBatchId) {
-          await updateDoc(doc(db, 'batches', selectedBatchId), {
-            healthStatus: 'Under Treatment'
-          });
-        }
-      } catch (healthUpdateError) {
-        console.error("Non-critical error: Failed to auto-update target health status", healthUpdateError);
-      }
-
       handleCloseForm();
     } catch (error) {
       console.error("Error saving vaccination: ", error);
