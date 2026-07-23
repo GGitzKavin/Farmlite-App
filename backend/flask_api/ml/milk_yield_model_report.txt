@@ -1,0 +1,96 @@
+FarmLite Milk Yield Model Report
+================================
+
+Dataset path: D:\UOB\FarmLite\datasets\global_cattle_milk_yield_prediction_dataset.csv
+Original row count: 250,000
+Rows used after sampling: 60,000
+Training row count: 48,000
+Test row count: 12,000
+Sampling note: Dataset exceeded 60,000 rows and was randomly sampled to 60,000 rows using random_state=42.
+
+Target column: Milk_Yield_L
+
+Selected feature columns:
+  - Breed
+  - Age_Months
+  - Weight_kg
+  - Lactation_Stage
+  - Days_in_Milk
+  - Ambient_Temperature_C
+  - Humidity_percent
+  - Previous_Week_Avg_Yield
+  - Body_Condition_Score
+
+Numeric feature columns:
+  - Age_Months
+  - Weight_kg
+  - Days_in_Milk
+  - Ambient_Temperature_C
+  - Humidity_percent
+  - Previous_Week_Avg_Yield
+  - Body_Condition_Score
+
+Categorical feature columns:
+  - Breed
+  - Lactation_Stage
+
+Excluded columns:
+  target/leakage:
+    - Milk_Yield_L
+  circular feed dependency:
+    - Feed_Quantity_kg
+  identifier/date:
+    - Cattle_ID
+    - Date
+    - Farm_ID
+  not selected:
+    - Region
+    - Country
+    - Climate_Zone
+    - Management_System
+    - Parity
+    - Feed_Type
+    - Feeding_Frequency
+    - Water_Intake_L
+    - Walking_Distance_km
+    - Grazing_Duration_hrs
+    - Rumination_Time_hrs
+    - Resting_Hours
+    - Season
+    - Housing_Score
+    - FMD_Vaccine
+    - Brucellosis_Vaccine
+    - HS_Vaccine
+    - BQ_Vaccine
+    - Anthrax_Vaccine
+    - IBR_Vaccine
+    - BVD_Vaccine
+    - Rabies_Vaccine
+    - Milking_Interval_hrs
+
+Baseline model
+--------------
+Model type: DummyRegressor(strategy="mean")
+MAE: 4.6555 L
+RMSE: 5.7486 L
+R2 score: -0.0002
+
+Final model
+-----------
+Model type: HistGradientBoostingRegressor
+Model parameters: max_iter=200, learning_rate=0.08, max_leaf_nodes=31, random_state=42
+MAE: 1.0801 L
+RMSE: 1.3532 L
+R2 score: 0.9446
+
+Saved model path: D:\UOB\FarmLite\backend\flask_api\ml\milk_yield_model.joblib
+Model file size: 244,545 bytes (0.23 MiB)
+
+Limitations
+-----------
+- The model predicts milk yield only.
+- It does not directly produce optimal feed recommendations.
+- Feed recommendation must be generated using rule-based nutritional logic.
+- Output is advisory only and should not replace guidance from a veterinarian or qualified animal nutritionist.
+- Dataset provenance and real-world validity have not been independently verified.
+- The rejected Feed_Quantity_kg model remains a failed experiment and must not be presented as production-ready.

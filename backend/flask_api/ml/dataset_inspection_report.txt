@@ -1,0 +1,362 @@
+FarmLite Dataset Inspection Report
+Dataset directory: D:\UOB\FarmLite\datasets
+
+====================================================================================================
+DATASET: global_cattle_milk_yield_prediction_dataset.csv
+Resolved path: D:\UOB\FarmLite\datasets\global_cattle_milk_yield_prediction_dataset.csv
+Rows: 250,000
+Columns: 37
+
+FULL COLUMN LIST
+   1. Cattle_ID
+   2. Breed
+   3. Region
+   4. Country
+   5. Climate_Zone
+   6. Management_System
+   7. Age_Months
+   8. Weight_kg
+   9. Parity
+  10. Lactation_Stage
+  11. Days_in_Milk
+  12. Feed_Type
+  13. Feed_Quantity_kg
+  14. Feeding_Frequency
+  15. Water_Intake_L
+  16. Walking_Distance_km
+  17. Grazing_Duration_hrs
+  18. Rumination_Time_hrs
+  19. Resting_Hours
+  20. Ambient_Temperature_C
+  21. Humidity_percent
+  22. Season
+  23. Housing_Score
+  24. FMD_Vaccine
+  25. Brucellosis_Vaccine
+  26. HS_Vaccine
+  27. BQ_Vaccine
+  28. Anthrax_Vaccine
+  29. IBR_Vaccine
+  30. BVD_Vaccine
+  31. Rabies_Vaccine
+  32. Previous_Week_Avg_Yield
+  33. Body_Condition_Score
+  34. Milking_Interval_hrs
+  35. Date
+  36. Farm_ID
+  37. Milk_Yield_L
+
+FIRST 5 ROWS
+    Cattle_ID             Breed        Region Country Climate_Zone Management_System  Age_Months  Weight_kg  Parity Lactation_Stage  Days_in_Milk     Feed_Type  Feed_Quantity_kg  Feeding_Frequency  Water_Intake_L  Walking_Distance_km  Grazing_Duration_hrs  Rumination_Time_hrs  Resting_Hours  Ambient_Temperature_C  Humidity_percent Season  Housing_Score  FMD_Vaccine  Brucellosis_Vaccine  HS_Vaccine  BQ_Vaccine  Anthrax_Vaccine  IBR_Vaccine  BVD_Vaccine  Rabies_Vaccine  Previous_Week_Avg_Yield  Body_Condition_Score  Milking_Interval_hrs       Date   Farm_ID  Milk_Yield_L
+CATTLE_000001        Tharparkar        Africa      CA     Tropical         Intensive          32      259.9       4            Late           352           Hay              16.8                  3            58.5                 7.89                   1.6                  4.3            8.4                   24.9              66.9 Summer           0.57            0                    1           1           1                1            0            0               0                     4.88                   3.0                    24 2023-02-06 FARM_0825          3.08
+CATTLE_000002        Africander South_America      ET         Arid    Semi_Intensive          63      593.9       6           Early           325    Dry_Fodder               8.9                  3            57.8                 4.01                   5.5                 11.3           11.1                   34.0              46.2 Summer           0.77            1                    0           0           1                0            0            1               1                     3.52                   2.5                    24 2022-10-31 FARM_0106          2.00
+CATTLE_000003 Holstein-Friesian       Oceania      KE    Temperate         Intensive         132      675.4       3             Mid            79 Crop_Residues               3.0                  3            75.3                 2.08                   3.8                  9.8           12.0                   45.0              78.3 Autumn           0.54            1                    0           0           1                1            0            1               0                    11.28                   2.5                    12 2024-11-01 FARM_0201         14.06
+CATTLE_000004         Fleckvieh     Europe_NA      BR     Tropical    Semi_Intensive          73      260.5       5            Late           249 Crop_Residues              10.6                  1            90.3                 3.60                   6.8                  7.1            8.9                   34.0              34.9 Spring           0.69            0                    0           0           1                0            0            0               0                    10.63                   4.0                     8 2023-07-07 FARM_0174         12.74
+CATTLE_000005        Danish_Red       Oceania      US  Subtropical         Extensive          50      477.8       6           Early           339  Concentrates              14.3                  3            57.3                 4.09                   1.0                  5.2           12.0                   33.1             100.0 Summer           0.83            0                    0           0           1                0            1            1               1                    16.99                   2.0                    12 2024-09-20 FARM_0028         15.64
+
+DATA TYPES
+Cattle_ID                      str
+Breed                          str
+Region                         str
+Country                        str
+Climate_Zone                   str
+Management_System              str
+Age_Months                   int64
+Weight_kg                  float64
+Parity                       int64
+Lactation_Stage                str
+Days_in_Milk                 int64
+Feed_Type                      str
+Feed_Quantity_kg           float64
+Feeding_Frequency            int64
+Water_Intake_L             float64
+Walking_Distance_km        float64
+Grazing_Duration_hrs       float64
+Rumination_Time_hrs        float64
+Resting_Hours              float64
+Ambient_Temperature_C      float64
+Humidity_percent           float64
+Season                         str
+Housing_Score              float64
+FMD_Vaccine                  int64
+Brucellosis_Vaccine          int64
+HS_Vaccine                   int64
+BQ_Vaccine                   int64
+Anthrax_Vaccine              int64
+IBR_Vaccine                  int64
+BVD_Vaccine                  int64
+Rabies_Vaccine               int64
+Previous_Week_Avg_Yield    float64
+Body_Condition_Score       float64
+Milking_Interval_hrs         int64
+Date                           str
+Farm_ID                        str
+Milk_Yield_L               float64
+
+MISSING VALUES PER COLUMN
+Cattle_ID                  0
+Breed                      0
+Region                     0
+Country                    0
+Climate_Zone               0
+Management_System          0
+Age_Months                 0
+Weight_kg                  0
+Parity                     0
+Lactation_Stage            0
+Days_in_Milk               0
+Feed_Type                  0
+Feed_Quantity_kg           0
+Feeding_Frequency          0
+Water_Intake_L             0
+Walking_Distance_km        0
+Grazing_Duration_hrs       0
+Rumination_Time_hrs        0
+Resting_Hours              0
+Ambient_Temperature_C      0
+Humidity_percent           0
+Season                     0
+Housing_Score              0
+FMD_Vaccine                0
+Brucellosis_Vaccine        0
+HS_Vaccine                 0
+BQ_Vaccine                 0
+Anthrax_Vaccine            0
+IBR_Vaccine                0
+BVD_Vaccine                0
+Rabies_Vaccine             0
+Previous_Week_Avg_Yield    0
+Body_Condition_Score       0
+Milking_Interval_hrs       0
+Date                       0
+Farm_ID                    0
+Milk_Yield_L               0
+
+DUPLICATE ROW COUNT: 0
+
+POSSIBLE COLUMNS BY CONCEPT
+  - Cattle ID: Cattle_ID
+  - Breed: Breed
+  - Age: Age_Months
+  - Weight: Weight_kg
+  - Health status / disease: None identified
+  - Milk yield: Previous_Week_Avg_Yield, Milk_Yield_L
+  - Feed type: Feed_Type, Feed_Quantity_kg
+  - Feed intake / quantity: Feed_Quantity_kg, Water_Intake_L
+  - Nutrient composition: None identified
+  - Roughage: None identified
+  - Concentrate: None identified
+  - Production stage: Lactation_Stage
+  - Lactation stage: Lactation_Stage, Days_in_Milk
+  - Possible target / output: Feed_Quantity_kg, Milk_Yield_L
+
+REQUESTED KEYWORD MATCHES
+  - Breed: breed
+  - Age_Months: age
+  - Weight_kg: weight, kg
+  - Lactation_Stage: lactation, stage
+  - Days_in_Milk: milk
+  - Feed_Type: feed
+  - Feed_Quantity_kg: feed, quantity, kg
+  - Water_Intake_L: intake
+  - Previous_Week_Avg_Yield: yield
+  - Milk_Yield_L: milk, yield
+
+POSSIBLE MACHINE LEARNING USE CASES
+  - Milk yield prediction: SUPPORTED: an explicit milk-yield column could be used as a target.
+  - Disease detection: NOT DIRECTLY SUPPORTED: no explicit disease target was identified.
+  - Feed intake prediction: POSSIBLE: feed quantity/intake can be treated as a historical prediction target, but it is not proof of an optimal ration.
+  - Feed recommendation: NOT DIRECTLY SUPPORTED: feed observations may be present, but there is no explicit recommended or optimal feed/ration target.
+  - Health-risk assisted feeding: POSSIBLE AS A RESEARCH PIPELINE: health and feed context coexist, but veterinary and nutrition rules are still required to turn risk predictions into safe feeding advice.
+
+====================================================================================================
+DATASET: global_cattle_disease_detection_dataset.csv
+Resolved path: D:\UOB\FarmLite\datasets\global_cattle_disease_detection_dataset.csv
+Rows: 250,000
+Columns: 40
+
+FULL COLUMN LIST
+   1. Cattle_ID
+   2. Breed
+   3. Region
+   4. Country
+   5. Climate_Zone
+   6. Management_System
+   7. Age_Months
+   8. Weight_kg
+   9. Parity
+  10. Lactation_Stage
+  11. Days_in_Milk
+  12. Feed_Type
+  13. Feed_Quantity_kg
+  14. Water_Intake_L
+  15. Walking_Distance_km
+  16. Grazing_Duration_hrs
+  17. Rumination_Time_hrs
+  18. Resting_Hours
+  19. Body_Temperature_C
+  20. Heart_Rate_bpm
+  21. Respiratory_Rate
+  22. Ambient_Temperature_C
+  23. Humidity_percent
+  24. Season
+  25. Housing_Score
+  26. Milk_Yield_L
+  27. FMD_Vaccine
+  28. Brucellosis_Vaccine
+  29. HS_Vaccine
+  30. BQ_Vaccine
+  31. Anthrax_Vaccine
+  32. IBR_Vaccine
+  33. BVD_Vaccine
+  34. Rabies_Vaccine
+  35. Previous_Week_Avg_Yield
+  36. Body_Condition_Score
+  37. Milking_Interval_hrs
+  38. Date
+  39. Farm_ID
+  40. Disease_Status
+
+FIRST 5 ROWS
+    Cattle_ID             Breed        Region Country Climate_Zone Management_System  Age_Months  Weight_kg  Parity Lactation_Stage  Days_in_Milk     Feed_Type  Feed_Quantity_kg  Water_Intake_L  Walking_Distance_km  Grazing_Duration_hrs  Rumination_Time_hrs  Resting_Hours  Body_Temperature_C  Heart_Rate_bpm  Respiratory_Rate  Ambient_Temperature_C  Humidity_percent Season  Housing_Score  Milk_Yield_L  FMD_Vaccine  Brucellosis_Vaccine  HS_Vaccine  BQ_Vaccine  Anthrax_Vaccine  IBR_Vaccine  BVD_Vaccine  Rabies_Vaccine  Previous_Week_Avg_Yield  Body_Condition_Score  Milking_Interval_hrs       Date   Farm_ID      Disease_Status
+CATTLE_000001        Tharparkar        Africa      CA     Tropical         Intensive          32      259.9       4            Late           352           Hay              16.8            58.5                 7.89                   1.6                  4.3            8.4                39.8            61.0              30.0                   24.9              66.9 Summer           0.57          3.08            0                    1           1           1                1            0            0               0                     4.88                   3.0                    24 2023-02-06 FARM_0825      Foot_and_Mouth
+CATTLE_000002        Africander South_America      ET         Arid    Semi_Intensive          63      593.9       6           Early           325    Dry_Fodder               8.9            57.8                 4.01                   5.5                 11.3           11.1                39.1            82.0              27.0                   34.0              46.2 Summer           0.77          2.00            1                    0           0           1                0            0            1               1                     3.52                   2.5                    24 2022-10-31 FARM_0106 Ketosis_Subclinical
+CATTLE_000003 Holstein-Friesian       Oceania      KE    Temperate         Intensive         132      675.4       3             Mid            79 Crop_Residues               3.0            75.3                 2.08                   3.8                  9.8           12.0                40.2            60.0              25.0                   45.0              78.3 Autumn           0.54         14.06            1                    0           0           1                1            0            1               0                    11.28                   2.5                    12 2024-11-01 FARM_0201             Healthy
+CATTLE_000004         Fleckvieh     Europe_NA      BR     Tropical    Semi_Intensive          73      260.5       5            Late           249 Crop_Residues              10.6            90.3                 3.60                   6.8                  7.1            8.9                37.7            91.0              30.0                   34.0              34.9 Spring           0.69         12.74            0                    0           0           1                0            0            0               0                    10.63                   4.0                     8 2023-07-07 FARM_0174             Healthy
+CATTLE_000005        Danish_Red       Oceania      US  Subtropical         Extensive          50      477.8       6           Early           339  Concentrates              14.3            57.3                 4.09                   1.0                  5.2           12.0                38.3            73.0              16.0                   33.1             100.0 Summer           0.83         15.64            0                    0           0           1                0            1            1               1                    16.99                   2.0                    12 2024-09-20 FARM_0028             Healthy
+
+DATA TYPES
+Cattle_ID                      str
+Breed                          str
+Region                         str
+Country                        str
+Climate_Zone                   str
+Management_System              str
+Age_Months                   int64
+Weight_kg                  float64
+Parity                       int64
+Lactation_Stage                str
+Days_in_Milk                 int64
+Feed_Type                      str
+Feed_Quantity_kg           float64
+Water_Intake_L             float64
+Walking_Distance_km        float64
+Grazing_Duration_hrs       float64
+Rumination_Time_hrs        float64
+Resting_Hours              float64
+Body_Temperature_C         float64
+Heart_Rate_bpm             float64
+Respiratory_Rate           float64
+Ambient_Temperature_C      float64
+Humidity_percent           float64
+Season                         str
+Housing_Score              float64
+Milk_Yield_L               float64
+FMD_Vaccine                  int64
+Brucellosis_Vaccine          int64
+HS_Vaccine                   int64
+BQ_Vaccine                   int64
+Anthrax_Vaccine              int64
+IBR_Vaccine                  int64
+BVD_Vaccine                  int64
+Rabies_Vaccine               int64
+Previous_Week_Avg_Yield    float64
+Body_Condition_Score       float64
+Milking_Interval_hrs         int64
+Date                           str
+Farm_ID                        str
+Disease_Status                 str
+
+MISSING VALUES PER COLUMN
+Cattle_ID                  0
+Breed                      0
+Region                     0
+Country                    0
+Climate_Zone               0
+Management_System          0
+Age_Months                 0
+Weight_kg                  0
+Parity                     0
+Lactation_Stage            0
+Days_in_Milk               0
+Feed_Type                  0
+Feed_Quantity_kg           0
+Water_Intake_L             0
+Walking_Distance_km        0
+Grazing_Duration_hrs       0
+Rumination_Time_hrs        0
+Resting_Hours              0
+Body_Temperature_C         0
+Heart_Rate_bpm             0
+Respiratory_Rate           0
+Ambient_Temperature_C      0
+Humidity_percent           0
+Season                     0
+Housing_Score              0
+Milk_Yield_L               0
+FMD_Vaccine                0
+Brucellosis_Vaccine        0
+HS_Vaccine                 0
+BQ_Vaccine                 0
+Anthrax_Vaccine            0
+IBR_Vaccine                0
+BVD_Vaccine                0
+Rabies_Vaccine             0
+Previous_Week_Avg_Yield    0
+Body_Condition_Score       0
+Milking_Interval_hrs       0
+Date                       0
+Farm_ID                    0
+Disease_Status             0
+
+DUPLICATE ROW COUNT: 0
+
+POSSIBLE COLUMNS BY CONCEPT
+  - Cattle ID: Cattle_ID
+  - Breed: Breed
+  - Age: Age_Months
+  - Weight: Weight_kg
+  - Health status / disease: Disease_Status
+  - Milk yield: Milk_Yield_L, Previous_Week_Avg_Yield
+  - Feed type: Feed_Type, Feed_Quantity_kg
+  - Feed intake / quantity: Feed_Quantity_kg, Water_Intake_L
+  - Nutrient composition: None identified
+  - Roughage: None identified
+  - Concentrate: None identified
+  - Production stage: Lactation_Stage
+  - Lactation stage: Lactation_Stage, Days_in_Milk
+  - Possible target / output: Feed_Quantity_kg, Milk_Yield_L, Disease_Status
+
+REQUESTED KEYWORD MATCHES
+  - Breed: breed
+  - Age_Months: age
+  - Weight_kg: weight, kg
+  - Lactation_Stage: lactation, stage
+  - Days_in_Milk: milk
+  - Feed_Type: feed
+  - Feed_Quantity_kg: feed, quantity, kg
+  - Water_Intake_L: intake
+  - Milk_Yield_L: milk, yield
+  - Previous_Week_Avg_Yield: yield
+  - Disease_Status: disease
+
+POSSIBLE MACHINE LEARNING USE CASES
+  - Milk yield prediction: SUPPORTED: an explicit milk-yield column could be used as a target.
+  - Disease detection: SUPPORTED: an explicit disease/diagnosis column could be used as a target.
+  - Feed intake prediction: POSSIBLE: feed quantity/intake can be treated as a historical prediction target, but it is not proof of an optimal ration.
+  - Feed recommendation: NOT DIRECTLY SUPPORTED: feed observations may be present, but there is no explicit recommended or optimal feed/ration target.
+  - Health-risk assisted feeding: POSSIBLE AS A RESEARCH PIPELINE: health and feed context coexist, but veterinary and nutrition rules are still required to turn risk predictions into safe feeding advice.
+
+====================================================================================================
+OVERALL CONCLUSION
+- Direct feed recommendation support: NO. Feed_Type and Feed_Quantity_kg describe observed feeding, but no column says that the feed or quantity is recommended, optimal, safe, or responsible for an outcome.
+- Milk-yield prediction support: YES. Milk_Yield_L is a plausible supervised target with multiple predictor columns.
+- Disease detection support: YES. Disease_Status is a plausible classification target in the disease dataset.
+- Feed-intake prediction support: POSSIBLE. Feed_Quantity_kg can be predicted as historical intake/usage, but should not be presented as an optimal recommendation.
+- Only milk-yield prediction: NO. The combined files also support disease classification and exploratory feed-quantity prediction, subject to validation.
+- Rule-based feed recommendation: STILL NEEDED unless a separate dataset supplies expert-validated optimal ration targets, nutrient requirements, constraints, and measured outcomes.
+- Health-risk assisted feeding: POSSIBLE as a future combination of disease-risk predictions and veterinary/nutrition rules; disease predictions alone do not define a safe ration.
+- Real-world claim safety: UNSUITABLE FOR REAL-WORLD CLAIMS AS-IS. CSV structure alone does not establish provenance, representative sampling, measurement quality, licensing, causal validity, or veterinary/nutrition review. Sequential identifiers and highly regular schemas may indicate synthetic or generated data, but provenance must be checked rather than assumed.
+Use these files only for exploratory/educational analysis until their source and validity are documented.
+
+Report output path: D:\UOB\FarmLite\backend\flask_api\ml\dataset_inspection_report.txt

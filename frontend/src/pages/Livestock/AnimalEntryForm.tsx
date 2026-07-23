@@ -26,7 +26,7 @@ interface AnimalEntryFormProps {
 const createInitialAnimalForm = (): AnimalFormValues => ({
   animalId: '',
   animalName: '',
-  species: 'Cattle (Beef)',
+  species: 'Dairy Cattle',
   breed: '',
   birthDate: '',
   age: '',
@@ -91,13 +91,12 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
             <div>
               <label className="block text-xs font-bold text-gray-500 mb-1">Species</label>
               <select name="species" value={formData.species} onChange={handleFormChange} className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white">
+                <option>Dairy Cattle</option>
                 <option>Cattle (Beef)</option>
-                <option>Cattle (Dairy)</option>
-                <option>Poultry</option>
+                <option>Sheep/Goats</option>
                 <option>Chicken</option>
                 <option>Duck</option>
                 <option>Swine</option>
-                <option>Sheep/Goats</option>
               </select>
             </div>
             <div>

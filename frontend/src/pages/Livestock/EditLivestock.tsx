@@ -4,7 +4,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Save, Calendar } from 'lucide-react';
-import { calculateAgeInMonths } from '../../utils/livestockStatus';
+import { calculateAgeInMonths, getDisplaySpecies } from '../../utils/livestockStatus';
 
 interface EditLivestockFormData {
   animalId: string;
@@ -30,7 +30,7 @@ const EditLivestock: React.FC = () => {
   const [formData, setFormData] = useState<EditLivestockFormData>({
     animalId: '',
     animalName: '',
-    species: 'Cattle (Beef)',
+    species: 'Dairy Cattle',
     breed: '',
     gender: 'Male',
     age: '',
@@ -38,6 +38,14 @@ const EditLivestock: React.FC = () => {
     birthDate: '',
     notes: ''
   });
+  const standardSpeciesOptions = [
+    'Dairy Cattle',
+    'Cattle (Beef)',
+    'Sheep/Goats',
+    'Chicken',
+    'Duck',
+    'Swine',
+  ];
 
   useEffect(() => {
     const fetchAnimal = async () => {
@@ -51,7 +59,7 @@ const EditLivestock: React.FC = () => {
           setFormData({
             animalId: data.animalId || '',
             animalName: data.animalName || '',
-            species: data.species || 'Cattle (Beef)',
+            species: getDisplaySpecies(data.species) || 'Dairy Cattle',
             breed: data.breed || '',
             gender: data.gender || 'Male',
             age: data.age?.toString() || '',
@@ -173,15 +181,12 @@ const EditLivestock: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Species</label>
                 <select name="species" value={formData.species} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
-                  <option>Cattle (Beef)</option>
-                  <option>Cattle (Dairy)</option>
-                  <option>Poultry (Chickens, Ducks, Turkeys)</option>
-                  <option>Chicken</option>
-                  <option>Duck</option>
-                  <option>Swine (Pigs)</option>
-                  <option>Sheep/Goats</option>
-                  <option>Equine (Horses, Donkeys)</option>
-                  <option>Other Livestock</option>
+                  {!standardSpeciesOptions.includes(formData.species) && formData.species ? (
+                    <option>{formData.species}</option>
+                  ) : null}
+                  {standardSpeciesOptions.map((speciesOption) => (
+                    <option key={speciesOption}>{speciesOption}</option>
+                  ))}
                 </select>
               </div>
 

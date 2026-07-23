@@ -12,6 +12,7 @@ import {
   parseDateValue,
   getVaccinationStatus,
   getVaccinationStatusStyle,
+  getDisplaySpecies,
   toText,
   type DerivedHealthStatus,
   type DerivedVaccinationStatus,
@@ -221,7 +222,7 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Species</p>
-                      <p className="mt-0.5 text-sm text-gray-900 font-medium">{animal?.species}</p>
+                      <p className="mt-0.5 text-sm text-gray-900 font-medium">{getDisplaySpecies(animal?.species)}</p>
                     </div>
                     <div>
                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Breed</p>

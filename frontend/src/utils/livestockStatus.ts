@@ -36,6 +36,21 @@ export const toText = (value: unknown) => {
   return '';
 };
 
+export const getDisplaySpecies = (species: unknown) => {
+  const speciesText = toText(species);
+  const normalizedSpecies = speciesText.toLowerCase().replace(/\s+/g, ' ');
+
+  if (
+    normalizedSpecies === 'dairy cow' ||
+    normalizedSpecies === 'cow' ||
+    normalizedSpecies === 'cattle (dairy)'
+  ) {
+    return 'Dairy Cattle';
+  }
+
+  return speciesText || 'Unknown';
+};
+
 export const parseDateValue = (value: unknown): Date | null => {
   if (!value) return null;
 

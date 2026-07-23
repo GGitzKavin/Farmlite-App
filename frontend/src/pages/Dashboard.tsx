@@ -8,6 +8,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
 import type { HealthRecord, Livestock } from '../types';
 import {
   getDerivedHealthStatus,
+  getDisplaySpecies,
   getHealthBadgeStyle,
   parseDateValue,
   toText,
@@ -270,7 +271,7 @@ const Dashboard: React.FC = () => {
                         {animal.animal.animalName}
                       </p>
                       <p className="text-sm text-gray-500 truncate">
-                        ID: {animal.animal.animalId} &bull; {animal.animal.species}
+                        ID: {animal.animal.animalId} &bull; {getDisplaySpecies(animal.animal.species)}
                       </p>
                     </div>
                     <div>

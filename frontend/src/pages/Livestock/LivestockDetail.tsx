@@ -11,6 +11,7 @@ import {
   parseDateValue,
   getVaccinationStatus,
   getVaccinationStatusStyle,
+  getDisplaySpecies,
 } from '../../utils/livestockStatus';
 
 const LivestockDetail: React.FC = () => {
@@ -151,6 +152,7 @@ const LivestockDetail: React.FC = () => {
       0;
     return rightTime - leftTime;
   });
+  const displaySpecies = getDisplaySpecies(animal.species);
 
   return (
     <div className="space-y-6">
@@ -162,7 +164,7 @@ const LivestockDetail: React.FC = () => {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{animal.animalName}</h1>
-            <p className="text-sm text-gray-500">ID: {animal.animalId} &bull; {animal.species}</p>
+            <p className="text-sm text-gray-500">ID: {animal.animalId} &bull; {displaySpecies}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -201,7 +203,7 @@ const LivestockDetail: React.FC = () => {
               <div className="space-y-4">
                 <div className="bg-gray-50 p-4 rounded-md">
                   <p className="text-sm font-medium text-gray-500">Species</p>
-                  <p className="mt-1 text-base text-gray-900">{animal.species}</p>
+                  <p className="mt-1 text-base text-gray-900">{displaySpecies}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-md">
                   <p className="text-sm font-medium text-gray-500">Breed</p>
@@ -309,7 +311,7 @@ const LivestockDetail: React.FC = () => {
               <Wheat className="w-12 h-12 text-green-600 mx-auto mb-4" />
               <h4 className="text-lg font-medium text-green-900 mb-2">Optimize Feeding with AI</h4>
               <p className="text-sm text-green-700 mb-6">
-                Get a scientifically calculated feed plan based on this {animal.species.toLowerCase()}'s weight, age, and health status.
+                Get a scientifically calculated feed plan based on this {displaySpecies.toLowerCase()}'s weight, age, and health status.
               </p>
               <Link 
                 to={`/ai-feed?id=${animal.id}`}
