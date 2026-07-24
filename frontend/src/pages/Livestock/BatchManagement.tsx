@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { collection, query, where, onSnapshot, orderBy, addDoc, doc, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
-import { Users, Plus, ShieldCheck, Wheat, Trash2 } from 'lucide-react';
+import { Users, Plus, ShieldCheck, Wheat, Trash2, Pencil } from 'lucide-react';
 import BatchEntryForm, { type BatchFormSubmission } from './BatchEntryForm';
 import type { Batch } from '../../types';
+import { getDisplaySpecies, getSpeciesFilterValue } from '../../utils/livestockStatus';
 
 interface BatchManagementProps {
   searchTerm: string;
@@ -124,7 +125,7 @@ const BatchCard: React.FC<{
           <button
             type="submit"
             disabled={savingInline}
-            className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-bold shadow-sm transition-all disabled:bg-green-400"
+            className="px-4 py-2 bg-[#606c38] hover:bg-[#4f5a2f] text-white rounded-lg text-sm font-medium shadow-sm transition-all disabled:bg-[#606c38]/60"
           >
             {savingInline ? 'Saving...' : 'Save'}
           </button>
@@ -139,7 +140,7 @@ const BatchCard: React.FC<{
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="font-bold text-gray-900 text-lg group-hover:text-green-700 transition-colors">{batch?.batchName}</h3>
-            <p className="text-xs text-gray-500 font-medium">{batch?.species}</p>
+            <p className="text-xs text-gray-500 font-medium">{getDisplaySpecies(batch?.species)}</p>
           </div>
           <div className="bg-green-50 text-green-700 px-3 py-1 rounded-lg border border-green-100 text-center">
              <span className="block text-lg font-bold leading-none">{batch?.headCount}</span>
@@ -183,17 +184,19 @@ const BatchCard: React.FC<{
         <div className="flex items-center gap-3">
           <button
             onClick={beginInlineEdit}
-            className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+            className="inline-flex items-center rounded-lg bg-[#669bbc] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5588a7]"
             title="Edit Batch"
           >
+            <Pencil className="mr-1.5 h-4 w-4" />
             Edit
           </button>
           <button
             onClick={() => onDelete(batch.id)}
-            className="text-slate-400 hover:text-red-600 transition-colors p-1"
+            className="inline-flex items-center rounded-lg bg-[#c1121f] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a]"
             title="Delete Batch"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="mr-1.5 h-4 w-4" />
+            Delete
           </button>
         </div>
       </div>
@@ -266,7 +269,9 @@ const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpe
     
     const matchesSearch = 
       name.includes(searchTerm.toLowerCase());
-    const matchesFilter = filterSpecies ? species === filterSpecies : true;
+    const matchesFilter = filterSpecies
+      ? getSpeciesFilterValue(species) === filterSpecies
+      : true;
     
     return matchesSearch && matchesFilter;
   });

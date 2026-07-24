@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import type { FeedInventory } from '../types';
-import { Wheat, Plus, AlertTriangle, Package } from 'lucide-react';
+import { Wheat, Plus, AlertTriangle, Package, Save, Trash2 } from 'lucide-react';
 
 const FeedInventoryPage: React.FC = () => {
   const { currentUser } = useAuth();
   const [feeds, setFeeds] = useState<FeedInventory[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
   const [formData, setFormData] = useState({
     feedName: '',
@@ -44,6 +45,7 @@ const FeedInventoryPage: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (statusMessage) setStatusMessage('');
   };
 
   const calculateStockLevel = (qty: number, threshold: number) => {
@@ -105,6 +107,20 @@ const FeedInventoryPage: React.FC = () => {
     }
   };
 
+  const handleDeleteFeed = async (feedId: string | undefined) => {
+    if (!feedId) return;
+    if (!window.confirm('Are you sure you want to delete this feed item? This action cannot be undone.')) return;
+
+    try {
+      await deleteDoc(doc(db, 'feedInventory', feedId));
+      setFeeds(prev => prev.filter(feed => feed.id !== feedId));
+      setStatusMessage('Feed item deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting feed item: ', error);
+      alert('Could not delete the feed item. Please try again.');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -114,7 +130,7 @@ const FeedInventoryPage: React.FC = () => {
         </h1>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="inline-flex items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#606c38]"
         >
           {showAddForm ? 'Cancel' : <><Plus className="-ml-1 mr-2 h-5 w-5" /> Add Feed</>}
         </button>
@@ -155,11 +171,18 @@ const FeedInventoryPage: React.FC = () => {
               <textarea name="notes" value={formData.notes} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm" rows={2}></textarea>
             </div>
             <div className="flex justify-end">
-              <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+              <button type="submit" className="inline-flex items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f]">
+                <Save className="mr-2 h-4 w-4" />
                 Save Feed
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {statusMessage && (
+        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
+          {statusMessage}
         </div>
       )}
 
@@ -222,9 +245,19 @@ const FeedInventoryPage: React.FC = () => {
                   </button>
                   <button 
                     onClick={() => handleUpdateQuantity(feed.id!, feed.quantity, feed.lowStockThreshold, 50)}
-                    className="flex-1 py-1.5 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                    className="flex-1 rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white hover:bg-[#4f5a2f]"
                   >
                     Restock
+                  </button>
+                </div>
+                <div className="mt-3 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => void handleDeleteFeed(feed.id)}
+                    className="inline-flex w-full items-center justify-center rounded-lg bg-[#c1121f] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a] sm:w-auto"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
                   </button>
                 </div>
               </div>

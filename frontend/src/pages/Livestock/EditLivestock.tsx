@@ -285,7 +285,7 @@ const EditLivestock: React.FC = () => {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-400"
+              className="inline-flex justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#606c38] disabled:bg-[#606c38]/60"
             >
               {saving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Update Livestock</>}
             </button>

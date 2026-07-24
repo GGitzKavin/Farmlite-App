@@ -33,6 +33,12 @@ const createInitialAnimalForm = (): AnimalFormValues => ({
   weight: '',
 });
 
+const labelClassName = 'block text-sm font-medium text-gray-700 mb-1.5';
+const inputClassName =
+  'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 shadow-sm';
+const iconInputClassName =
+  'block w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-3 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 shadow-sm';
+
 const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => {
   const [formData, setFormData] = useState<AnimalFormValues>(createInitialAnimalForm);
   const ageInMonths = formData.birthDate
@@ -70,27 +76,24 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_220px]">
-        {/* Basic Info */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-            <Tag className="w-3 h-3" /> Basic Info
+    <form onSubmit={handleSubmit} className="p-4 sm:p-5">
+      <div className="space-y-5">
+        <section className="rounded-xl border border-gray-200 bg-gray-50/40 p-4">
+          <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
+            <Tag className="h-4 w-4 text-green-600" /> Basic Info
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1">Tag ID *</label>
-              <input required type="text" name="animalId" value={formData.animalId} onChange={handleFormChange} placeholder="eg- 001" className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" />
+              <label className={labelClassName}>Tag ID *</label>
+              <input required type="text" name="animalId" value={formData.animalId} onChange={handleFormChange} placeholder="eg- 001" className={inputClassName} />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1">Name</label>
-              <input type="text" name="animalName" value={formData.animalName} onChange={handleFormChange} placeholder="e.g., Bessie" className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" />
+              <label className={labelClassName}>Name</label>
+              <input type="text" name="animalName" value={formData.animalName} onChange={handleFormChange} placeholder="e.g., Bessie" className={inputClassName} />
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1">Species</label>
-              <select name="species" value={formData.species} onChange={handleFormChange} className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white">
+              <label className={labelClassName}>Species</label>
+              <select name="species" value={formData.species} onChange={handleFormChange} className={inputClassName}>
                 <option>Dairy Cattle</option>
                 <option>Cattle (Beef)</option>
                 <option>Sheep/Goats</option>
@@ -100,19 +103,19 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1">Breed</label>
-              <input type="text" name="breed" value={formData.breed} onChange={handleFormChange} placeholder="e.g., Angus" className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" />
+              <label className={labelClassName}>Breed</label>
+              <input type="text" name="breed" value={formData.breed} onChange={handleFormChange} placeholder="e.g., Friesian" className={inputClassName} />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Physical Details */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-            <Info className="w-3 h-3" /> Physical Details
+        <section className="rounded-xl border border-gray-200 bg-white p-4">
+          <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
+            <Info className="h-4 w-4 text-green-600" /> Physical Details
           </h3>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="block text-xs font-bold text-gray-500 mb-1">Birth Date</label>
+            <label className={labelClassName}>Birth Date</label>
             <div className="relative group">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-green-500 transition-colors pointer-events-none" />
               <input 
@@ -120,14 +123,13 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
                 name="birthDate" 
                 value={formData.birthDate} 
                 onChange={handleFormChange} 
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white cursor-pointer" 
+                className={`${iconInputClassName} cursor-pointer`}
                 onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.showPicker?.()}
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1">Age (Months)</label>
+              <label className={labelClassName}>Age (Months)</label>
               <input
                 type="number"
                 min="0"
@@ -136,26 +138,25 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
                 onChange={handleFormChange}
                 readOnly={Boolean(formData.birthDate)}
                 placeholder={formData.birthDate ? 'Auto-calculated' : 'Enter age in months'}
-                className={`block w-full rounded-md p-2 text-sm font-bold ${
+                className={`block w-full rounded-lg px-3 py-2.5 text-sm font-medium shadow-sm ${
                   formData.birthDate
                     ? 'bg-gray-50 border border-gray-200 text-gray-500'
-                    : 'border-gray-300 border focus:ring-green-500 focus:border-green-500 shadow-sm'
+                    : 'border border-gray-300 bg-white focus:border-green-500 focus:ring-2 focus:ring-green-500'
                 }`}
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1">Weight (kg)</label>
+              <label className={labelClassName}>Weight (kg)</label>
               <div className="relative">
                 <Weight className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                <input type="number" name="weight" value={formData.weight} onChange={handleFormChange} placeholder="0.0" className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" />
+                <input type="number" name="weight" value={formData.weight} onChange={handleFormChange} placeholder="0.0" className={iconInputClassName} />
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Save Button */}
-        <div className="flex items-end lg:justify-end">
-          <button disabled={saving} type="submit" className="w-full inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-md text-sm font-bold hover:bg-green-700 shadow-md transition-all disabled:bg-green-400 h-[42px] lg:min-w-[220px]">
+        <div className="flex justify-end border-t border-gray-100 pt-4">
+          <button disabled={saving} type="submit" className="inline-flex w-full items-center justify-center rounded-lg bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60 sm:w-auto sm:min-w-[180px]">
             {saving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Save Livestock</>}
           </button>
         </div>

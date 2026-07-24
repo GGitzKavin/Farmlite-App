@@ -4,7 +4,7 @@ import { doc, getDoc, collection, query, where, getDocs, writeBatch } from 'fire
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import type { Livestock, HealthRecord, Vaccination } from '../../types';
-import { ArrowLeft, Trash2, Activity, Syringe, Wheat, FileText } from 'lucide-react';
+import { ArrowLeft, Trash2, Activity, Syringe, FileText, Pencil } from 'lucide-react';
 import {
   getDerivedHealthStatus,
   getHealthBadgeStyle,
@@ -23,7 +23,7 @@ const LivestockDetail: React.FC = () => {
   const [vaccinations, setVaccinations] = useState<Vaccination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('details'); // details, health, feed
+  const [activeTab, setActiveTab] = useState('details');
 
   useEffect(() => {
     const fetchAnimalAndRecords = async () => {
@@ -169,10 +169,11 @@ const LivestockDetail: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           {/* Edit is not implemented yet, just a placeholder link */}
-          <Link to={`/livestock/edit/${animal.id}`} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+          <Link to={`/livestock/edit/${animal.id}`} className="inline-flex items-center rounded-lg bg-[#669bbc] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5588a7]">
+            <Pencil className="mr-1.5 h-4 w-4" />
             Edit
           </Link>
-          <button onClick={handleDelete} className="inline-flex items-center px-3 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50">
+          <button onClick={handleDelete} className="inline-flex items-center rounded-lg bg-[#c1121f] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a]">
             <Trash2 className="w-4 h-4 mr-2" />
             Delete
           </button>
@@ -187,9 +188,6 @@ const LivestockDetail: React.FC = () => {
           </button>
           <button onClick={() => setActiveTab('health')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'health' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
             Medical & Vaccines
-          </button>
-          <button onClick={() => setActiveTab('feed')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'feed' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
-            Feed Records
           </button>
         </nav>
       </div>
@@ -304,24 +302,6 @@ const LivestockDetail: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'feed' && (
-          <div className="p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><Wheat className="w-5 h-5 mr-2 text-gray-400" /> Feed Information</h3>
-            <div className="bg-green-50 p-6 rounded-lg border border-green-200 text-center">
-              <Wheat className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h4 className="text-lg font-medium text-green-900 mb-2">Optimize Feeding with AI</h4>
-              <p className="text-sm text-green-700 mb-6">
-                Get a scientifically calculated feed plan based on this {displaySpecies.toLowerCase()}'s weight, age, and health status.
-              </p>
-              <Link 
-                to={`/ai-feed?id=${animal.id}`}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
-              >
-                Get AI Recommendation
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

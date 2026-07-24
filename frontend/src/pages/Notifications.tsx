@@ -323,7 +323,7 @@ const NotificationRow: React.FC<{
           type="button"
           onClick={() => onAction(notification.actionPath)}
           disabled={!notification.actionPath}
-          className="inline-flex items-center justify-center rounded-lg border border-green-200 bg-green-50 px-3.5 py-2 text-sm font-semibold text-green-700 transition hover:bg-green-100 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
+          className="inline-flex items-center justify-center rounded-lg border border-[#606c38]/30 bg-white px-4 py-2 text-sm font-medium text-[#606c38] shadow-sm transition hover:bg-[#fefae0] disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
         >
           {notification.actionLabel ?? 'Review'}
           <ArrowRight className="ml-2 h-4 w-4" />

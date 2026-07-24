@@ -11,7 +11,7 @@ import {
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import type { HealthRecord, Livestock } from '../types';
-import { Activity, Plus, Search } from 'lucide-react';
+import { Activity, Plus, Search, Pencil, Trash2, Save } from 'lucide-react';
 
 interface HealthRecordFormData {
   livestockId: string;
@@ -375,7 +375,7 @@ const HealthTracking: React.FC = () => {
             setFormData(createInitialHealthRecordForm());
             setStatusMessage(null);
           }}
-          className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="inline-flex items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#606c38]"
         >
           {showAddForm ? 'Cancel' : <><Plus className="-ml-1 mr-2 h-5 w-5" /> Add Record</>}
         </button>
@@ -471,7 +471,8 @@ const HealthTracking: React.FC = () => {
             </div>
 
             <div className="flex justify-end">
-              <button type="submit" disabled={!canSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400">
+              <button type="submit" disabled={!canSubmit} className="inline-flex items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60">
+                <Save className="mr-2 h-4 w-4" />
                 {editingRecord ? 'Update Health Record' : 'Save Health Record'}
               </button>
             </div>
@@ -550,19 +551,21 @@ const HealthTracking: React.FC = () => {
                   )}
                 </div>
 
-                <div className="mt-4 flex justify-end gap-3 border-t border-gray-100 pt-4">
+                <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-gray-100 pt-4">
                   <button
                     type="button"
                     onClick={() => handleEdit(record)}
-                    className="text-sm font-medium text-green-700 hover:text-green-800"
+                    className="inline-flex items-center rounded-lg bg-[#669bbc] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5588a7]"
                   >
+                    <Pencil className="mr-1.5 h-4 w-4" />
                     Edit
                   </button>
                   <button
                     type="button"
                     onClick={() => void handleDelete(record)}
-                    className="text-sm font-medium text-red-600 hover:text-red-700"
+                    className="inline-flex items-center rounded-lg bg-[#c1121f] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a]"
                   >
+                    <Trash2 className="mr-1.5 h-4 w-4" />
                     Delete
                   </button>
                 </div>

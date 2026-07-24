@@ -26,7 +26,7 @@ interface BatchEntryFormProps {
 
 const createInitialBatchForm = (initialData?: Partial<BatchFormSubmission>): BatchFormValues => ({
   batchName: initialData?.batchName ?? '',
-  species: initialData?.species ?? 'Cattle (Beef)',
+  species: initialData?.species ?? 'Dairy Cattle',
   headCount: String(initialData?.headCount ?? 1),
   feedType: initialData?.feedType ?? '',
   vaccinationStatus: initialData?.vaccinationStatus ?? 'Up to date',
@@ -68,13 +68,12 @@ const BatchEntryForm: React.FC<BatchEntryFormProps> = ({ onSave, saving, initial
           <div>
             <label className="block text-xs font-bold text-gray-500 mb-1">Species</label>
             <select name="species" value={batchForm.species} onChange={handleFormChange} className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white">
+              <option>Dairy Cattle</option>
               <option>Cattle (Beef)</option>
-              <option>Cattle (Dairy)</option>
-              <option>Poultry</option>
+              <option>Sheep/Goats</option>
               <option>Chicken</option>
               <option>Duck</option>
               <option>Swine</option>
-              <option>Sheep/Goats</option>
             </select>
           </div>
         </div>
@@ -124,12 +123,12 @@ const BatchEntryForm: React.FC<BatchEntryFormProps> = ({ onSave, saving, initial
             <button
               onClick={onCancel}
               type="button"
-              className="w-full inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md text-sm font-bold hover:bg-gray-50 shadow-sm transition-all h-[42px] mt-auto font-medium"
+              className="w-full inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 h-[42px] mt-auto"
             >
               Cancel
             </button>
           )}
-          <button disabled={saving} type="submit" className="w-full inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-md text-sm font-bold hover:bg-green-700 shadow-md transition-all disabled:bg-green-400 h-[42px] mt-auto">
+          <button disabled={saving} type="submit" className="w-full inline-flex items-center justify-center rounded-lg bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60 h-[42px] mt-auto">
             {saving ? (initialData ? 'Updating...' : 'Saving...') : <><Save className="w-4 h-4 mr-2" /> {initialData ? 'Update Batch' : 'Save Batch'}</>}
           </button>
         </div>

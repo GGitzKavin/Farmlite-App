@@ -3,7 +3,7 @@ import { collection, query, where, getDocs, addDoc, doc, deleteDoc, updateDoc, s
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import type { Vaccination, Livestock, Batch } from '../types';
-import { Syringe, Plus, Search, Calendar, Eye, Trash2 } from 'lucide-react';
+import { Syringe, Plus, Search, Calendar, Eye, Trash2, Pencil, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 type VaccinationTargetType = 'Individual Animal' | 'Batch';
@@ -250,7 +250,7 @@ const VaccinationManagement: React.FC = () => {
               setShowAddForm(true);
             }
           }}
-          className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="inline-flex items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#606c38]"
         >
           {showAddForm ? 'Cancel' : <><Plus className="-ml-1 mr-2 h-5 w-5" /> Add Record</>}
         </button>
@@ -340,7 +340,8 @@ const VaccinationManagement: React.FC = () => {
               <textarea name="notes" value={formData.notes} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm" rows={2}></textarea>
             </div>
             <div className="flex justify-end">
-              <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+              <button type="submit" className="inline-flex items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f]">
+                <Save className="mr-2 h-4 w-4" />
                 Save Record
               </button>
             </div>
@@ -375,55 +376,59 @@ const VaccinationManagement: React.FC = () => {
               const overdue = isOverdue(vac.nextDueDate);
               return (
                 <li key={vac.id}>
-                  <div className="px-4 py-4 sm:px-6 hover:bg-gray-50">
-                    <div className="flex items-center justify-between">
+                  <div className="px-4 py-4 hover:bg-gray-50 sm:pl-6 sm:pr-10">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div className="flex items-center">
                         <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center ${overdue ? 'bg-red-100' : 'bg-green-100'}`}>
                           <Syringe className={`h-6 w-6 ${overdue ? 'text-red-600' : 'text-green-600'}`} />
                         </div>
                         <div className="ml-4">
-                          <p className="text-sm font-medium text-green-600 truncate">{vac.vaccineName}</p>
+                          <p className="text-lg font-semibold text-gray-900 truncate">{vac.vaccineName}</p>
                           <p className="text-sm text-gray-500">
                             {vac.targetType === 'Batch' || vac.batchId ? 'Batch' : 'Animal'}:{' '}
                             <span className="font-medium text-gray-900">{getTargetName(vac)}</span>
                           </p>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-2">
-                        <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex w-full flex-col items-start gap-2 lg:w-auto lg:min-w-[280px] lg:items-end lg:pr-4">
+                        <div className="flex items-center text-sm text-gray-700">
                           <Calendar className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
                           <p>
-                            Due: <span className={overdue ? 'text-red-600 font-bold' : 'text-gray-900'}>{vac.nextDueDate}</span>
+                            <span className="font-medium">Due:</span>{' '}
+                            <span className={overdue ? 'text-red-600 font-bold' : 'text-gray-900 font-medium'}>{vac.nextDueDate}</span>
                           </p>
                         </div>
-                        <div className="mt-1 flex items-center text-sm text-gray-500">
-                          <p>Given: {vac.vaccinationDate}</p>
+                        <div className="flex items-center text-sm text-gray-700">
+                          <p><span className="font-medium">Given:</span> {vac.vaccinationDate}</p>
                         </div>
                         
                         {/* Action Buttons */}
-                        <div className="flex items-center gap-3 mt-1">
+                        <div className="flex flex-wrap items-center justify-end gap-2 mt-1">
                           {vac.livestockId && (
                             <button
                               onClick={() => navigate(`/livestock/${vac.livestockId}`)}
-                              className="text-slate-400 hover:text-green-600 transition-colors p-1"
+                              className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
                               title="View Animal Profile"
                             >
-                              <Eye className="h-4 w-4" />
+                              <Eye className="mr-1.5 h-4 w-4" />
+                              View
                             </button>
                           )}
                           <button
                             onClick={() => handleEdit(vac)}
-                            className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                            className="inline-flex items-center rounded-lg bg-[#669bbc] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5588a7]"
                             title="Edit Record"
                           >
+                            <Pencil className="mr-1.5 h-4 w-4" />
                             Edit
                           </button>
                           <button
                             onClick={() => handleDelete(vac.id!)}
-                            className="text-slate-400 hover:text-red-600 transition-colors p-1"
+                            className="inline-flex items-center rounded-lg bg-[#c1121f] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a]"
                             title="Delete Record"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="mr-1.5 h-4 w-4" />
+                            Delete
                           </button>
                         </div>
                       </div>

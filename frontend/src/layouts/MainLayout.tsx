@@ -46,7 +46,7 @@ const MainLayout: React.FC = () => {
   ];
 
   return (
-    <div className="h-screen flex overflow-hidden bg-gray-50">
+    <div className="h-screen flex overflow-hidden bg-[#fefae0]">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
@@ -56,19 +56,19 @@ const MainLayout: React.FC = () => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex flex-col items-center justify-center pt-10 pb-8 px-4 mb-8 border-b border-gray-200 relative text-center">
+      <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-[#bc6c25] border-r border-[#a85f20] transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex flex-col items-center justify-center pt-10 pb-8 px-4 mb-8 border-b border-[#d79552]/60 relative text-center">
           <img 
             src={logo} 
             alt="FarmLite Logo" 
             className="w-32 h-auto object-contain mx-auto mb-4"
             loading="eager"
           />
-          <span className="text-4xl font-extrabold tracking-tight leading-tight text-green-900">
+          <span className="text-4xl font-extrabold tracking-tight leading-tight text-white">
             FarmLite
           </span>
           <button 
-            className="absolute top-4 right-4 lg:hidden text-gray-500 hover:text-gray-700"
+            className="absolute top-4 right-4 lg:hidden text-[#fefae0] hover:text-white"
             onClick={() => setSidebarOpen(false)}
           >
             <X className="h-8 w-8" />
@@ -86,12 +86,12 @@ const MainLayout: React.FC = () => {
                   to={item.path}
                   className={`group flex items-center px-4 py-4 text-xl font-semibold rounded-md ${
                     isActive 
-                      ? 'bg-green-50 text-green-700' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-[#fefae0] text-[#3f250d]' 
+                      : 'text-[#fff8dc] hover:bg-[#d79552] hover:text-white'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <Icon className={`mr-4 flex-shrink-0 h-7 w-7 ${isActive ? 'text-green-600' : 'text-gray-400 group-hover:text-gray-500'}`} />
+                  <Icon className={`mr-4 flex-shrink-0 h-7 w-7 ${isActive ? 'text-[#606c38]' : 'text-[#fff8dc] group-hover:text-white'}`} />
                   {item.name}
                 </Link>
               );
@@ -99,7 +99,7 @@ const MainLayout: React.FC = () => {
           </nav>
         </div>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-[#d79552]/60">
           <div className="space-y-1">
             {bottomNavItems.map((item) => {
               const Icon = item.icon;
@@ -110,21 +110,21 @@ const MainLayout: React.FC = () => {
                   to={item.path}
                   className={`group flex items-center px-4 py-4 text-xl font-semibold rounded-md ${
                     isActive 
-                      ? 'bg-green-50 text-green-700' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-[#fefae0] text-[#3f250d]' 
+                      : 'text-[#fff8dc] hover:bg-[#d79552] hover:text-white'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <Icon className={`mr-4 flex-shrink-0 h-7 w-7 ${isActive ? 'text-green-600' : 'text-gray-400 group-hover:text-gray-500'}`} />
+                  <Icon className={`mr-4 flex-shrink-0 h-7 w-7 ${isActive ? 'text-[#606c38]' : 'text-[#fff8dc] group-hover:text-white'}`} />
                   {item.name}
                 </Link>
               );
             })}
             <button
               onClick={handleLogout}
-              className="w-full group flex items-center px-4 py-4 text-xl font-semibold rounded-md text-red-600 hover:bg-red-50"
+              className="w-full group flex items-center px-4 py-4 text-xl font-semibold rounded-md text-white hover:bg-[#c1121f]"
             >
-              <LogOut className="mr-4 flex-shrink-0 h-7 w-7 text-red-500 group-hover:text-red-600" />
+              <LogOut className="mr-4 flex-shrink-0 h-7 w-7 text-red-100 group-hover:text-white" />
               Sign Out
             </button>
           </div>
@@ -134,7 +134,7 @@ const MainLayout: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Topbar for mobile */}
-        <div className="lg:hidden flex items-center justify-between bg-white border-b border-gray-200 p-4">
+        <div className="lg:hidden flex items-center justify-between bg-[#fefae0] border-b border-[#eadfa9] p-4">
           <div className="flex items-center">
             <img 
               src={logo} 
@@ -151,7 +151,7 @@ const MainLayout: React.FC = () => {
           </button>
         </div>
 
-        <main className="flex-1 overflow-y-auto focus:outline-none p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto bg-[#fefae0] focus:outline-none p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

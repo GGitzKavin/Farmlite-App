@@ -23,35 +23,33 @@ const LivestockList: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-5 relative">
       <ErrorBoundary>
         {/* Toast Notification */}
         {successMessage && (
           <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
-            <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
+            <div className="bg-[#606c38] text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
               <CheckCircle className="w-5 h-5" />
               <span className="font-bold">{successMessage}</span>
             </div>
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Livestock Management</h1>
-            <p className="text-sm text-gray-500">Manage individual animals and group batches</p>
-          </div>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <h1 className="text-3xl font-bold text-gray-900">Livestock Management</h1>
         </div>
 
         {/* Tabs and Primary Search */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between px-6 bg-gray-50/50">
-            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          <div className="border-b border-gray-200 bg-gray-50/60 px-4 sm:px-5">
+            <div className="flex flex-col gap-3 py-3 lg:flex-row lg:items-center lg:justify-between">
+            <nav className="-mb-px flex space-x-6" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab('individual')}
                 className={`
-                  flex items-center py-4 px-1 border-b-2 font-bold text-sm whitespace-nowrap transition-all
+                  flex items-center py-2.5 px-1 border-b-2 font-semibold text-sm whitespace-nowrap transition-all
                   ${activeTab === 'individual'
-                    ? 'border-green-500 text-green-600'
+                    ? 'border-[#606c38] text-[#606c38]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
                 `}
               >
@@ -61,9 +59,9 @@ const LivestockList: React.FC = () => {
               <button
                 onClick={() => setActiveTab('batch')}
                 className={`
-                  flex items-center py-4 px-1 border-b-2 font-bold text-sm whitespace-nowrap transition-all
+                  flex items-center py-2.5 px-1 border-b-2 font-semibold text-sm whitespace-nowrap transition-all
                   ${activeTab === 'batch'
-                    ? 'border-green-500 text-green-600'
+                    ? 'border-[#606c38] text-[#606c38]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
                 `}
               >
@@ -72,37 +70,37 @@ const LivestockList: React.FC = () => {
               </button>
             </nav>
 
-            <div className="py-3 flex flex-col sm:flex-row gap-3 md:w-1/2 lg:w-1/3">
+            <div className="flex w-full flex-col gap-2 sm:flex-row lg:max-w-xl">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder={`Search ${activeTab === 'individual' ? 'animals' : 'batches'}...`}
-                  className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md bg-white text-sm focus:ring-green-500 focus:border-green-500"
+                  className="block h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-3 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="relative">
+              <div className="relative sm:w-48">
                 <select
-                  className="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 rounded-md bg-white"
+                  className="block h-10 w-full rounded-lg border border-gray-300 bg-white pl-3 pr-10 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={filterSpecies}
                   onChange={(e) => setFilterSpecies(e.target.value)}
                 >
                   <option value="">All Species</option>
-                  <option value="Cattle (Beef)">Cattle (Beef)</option>
-                  <option value="Cattle (Dairy)">Cattle (Dairy)</option>
-                  <option value="Poultry">Poultry</option>
-                  <option value="Chicken">Chicken</option>
-                  <option value="Duck">Duck</option>
-                  <option value="Swine">Swine</option>
-                  <option value="Sheep/Goats">Sheep/Goats</option>
+                  <option value="dairy-cattle">Dairy Cattle</option>
+                  <option value="cattle-beef">Cattle (Beef)</option>
+                  <option value="sheep-goats">Sheep/Goats</option>
+                  <option value="chicken">Chicken</option>
+                  <option value="duck">Duck</option>
+                  <option value="swine">Swine</option>
                 </select>
               </div>
             </div>
+            </div>
           </div>
 
-          <div className="p-6 bg-white min-h-[400px]">
+          <div className="p-4 sm:p-5 bg-white min-h-[400px]">
             <ErrorBoundary fallback={
               <div className="p-12 text-center">
                 <AlertCircle className="w-12 h-12 text-orange-500 mx-auto mb-4" />

@@ -51,6 +51,24 @@ export const getDisplaySpecies = (species: unknown) => {
   return speciesText || 'Unknown';
 };
 
+export const getSpeciesFilterValue = (species: unknown) => {
+  const normalizedSpecies = getDisplaySpecies(species)
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (normalizedSpecies === 'dairy cattle') return 'dairy-cattle';
+  if (normalizedSpecies === 'cattle (beef)') return 'cattle-beef';
+  if (normalizedSpecies === 'sheep/goats') return 'sheep-goats';
+  if (normalizedSpecies === 'chicken') return 'chicken';
+  if (normalizedSpecies === 'duck') return 'duck';
+  if (normalizedSpecies === 'swine') return 'swine';
+
+  return normalizedSpecies
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
 export const parseDateValue = (value: unknown): Date | null => {
   if (!value) return null;
 

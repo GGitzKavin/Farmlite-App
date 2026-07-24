@@ -356,7 +356,7 @@ const Profile: React.FC = () => {
             <button
               type="submit"
               disabled={savingSection === 'owner'}
-              className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:bg-green-400"
+              className="inline-flex items-center rounded-lg bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60"
             >
               <Save className="mr-2 h-4 w-4" />
               {savingSection === 'owner' ? 'Saving...' : 'Save Owner Details'}
@@ -432,7 +432,7 @@ const Profile: React.FC = () => {
             <button
               type="submit"
               disabled={savingSection === 'farm'}
-              className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:bg-green-400"
+              className="inline-flex items-center rounded-lg bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60"
             >
               <Save className="mr-2 h-4 w-4" />
               {savingSection === 'farm' ? 'Saving...' : 'Save Farm Details'}
@@ -459,7 +459,7 @@ const Profile: React.FC = () => {
               type="button"
               onClick={() => void handleSendPasswordReset()}
               disabled={savingSection === 'security'}
-              className="inline-flex items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:bg-green-400"
+              className="inline-flex items-center justify-center rounded-lg bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60"
             >
               {savingSection === 'security'
                 ? 'Sending...'

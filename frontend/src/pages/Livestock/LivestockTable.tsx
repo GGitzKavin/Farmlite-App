@@ -4,7 +4,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import type { HealthRecord, Livestock, Vaccination } from '../../types';
 import { Link } from 'react-router-dom';
-import { Plus, Search } from 'lucide-react';
+import { Eye, Plus, Search } from 'lucide-react';
 import AnimalEntryForm, { type AnimalFormSubmission } from './AnimalEntryForm';
 import {
   getDerivedHealthStatus,
@@ -13,6 +13,7 @@ import {
   getVaccinationStatus,
   getVaccinationStatusStyle,
   getDisplaySpecies,
+  getSpeciesFilterValue,
   toText,
   type DerivedHealthStatus,
   type DerivedVaccinationStatus,
@@ -174,7 +175,9 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
       name.includes(searchTerm.toLowerCase()) ||
       id.includes(searchTerm.toLowerCase()) ||
       breed.includes(searchTerm.toLowerCase());
-    const matchesFilter = filterSpecies ? species === filterSpecies : true;
+    const matchesFilter = filterSpecies
+      ? getSpeciesFilterValue(species) === filterSpecies
+      : true;
     
     return matchesSearch && matchesFilter;
   });
@@ -189,11 +192,11 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       {/* Persistent Inline Entry Card */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-gray-100 bg-gray-50">
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+        <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 sm:px-5">
+          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <Plus className="w-5 h-5 text-green-600" /> Add New Animal
           </h2>
         </div>
@@ -202,46 +205,47 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
 
       {/* Livestock Grid */}
       {filteredList.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredList.map((animal) => {
             const healthStatus = healthStatusByAnimalId[animal.id] ?? 'Healthy';
             const vaccinationStatus = vaccinationStatusByAnimalId[animal.id] ?? 'No records';
 
             return (
-              <div key={animal?.id} className="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200">
-                <div className="p-5">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">{animal?.animalName}</h3>
-                      <p className="text-sm text-gray-500">ID: {animal?.animalId}</p>
+              <div key={animal?.id} className="bg-[#dda15e] overflow-hidden shadow-sm rounded-xl border border-[#bc6c25]/60 hover:shadow-md transition-all duration-200">
+                <div className="p-4">
+                  <div className="flex justify-between items-start gap-3">
+                    <div className="min-w-0">
+                      <h3 className="truncate text-lg font-semibold text-[#2f1d0c]">{animal?.animalName}</h3>
+                      <p className="text-sm text-[#4a2d11]">ID: {animal?.animalId}</p>
                     </div>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${getHealthBadgeStyle(healthStatus)}`}>
+                    <span className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-semibold ${getHealthBadgeStyle(healthStatus)}`}>
                       {healthStatus}
                     </span>
                   </div>
-                  <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="mt-4 grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Species</p>
-                      <p className="mt-0.5 text-sm text-gray-900 font-medium">{getDisplaySpecies(animal?.species)}</p>
+                      <p className="text-xs text-[#5a3614] font-medium uppercase tracking-wide">Species</p>
+                      <p className="mt-0.5 text-sm text-[#2f1d0c] font-semibold">{getDisplaySpecies(animal?.species)}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Breed</p>
-                      <p className="mt-0.5 text-sm text-gray-900 font-medium">{animal?.breed}</p>
+                      <p className="text-xs text-[#5a3614] font-medium uppercase tracking-wide">Breed</p>
+                      <p className="mt-0.5 text-sm text-[#2f1d0c] font-medium">{animal?.breed}</p>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Age/Weight</p>
-                      <p className="mt-0.5 text-sm text-gray-900 font-medium">{animal?.age} mo / {animal?.weight}kg</p>
+                    <div className="rounded-lg bg-[#fefae0]/80 p-2.5">
+                      <p className="text-xs text-[#5a3614] font-medium uppercase tracking-wide">Age / Weight</p>
+                      <p className="mt-0.5 text-sm text-[#2f1d0c] font-medium">{animal?.age} mo / {animal?.weight} kg</p>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Vaccines</p>
-                      <p className={`mt-0.5 text-sm font-bold ${getVaccinationStatusStyle(vaccinationStatus)}`}>
+                    <div className="rounded-lg bg-[#fefae0]/80 p-2.5">
+                      <p className="text-xs text-[#5a3614] font-medium uppercase tracking-wide">Vaccines</p>
+                      <p className={`mt-0.5 text-sm font-semibold ${getVaccinationStatusStyle(vaccinationStatus)}`}>
                         {vaccinationStatus}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-5 py-3 border-t border-gray-100">
-                  <Link to={`/livestock/${animal?.id}`} className="text-sm font-bold text-green-600 hover:text-green-700 w-full text-center block transition-colors">
+                <div className="bg-[#bc6c25]/15 px-4 py-3 border-t border-[#bc6c25]/40">
+                  <Link to={`/livestock/${animal?.id}`} className="inline-flex w-full items-center justify-center rounded-lg border border-[#606c38]/30 bg-[#fefae0] px-3 py-2 text-center text-sm font-medium text-[#3f250d] transition-colors hover:bg-white">
+                    <Eye className="mr-2 h-4 w-4" />
                     View Full Profile
                   </Link>
                 </div>

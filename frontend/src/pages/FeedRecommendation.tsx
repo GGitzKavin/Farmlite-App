@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
-import { AlertCircle, Bot, Droplets, Info, Leaf, Loader2, Sparkles, Wheat } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import { AlertCircle, Bot, Download, Droplets, Leaf, Loader2, Sparkles, Wheat } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
@@ -232,6 +233,11 @@ const toNumberWithDefault = (value: string, fallback: number) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
+const makePdfSafeName = (value: string) => {
+  const safeName = value.trim().replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '');
+  return safeName || 'Animal';
+};
+
 const FeedRecommendation: React.FC = () => {
   const { currentUser } = useAuth();
   const [searchParams] = useSearchParams();
@@ -240,6 +246,7 @@ const FeedRecommendation: React.FC = () => {
   const [loadingAnimals, setLoadingAnimals] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [pdfError, setPdfError] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
   const [recommendation, setRecommendation] = useState<FeedRecommendationResponse | null>(null);
   const [formData, setFormData] = useState<FeedFormData>(createInitialFormData);
@@ -381,6 +388,7 @@ const FeedRecommendation: React.FC = () => {
 
     setSubmitting(true);
     setError('');
+    setPdfError('');
     setValidationMessage('');
     setRecommendation(null);
 
@@ -426,26 +434,127 @@ const FeedRecommendation: React.FC = () => {
     }
   };
 
+  const handleDownloadPdf = () => {
+    if (!recommendation) return;
+
+    try {
+      setPdfError('');
+
+      const report = new jsPDF();
+      const margin = 16;
+      const maxTextWidth = 178;
+      const pageHeight = report.internal.pageSize.getHeight();
+      let yPosition = 18;
+
+      const ensureSpace = (requiredHeight: number) => {
+        if (yPosition + requiredHeight <= pageHeight - margin) return;
+        report.addPage();
+        yPosition = 18;
+      };
+
+      const addWrappedText = (
+        text: string,
+        options: { fontSize?: number; fontStyle?: 'normal' | 'bold'; indent?: number } = {}
+      ) => {
+        const fontSize = options.fontSize ?? 10;
+        const indent = options.indent ?? 0;
+        report.setFont('helvetica', options.fontStyle ?? 'normal');
+        report.setFontSize(fontSize);
+
+        const lineHeight = fontSize * 0.42;
+        const lines = report.splitTextToSize(text, maxTextWidth - indent);
+        ensureSpace(lines.length * lineHeight + 2);
+        report.text(lines, margin + indent, yPosition);
+        yPosition += lines.length * lineHeight + 2;
+      };
+
+      const addSectionTitle = (title: string) => {
+        yPosition += 3;
+        ensureSpace(10);
+        addWrappedText(title, { fontSize: 13, fontStyle: 'bold' });
+      };
+
+      const addRow = (label: string, value: string | number | null | undefined) => {
+        addWrappedText(`${label}: ${value ?? 'N/A'}`);
+      };
+
+      const addBullet = (text: string) => {
+        addWrappedText(`- ${text}`, { indent: 4 });
+      };
+
+      const generatedAt = new Date();
+      const reportDate = generatedAt.toISOString().slice(0, 10);
+      const animalName = formData.animalName || recommendation.animalName || selectedAnimal?.animalName || 'Animal';
+      const animalTag = formData.animalId || recommendation.animalId || selectedAnimal?.animalId || 'N/A';
+
+      report.setFont('helvetica', 'bold');
+      report.setFontSize(17);
+      report.text('FarmLite AI Feed Recommendation Report', margin, yPosition);
+      yPosition += 10;
+
+      addSectionTitle('Report Metadata');
+      addRow('Generated date and time', generatedAt.toLocaleString());
+      addRow('Animal name', animalName);
+      addRow('Animal ID/tag', animalTag);
+
+      addSectionTitle('Selected Animal Details');
+      addRow('Breed', formData.breed);
+      addRow('Age in months', formData.ageMonths);
+      addRow('Weight in kg', formData.weightKg);
+      addRow('Health status', formData.healthStatus);
+      addRow('Lactation stage', formData.lactationStage);
+      addRow('Days in milk', formData.daysInMilk);
+      addRow('Previous week average yield', `${formData.previousWeekAvgYield} L`);
+      addRow('Body condition score', formData.bodyConditionScore);
+      addRow('Ambient temperature', `${formData.ambientTemperatureC} C`);
+      addRow('Humidity', `${formData.humidityPercent}%`);
+
+      addSectionTitle('Prediction');
+      addRow('Predicted milk yield', `${recommendation.prediction.predictedMilkYieldL} L/day`);
+      addRow('Model used', recommendation.prediction.modelUsed);
+      addRow('Target', recommendation.prediction.target);
+
+      addSectionTitle('Feed Recommendation');
+      addRow('Total feed', `${recommendation.recommendation.totalFeedKg} kg`);
+      addRow('Roughage', `${recommendation.recommendation.roughageKg} kg`);
+      addRow('Concentrate', `${recommendation.recommendation.concentrateKg} kg`);
+      addRow('Mineral mix', `${recommendation.recommendation.mineralMixKg} kg`);
+      addRow('Water advice', recommendation.recommendation.waterAdvice);
+      addRow('Feeding frequency', recommendation.recommendation.feedingFrequency);
+      addRow('Confidence level', recommendation.recommendation.confidenceLevel);
+
+      addSectionTitle('Explanation');
+      recommendation.recommendation.explanation.forEach(addBullet);
+
+      addSectionTitle('Warnings');
+      if (recommendation.recommendation.warnings.length > 0) {
+        recommendation.recommendation.warnings.forEach(addBullet);
+      } else {
+        addWrappedText('No major warnings for this input.');
+      }
+
+      addSectionTitle('Limitations / Disclaimer');
+      recommendation.limitations.forEach(addBullet);
+      addBullet(recommendation.recommendation.disclaimer);
+
+      addSectionTitle('Footer');
+      addWrappedText(
+        'Generated by FarmLite. This recommendation is advisory only and should not replace guidance from a veterinarian or qualified animal nutritionist.'
+      );
+
+      report.save(`FarmLite_AI_Feed_Report_${makePdfSafeName(animalName)}_${reportDate}.pdf`);
+    } catch (downloadError) {
+      console.error('Could not generate AI feed PDF report:', downloadError);
+      setPdfError('Could not generate PDF report. Please try again.');
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Bot className="h-6 w-6 mr-2 text-green-600" />
-          AI Feed Recommendation
-        </h1>
-        <p className="text-sm text-gray-500">
-          Generate advisory cattle feed suggestions using milk-yield prediction and rule-based nutrition logic.
-        </p>
-      </div>
-
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-        <div className="flex gap-3">
-          <Info className="h-5 w-5 flex-shrink-0 text-blue-500" />
-          <p className="text-sm text-blue-800">
-            This module is intended for dairy cattle. Basic animal details are auto-filled from Livestock, while milk and lactation details can be adjusted before generating the recommendation.
-          </p>
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+        <Bot className="h-6 w-6 mr-2 text-green-600" />
+        AI Feed Recommendation
+      </h1>
 
       {error ? (
         <div className="rounded-md border border-red-200 bg-red-50 p-4">
@@ -606,7 +715,7 @@ const FeedRecommendation: React.FC = () => {
             <button
               type="submit"
               disabled={submitting || loadingAnimals}
-              className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:bg-green-400"
+              className="inline-flex w-full items-center justify-center rounded-lg border border-transparent bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4f5a2f] disabled:bg-[#606c38]/60"
             >
               {submitting ? (
                 <>
@@ -626,6 +735,27 @@ const FeedRecommendation: React.FC = () => {
         <div className="space-y-6">
           {recommendation ? (
             <>
+              <div className="flex flex-col gap-3 rounded-lg border border-green-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Generated Recommendation</h2>
+                  <p className="text-sm text-gray-500">Download a PDF copy for your project demo or farm notes.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDownloadPdf}
+                  className="inline-flex w-full items-center justify-center rounded-lg border border-[#606c38] bg-white px-4 py-2 text-sm font-medium text-[#606c38] shadow-sm hover:bg-[#fefae0] sm:w-auto"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download PDF Report
+                </button>
+              </div>
+
+              {pdfError ? (
+                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  {pdfError}
+                </div>
+              ) : null}
+
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div className="rounded-lg border border-green-200 bg-white p-5 shadow-sm md:col-span-1">
                   <p className="text-sm font-medium text-gray-500">Predicted Milk Yield</p>
