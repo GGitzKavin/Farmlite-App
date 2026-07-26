@@ -1,0 +1,221 @@
+{
+  "total_row_count": 250000,
+  "row_counts": {
+    "train": 175000,
+    "validation": 37500,
+    "test": 37500
+  },
+  "percentages": {
+    "train": 70.0,
+    "validation": 15.0,
+    "test": 15.0
+  },
+  "random_seed": 42,
+  "split_version": "phase3_split_v1",
+  "split_algorithm": "Two-stage sklearn train_test_split: 70% train, then equal validation/test halves of the remaining 30%; Feed_Type stratified",
+  "stratification_column": "feed_type",
+  "feed_type_distribution": {
+    "train": {
+      "Concentrates": {
+        "count": 21897,
+        "percentage": 12.512571
+      },
+      "Crop_Residues": {
+        "count": 21891,
+        "percentage": 12.509143
+      },
+      "Dry_Fodder": {
+        "count": 22098,
+        "percentage": 12.627429
+      },
+      "Green_Fodder": {
+        "count": 21856,
+        "percentage": 12.489143
+      },
+      "Hay": {
+        "count": 21794,
+        "percentage": 12.453714
+      },
+      "Mixed_Feed": {
+        "count": 21806,
+        "percentage": 12.460571
+      },
+      "Pasture_Grass": {
+        "count": 21903,
+        "percentage": 12.516
+      },
+      "Silage": {
+        "count": 21755,
+        "percentage": 12.431429
+      }
+    },
+    "validation": {
+      "Concentrates": {
+        "count": 4693,
+        "percentage": 12.514667
+      },
+      "Crop_Residues": {
+        "count": 4691,
+        "percentage": 12.509333
+      },
+      "Dry_Fodder": {
+        "count": 4736,
+        "percentage": 12.629333
+      },
+      "Green_Fodder": {
+        "count": 4683,
+        "percentage": 12.488
+      },
+      "Hay": {
+        "count": 4670,
+        "percentage": 12.453333
+      },
+      "Mixed_Feed": {
+        "count": 4672,
+        "percentage": 12.458667
+      },
+      "Pasture_Grass": {
+        "count": 4693,
+        "percentage": 12.514667
+      },
+      "Silage": {
+        "count": 4662,
+        "percentage": 12.432
+      }
+    },
+    "test": {
+      "Concentrates": {
+        "count": 4692,
+        "percentage": 12.512
+      },
+      "Crop_Residues": {
+        "count": 4691,
+        "percentage": 12.509333
+      },
+      "Dry_Fodder": {
+        "count": 4735,
+        "percentage": 12.626667
+      },
+      "Green_Fodder": {
+        "count": 4683,
+        "percentage": 12.488
+      },
+      "Hay": {
+        "count": 4670,
+        "percentage": 12.453333
+      },
+      "Mixed_Feed": {
+        "count": 4673,
+        "percentage": 12.461333
+      },
+      "Pasture_Grass": {
+        "count": 4694,
+        "percentage": 12.517333
+      },
+      "Silage": {
+        "count": 4662,
+        "percentage": 12.432
+      }
+    }
+  },
+  "feed_quantity_kg_summary": {
+    "train": {
+      "count": 175000,
+      "missing_count": 0,
+      "mean": 12.023848,
+      "standard_deviation": 3.959758,
+      "minimum": 3.0,
+      "p25": 9.3,
+      "median": 12.0,
+      "p75": 14.7,
+      "maximum": 25.0
+    },
+    "validation": {
+      "count": 37500,
+      "missing_count": 0,
+      "mean": 11.993896,
+      "standard_deviation": 3.965326,
+      "minimum": 3.0,
+      "p25": 9.3,
+      "median": 12.0,
+      "p75": 14.7,
+      "maximum": 25.0
+    },
+    "test": {
+      "count": 37500,
+      "missing_count": 0,
+      "mean": 11.995979,
+      "standard_deviation": 3.955742,
+      "minimum": 3.0,
+      "p25": 9.3,
+      "median": 12.0,
+      "p75": 14.7,
+      "maximum": 25.0
+    }
+  },
+  "milk_yield_l_summary": {
+    "train": {
+      "count": 175000,
+      "missing_count": 0,
+      "mean": 8.729748,
+      "standard_deviation": 5.766628,
+      "minimum": 0.0,
+      "p25": 4.34,
+      "median": 7.62,
+      "p75": 12.3,
+      "maximum": 36.42
+    },
+    "validation": {
+      "count": 37500,
+      "missing_count": 0,
+      "mean": 8.709638,
+      "standard_deviation": 5.755969,
+      "minimum": 0.0,
+      "p25": 4.31,
+      "median": 7.63,
+      "p75": 12.3,
+      "maximum": 36.05
+    },
+    "test": {
+      "count": 37500,
+      "missing_count": 0,
+      "mean": 8.702181,
+      "standard_deviation": 5.755934,
+      "minimum": 0.0,
+      "p25": 4.35,
+      "median": 7.58,
+      "p75": 12.27,
+      "maximum": 35.34
+    }
+  },
+  "feed_quantity_distribution_difference": {
+    "standardized_mean_difference_by_split": {
+      "train": 0.00219,
+      "validation": 0.005373,
+      "test": 0.004847
+    },
+    "materiality_threshold": 0.1,
+    "maximum_standardized_mean_difference": 0.005373,
+    "material_difference_detected": false,
+    "interpretation": "This is a split-balance diagnostic for the synthetic dataset, not a biological threshold."
+  },
+  "milk_yield_distribution_difference": {
+    "standardized_mean_difference_by_split": {
+      "train": 0.001241,
+      "validation": 0.002248,
+      "test": 0.003542
+    },
+    "materiality_threshold": 0.1,
+    "maximum_standardized_mean_difference": 0.003542,
+    "material_difference_detected": false,
+    "interpretation": "This is a split-balance diagnostic for the synthetic dataset, not a biological threshold."
+  },
+  "checks": {
+    "cattle_id_overlap_count": 0,
+    "duplicate_source_row_count": 0,
+    "missing_assignment_count": 0,
+    "each_row_assigned_once": true,
+    "manifest_columns_are_traceability_only": true
+  },
+  "reproducibility_hash_sha256": "A7C206B058CBD04AED428F9C44228653AF4CBEB6F86D90317A0A847BC02DADFB"
+}

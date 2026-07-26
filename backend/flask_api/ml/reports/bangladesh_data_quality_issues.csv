@@ -1,0 +1,170 @@
+file,sheet,source_row_number,cow_id,observation_id,column,issue_type,original_value,severity,recommended_action
+ALL_WORKBOOKS,N/A,N/A,N/A,UNCLEAR,date/time,DATE_AND_TIME_FIELDS_ABSENT,No observation date or timestamp,HIGH,Obtain dates/times before temporal or causal feature use.
+ALL_WORKBOOKS,N/A,N/A,N/A,UNCLEAR,temperature/humidity,ENVIRONMENTAL_INPUTS_ABSENT,"No numeric temperature, humidity, or THI values",HIGH,Obtain underlying environmental measurements.
+Blood metabolites.xlsx,Sheet1,2,102,UNCLEAR,Animal ID,MIXED_IDENTIFIER_CELL_TYPES,102,MEDIUM,Confirm identifier storage type; do not alter raw cells.
+Blood metabolites.xlsx,Sheet1,3,102,UNCLEAR,Animal ID,MIXED_IDENTIFIER_CELL_TYPES,102,MEDIUM,Confirm identifier storage type; do not alter raw cells.
+Blood metabolites.xlsx,Sheet1,HEADER,ALL,UNCLEAR,ALT (U/I),UNIT_CONFLICT_WITH_METADATA,Workbook U/I; metadata U/L,HIGH,Obtain source-owner confirmation of the intended unit.
+Blood metabolites.xlsx,Sheet1,HEADER,ALL,UNCLEAR,AST (U/I),UNIT_CONFLICT_WITH_METADATA,Workbook U/I; metadata U/L,HIGH,Obtain source-owner confirmation of the intended unit.
+"DMI, milk yield and composition.xlsx",Sheet1,137,111,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,138,111,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,139,111,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,140,111,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,141,111,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,142,111,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,143,111,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,144,111,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,145,111,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,146,111,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,147,111,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,148,111,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,149,111,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,150,111,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,151,111,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,111,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,287,211,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,288,211,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,289,211,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,290,211,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,291,211,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,292,211,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,293,211,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,294,211,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,295,211,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,296,211,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,297,211,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,298,211,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,299,211,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,300,211,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,301,211,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,211,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,437,311,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,438,311,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,439,311,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,440,311,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,441,311,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,442,311,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,443,311,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,444,311,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,445,311,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,446,311,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,447,311,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,448,311,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,449,311,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,450,311,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,451,311,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,311,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,587,411,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,588,411,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,589,411,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,590,411,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,591,411,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,592,411,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,593,411,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,594,411,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,595,411,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,596,411,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,597,411,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,598,411,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,599,411,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,600,411,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,601,411,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,411,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,737,511,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,738,511,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,739,511,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,740,511,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,741,511,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,742,511,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,743,511,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,744,511,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,745,511,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,746,511,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,747,511,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,748,511,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,749,511,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,750,511,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,751,511,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,511,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+"DMI, milk yield and composition.xlsx",Sheet1,N/A,N/A,UNCLEAR,DMI (kg),HEADER_PERIOD_AMBIGUITY,Header says kg; metadata variable name says kg per day,MEDIUM,Retain kg/cow/day only with metadata and repository provenance.
+metadata.docx,N/A,N/A,N/A,UNCLEAR,DMI,DMI_COLLECTION_PROTOCOL_UNCLEAR,Feed offered/refused method is not documented,HIGH,Obtain the DMI measurement protocol before model training.
+metadata.docx,N/A,N/A,N/A,UNCLEAR,File 2,SOURCE_FILENAME_MISMATCH,"metadata: milk yield and composition.xlsx; supplied: DMI, milk yield and composition.xlsx",MEDIUM,Confirm that the supplied workbook is the documented File 2.
+metadata.docx,N/A,N/A,N/A,UNCLEAR,Milk Yield,MILK_COLLECTION_PROTOCOL_UNCLEAR,Exact collection/instrument method is not documented,MEDIUM,Obtain the milk recording protocol.
+metadata.docx,N/A,N/A,N/A,UNCLEAR,laboratory fields,LABORATORY_METHODS_UNCLEAR,Exact instruments and assays are absent,MEDIUM,Obtain laboratory methods and quality-control details.
+metadata.docx,N/A,N/A,N/A,UNCLEAR,missing codes,MISSING_VALUE_CODES_UNDOCUMENTED,UNCLEAR,LOW,Confirm source missing-value conventions.
+physiological responses.xlsx,Sheet1,10,101,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,11,101,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,12,101,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,12,101,UNCLEAR,THI Range,INCONSISTENT_THI_LABEL_FORMAT,T2 (≥80),LOW,Use metadata-supported mapping only in a future approved step.
+physiological responses.xlsx,Sheet1,13,101,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,14,101,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,15,101,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,152,201,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,152,201,UNCLEAR,Genetic group,INCONSISTENT_GENETIC_GROUP_LABEL_FORMAT,HF_50,MEDIUM,Confirm documented equivalence before any future harmonization.
+physiological responses.xlsx,Sheet1,153,201,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,154,201,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,155,201,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,156,201,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,157,201,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,158,201,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,159,201,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,16,101,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,160,201,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,161,201,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,162,201,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,163,201,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,164,201,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,165,201,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,166,201,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,201,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,2,101,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,2,101,UNCLEAR,THI Range,INCONSISTENT_THI_LABEL_FORMAT,T0 (≤75),LOW,Use metadata-supported mapping only in a future approved step.
+physiological responses.xlsx,Sheet1,3,101,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,302,301,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,302,301,UNCLEAR,Genetic group,INCONSISTENT_GENETIC_GROUP_LABEL_FORMAT,HF_62.5,MEDIUM,Confirm documented equivalence before any future harmonization.
+physiological responses.xlsx,Sheet1,303,301,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,304,301,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,305,301,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,306,301,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,307,301,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,308,301,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,309,301,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,310,301,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,311,301,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,312,301,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,313,301,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,314,301,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,315,301,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,316,301,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,301,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,4,101,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,452,401,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,452,401,UNCLEAR,Genetic group,INCONSISTENT_GENETIC_GROUP_LABEL_FORMAT,HF_75,MEDIUM,Confirm documented equivalence before any future harmonization.
+physiological responses.xlsx,Sheet1,453,401,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,454,401,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,455,401,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,456,401,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,457,401,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,458,401,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,459,401,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,460,401,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,461,401,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,462,401,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,463,401,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,464,401,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,465,401,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,466,401,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,401,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,5,101,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,6,101,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,602,501,T0-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,602,501,UNCLEAR,Genetic group,INCONSISTENT_GENETIC_GROUP_LABEL_FORMAT,HF_87.5,MEDIUM,Confirm documented equivalence before any future harmonization.
+physiological responses.xlsx,Sheet1,603,501,T0-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,604,501,T0-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,605,501,T0-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,606,501,T0-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,607,501,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,608,501,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,609,501,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,610,501,T1-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,611,501,T1-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,612,501,T2-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,613,501,T2-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,614,501,T2-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,615,501,T2-R4,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,616,501,T2-R5,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,501,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,7,101,T1-R1,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,7,101,UNCLEAR,THI Range,INCONSISTENT_THI_LABEL_FORMAT,T1 (75-80),LOW,Use metadata-supported mapping only in a future approved step.
+physiological responses.xlsx,Sheet1,8,101,T1-R2,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.
+physiological responses.xlsx,Sheet1,9,101,T1-R3,Animal ID,CROSS_WORKBOOK_COW_ID_COVERAGE_MISMATCH,101,HIGH,Confirm cow ID with source owner before joining physiology to DMI/milk or blood.

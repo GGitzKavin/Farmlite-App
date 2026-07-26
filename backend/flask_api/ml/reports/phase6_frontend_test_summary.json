@@ -1,0 +1,63 @@
+{
+  "report_version": "phase6_frontend_test_summary_v1",
+  "phase": "6",
+  "generated_date": "2026-07-26",
+  "frontend_focused": {
+    "command": "npm.cmd run test:phase6",
+    "framework": "Node built-in test runner",
+    "tests_run": 49,
+    "passed": 49,
+    "failed": 0,
+    "result": "PASS"
+  },
+  "frontend_build": {
+    "default_flag_command": "npm.cmd run build",
+    "default_flag_result": "PASS",
+    "candidate_enabled_command": "$env:VITE_BANGLADESH_CANDIDATE_UI_ENABLED='true'; npm.cmd run build",
+    "candidate_enabled_result": "PASS",
+    "typecheck_result": "PASS",
+    "non_blocking_warning": "Vite reported an existing large output chunk warning."
+  },
+  "frontend_lint": {
+    "phase6_scoped_command": "npm.cmd exec -- eslint src/api/bangladeshCandidate.ts src/api/baseUrl.ts src/components/ResearchPredictions.tsx src/config/featureFlags.ts src/config/publicFeatureFlag.ts src/features/bangladeshCandidate.ts src/utils/researchPredictionPdf.ts tests/phase6_frontend.test.mjs",
+    "phase6_scoped_result": "PASS",
+    "complete_command": "npm.cmd run lint",
+    "complete_result": "FAIL_EXISTING_REPOSITORY_LINT_DEBT",
+    "complete_error_count": 7,
+    "phase6_new_module_error_count": 0,
+    "affected_existing_files": [
+      "frontend/src/components/ErrorBoundary.tsx",
+      "frontend/src/pages/FeedRecommendation.tsx",
+      "frontend/src/pages/HealthTracking.tsx",
+      "frontend/src/pages/Livestock/LivestockTable.tsx",
+      "frontend/src/pages/Notifications.tsx",
+      "frontend/src/pages/Profile.tsx"
+    ]
+  },
+  "backend": {
+    "complete_command": "venv\\Scripts\\python.exe -m unittest discover -s tests -v",
+    "tests_run": 307,
+    "passed": 307,
+    "failed": 0,
+    "errors": 0,
+    "result": "PASS",
+    "snapshot_note": "Historical frontend/PDF freeze hashes were advanced to the authorized Phase 6 snapshot; backend runtime logic was unchanged.",
+    "compileall_command": "venv\\Scripts\\python.exe -m compileall -q config api ml tests",
+    "compileall_result": "PASS"
+  },
+  "local_development": {
+    "binding": "127.0.0.1:4174",
+    "http_status": 200,
+    "public_exposure": false,
+    "result": "PASS"
+  },
+  "manual_scenarios": {
+    "total": 12,
+    "pass": 11,
+    "pass_with_limitation": 1,
+    "report": "ml/reports/phase6_manual_ui_validation.csv"
+  },
+  "git_diff_check": "PASS_WITH_LINE_ENDING_WARNINGS_ONLY",
+  "git_staged_files": 0,
+  "production_approved": false
+}

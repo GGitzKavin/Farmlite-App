@@ -170,15 +170,15 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
     const id = animal?.animalId?.toLowerCase() || '';
     const breed = animal?.breed?.toLowerCase() || '';
     const species = animal?.species || '';
-    
-    const matchesSearch = 
+
+    const matchesSearch =
       name.includes(searchTerm.toLowerCase()) ||
       id.includes(searchTerm.toLowerCase()) ||
       breed.includes(searchTerm.toLowerCase());
     const matchesFilter = filterSpecies
       ? getSpeciesFilterValue(species) === filterSpecies
       : true;
-    
+
     return matchesSearch && matchesFilter;
   });
 
@@ -224,7 +224,7 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-xs text-[#5a3614] font-medium uppercase tracking-wide">Species</p>
+                      <p className="text-xs text-[#5a3614] font-medium uppercase tracking-wide">Livestock</p>
                       <p className="mt-0.5 text-sm text-[#2f1d0c] font-semibold">{getDisplaySpecies(animal?.species)}</p>
                     </div>
                     <div>
@@ -258,10 +258,10 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
           <div className="bg-white p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
             <Search className="h-8 w-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-bold text-gray-900">No animals found</h3>
+          <h3 className="text-lg font-bold text-gray-900">No livestock found</h3>
           <p className="text-gray-500 mt-1 max-w-xs mx-auto">
-            {searchTerm || filterSpecies 
-              ? "We couldn't find any animals matching your current search criteria." 
+            {searchTerm || filterSpecies
+              ? "We couldn't find any livestock matching your current search criteria."
               : "You haven't added any livestock yet. Use the form above to add your first animal."}
           </p>
         </div>

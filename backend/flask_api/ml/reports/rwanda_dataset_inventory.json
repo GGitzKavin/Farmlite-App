@@ -1,0 +1,187 @@
+{
+  "audit_version": "rwanda_phase_4_5a_audit_v1",
+  "audit_scope": "READ_ONLY_NO_TRAINING",
+  "source_directory": "datasets/external/raw/rwanda_dairy_nutrition",
+  "expected_file_count": 4,
+  "all_required_files_detected": true,
+  "all_files_open_successfully": true,
+  "files": [
+    {
+      "filename": "Metadata.xlsx",
+      "relative_path": "datasets/external/raw/rwanda_dairy_nutrition/Metadata.xlsx",
+      "extension": ".xlsx",
+      "file_size_bytes": 12680,
+      "sha256": "DD3001D696D217C19A6C3198A46F262BFD849BBCD061B62CDF974FE4E778E068",
+      "last_modified_utc": "2026-07-25T17:37:49.090669+00:00",
+      "opens_successfully": true,
+      "excel_sheet_count": 1,
+      "sheet_names": [
+        "Metadata"
+      ],
+      "formulas_exist": false,
+      "formula_count": 0,
+      "merged_cells_exist": false,
+      "hidden_sheets_exist": false,
+      "comments_or_notes_exist": false,
+      "contains_metadata_or_citation_information": true,
+      "contains_licence_information": false,
+      "package_properties": {
+        "creator": "250788820737",
+        "last_modified_by": "250788820737",
+        "created": "2025-03-14T09:14:25Z",
+        "modified": "2025-03-17T08:37:13Z"
+      },
+      "archive_entry_count": 10,
+      "sheets": [
+        {
+          "sheet_name": "Metadata",
+          "state": "visible",
+          "row_count": 73,
+          "column_count": 3,
+          "dimension": "A1:D74",
+          "formula_count": 0,
+          "merged_cell_count": 0,
+          "comment_count": 0
+        }
+      ],
+      "docx_table_count": null
+    },
+    {
+      "filename": "Specific data recorded on individual cows under lactation in Rwanda 2020-2021.xlsx",
+      "relative_path": "datasets/external/raw/rwanda_dairy_nutrition/Specific data recorded on individual cows under lactation in Rwanda 2020-2021.xlsx",
+      "extension": ".xlsx",
+      "file_size_bytes": 46769,
+      "sha256": "4DADD19810DEA87E1EC2CAE915369E59AB71BF396893496151D8B2F50CF6C876",
+      "last_modified_utc": "2026-07-25T17:37:50.068608+00:00",
+      "opens_successfully": true,
+      "excel_sheet_count": 1,
+      "sheet_names": [
+        "Raw data"
+      ],
+      "formulas_exist": true,
+      "formula_count": 8,
+      "merged_cells_exist": false,
+      "hidden_sheets_exist": false,
+      "comments_or_notes_exist": false,
+      "contains_metadata_or_citation_information": true,
+      "contains_licence_information": false,
+      "package_properties": {
+        "creator": "250788820737",
+        "last_modified_by": "250788820737",
+        "created": "2024-04-18T14:41:38Z",
+        "modified": "2025-03-17T08:37:49Z"
+      },
+      "archive_entry_count": 13,
+      "sheets": [
+        {
+          "sheet_name": "Raw data",
+          "state": "visible",
+          "row_count": 107,
+          "column_count": 43,
+          "dimension": "A1:AQ107",
+          "formula_count": 8,
+          "merged_cell_count": 0,
+          "comment_count": 0
+        }
+      ],
+      "docx_table_count": null
+    },
+    {
+      "filename": "Different fodders components in the samples.xlsx",
+      "relative_path": "datasets/external/raw/rwanda_dairy_nutrition/Different fodders components in the samples.xlsx",
+      "extension": ".xlsx",
+      "file_size_bytes": 14417,
+      "sha256": "BA5F9180494FDE7DBC58B95EA4018A08915AE023719D4D453F09D18C25F79D0A",
+      "last_modified_utc": "2026-07-25T17:37:48.122552+00:00",
+      "opens_successfully": true,
+      "excel_sheet_count": 2,
+      "sheet_names": [
+        "Composites feeds",
+        "Sheet2"
+      ],
+      "formulas_exist": false,
+      "formula_count": 0,
+      "merged_cells_exist": false,
+      "hidden_sheets_exist": false,
+      "comments_or_notes_exist": false,
+      "contains_metadata_or_citation_information": true,
+      "contains_licence_information": false,
+      "package_properties": {
+        "creator": "250788820737",
+        "last_modified_by": "250788820737",
+        "created": "2025-03-14T07:50:25Z",
+        "modified": "2025-03-17T08:58:31Z"
+      },
+      "archive_entry_count": 11,
+      "sheets": [
+        {
+          "sheet_name": "Composites feeds",
+          "state": "visible",
+          "row_count": 108,
+          "column_count": 2,
+          "dimension": "A1:Q116",
+          "formula_count": 0,
+          "merged_cell_count": 0,
+          "comment_count": 0
+        },
+        {
+          "sheet_name": "Sheet2",
+          "state": "visible",
+          "row_count": 3,
+          "column_count": 2,
+          "dimension": "A1:B18",
+          "formula_count": 0,
+          "merged_cell_count": 0,
+          "comment_count": 0
+        }
+      ],
+      "docx_table_count": null
+    },
+    {
+      "filename": "Bucket feeding plan (Supplemental Table).docx",
+      "relative_path": "datasets/external/raw/rwanda_dairy_nutrition/Bucket feeding plan (Supplemental Table).docx",
+      "extension": ".docx",
+      "file_size_bytes": 15953,
+      "sha256": "B3192EEC974B2599C8607B4458825DA19C7919C87E2FEF263821A584D587493B",
+      "last_modified_utc": "2026-07-25T17:37:46.837570+00:00",
+      "opens_successfully": true,
+      "excel_sheet_count": null,
+      "sheet_names": [],
+      "formulas_exist": false,
+      "formula_count": 0,
+      "merged_cells_exist": false,
+      "hidden_sheets_exist": false,
+      "comments_or_notes_exist": false,
+      "contains_metadata_or_citation_information": true,
+      "contains_licence_information": false,
+      "package_properties": {
+        "creator": "250788820737",
+        "last_modified_by": "250788820737",
+        "created": "2025-03-17T08:19:00Z",
+        "modified": "2025-03-17T08:19:00Z"
+      },
+      "archive_entry_count": 12,
+      "sheets": [],
+      "docx_table_count": 1
+    }
+  ],
+  "repository_citation": {
+    "title": "Energy, protein, dry matter and water gap analysis in dairy cows kept under cut and carry fodder-based feeding system.",
+    "contributors": [
+      "Olive Umunezero",
+      "Charles Gachuiri",
+      "Mupenzi Mutimura"
+    ],
+    "repository": "Mendeley Data",
+    "version": "1",
+    "published": "2025-03-17",
+    "doi": "10.17632/6jf28ftxrr.1",
+    "url": "https://data.mendeley.com/datasets/6jf28ftxrr/1",
+    "licence": "CC BY 4.0",
+    "licence_scope_note": "The Mendeley dataset record declares CC BY 4.0. The related journal article has a separate CC BY-NC-ND 4.0 licence.",
+    "related_article_doi": "10.1016/j.anopes.2025.100097",
+    "related_article_url": "https://www.sciencedirect.com/science/article/pii/S2772694025000068",
+    "retrieved": "2026-07-25"
+  },
+  "raw_records_included": false
+}

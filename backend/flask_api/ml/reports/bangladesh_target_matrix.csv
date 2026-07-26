@@ -1,0 +1,11 @@
+desired_output,bangladesh_source,exact_field,unit,period,measurement_status,ml_suitability,rule_suitability,decision
+Dry-matter intake,"DMI, milk yield and composition.xlsx",DMI (kg),kg/cow/day,per cow per day,DIRECTLY_MEASURED,READY_WITH_LIMITATIONS,SUPPORTING_ANALYSIS_ONLY,READY_WITH_LIMITATIONS
+Milk yield,"DMI, milk yield and composition.xlsx",Milk Yield (L/day/cow),L/cow/day,per cow per day,OBSERVED,READY_WITH_LIMITATIONS,SUPPORTING_ANALYSIS_ONLY,READY_WITH_LIMITATIONS
+Feed/ration category,NONE,UNCLEAR,UNCLEAR,UNCLEAR,UNKNOWN,EXPERT_LABELS_REQUIRED,NOT_SUPPORTED,EXPERT_LABELS_REQUIRED
+Water advice,NONE,UNCLEAR,UNCLEAR,UNCLEAR,UNKNOWN,NOT_SUPPORTED,NOT_SUPPORTED,NOT_SUPPORTED
+Roughage quantity,NONE,UNCLEAR,UNCLEAR,UNCLEAR,UNKNOWN,NOT_SUPPORTED,NOT_SUPPORTED,NOT_SUPPORTED
+Concentrate quantity,NONE,UNCLEAR,UNCLEAR,UNCLEAR,UNKNOWN,NOT_SUPPORTED,NOT_SUPPORTED,NOT_SUPPORTED
+Mineral mix,NONE,UNCLEAR,UNCLEAR,UNCLEAR,UNKNOWN,NOT_SUPPORTED,NOT_SUPPORTED,NOT_SUPPORTED
+Heat-stress warning,"DMI, milk yield and composition.xlsx; physiological responses.xlsx",THI Range; physiological responses,category; field-specific,per observation,TREATMENT_ASSIGNED,READY_WITH_LIMITATIONS,SUPPORTING_ANALYSIS_ONLY,READY_WITH_LIMITATIONS
+Milk fat,"DMI, milk yield and composition.xlsx",Fat%,%,per observation,LABORATORY_MEASURED,ML_TARGET_CANDIDATE,SUPPORTING_ANALYSIS_ONLY,SUPPORTING_ANALYSIS_ONLY
+Milk protein,"DMI, milk yield and composition.xlsx",Protein %,%,per observation,LABORATORY_MEASURED,ML_TARGET_CANDIDATE,SUPPORTING_ANALYSIS_ONLY,SUPPORTING_ANALYSIS_ONLY

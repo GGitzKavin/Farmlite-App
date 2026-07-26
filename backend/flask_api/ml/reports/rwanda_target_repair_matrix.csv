@@ -1,0 +1,12 @@
+target,current_source_field,current_status,required_clarification,possible_repair,training_decision
+Measured daily milk,hand-milked yield,VERIFIED_MEASURED_MILK_L_COW_DAY,Confirm all daily milkings and row/cow independence.,None to target; supply IDs and collection detail.,READY_WITH_LIMITATIONS
+Total milk performance,Total milk performance,CALCULATED_TOTAL_MILK_L_COW_DAY,Confirm whether estimated calf allocation is required.,Keep measured and calculated targets separate with provenance.,WAITING_FOR_AUTHOR_RESPONSE
+Water provided/consumed,waterday,VERIFIED_WATER_PROVIDED_L_COW_DAY,Confirm no remaining water was measured and scope is per cow.,Canonicalize only as water_provided_l_cow_day after approval.,WAITING_FOR_AUTHOR_RESPONSE
+DMI,DMIcapacity (kgDM),BLOCKED_UNCLEAR_DEFINITION,Resolve capacity versus intake and 28 signed leftovers.,Preserve source and add approved recalculation separately.,WAITING_FOR_CORRECTED_DATA
+CP intake,Cpintakeingr,CALCULATED_INTAKE_DMI_DEPENDENT,Resolve DMI basis and confirm CP units.,Transparent rule calculation with audit columns.,RULE_ENGINE_ONLY
+CP requirement,TotalreqCP,MODEL_DERIVED_REQUIREMENT,Confirm guideline and 22 inconsistent CPmilk values.,Recalculate beside source after approval.,RULE_ENGINE_ONLY
+CP gap,gapCP,METADATA_FORMULA_CONFLICT,Approve repository formula over metadata.,Keep source plus separately versioned rule output.,WAITING_FOR_AUTHOR_RESPONSE
+ME intake,MEIntake,CALCULATED_INTAKE_DMI_DEPENDENT,Resolve DMI and supply G24/ME provenance.,Rule calculation after inputs are verified.,RULE_ENGINE_ONLY
+ME requirement,MEmaint+peakmilk,PARTIALLY_REPRODUCIBLE_REQUIREMENT,Resolve 20 ME-milk mismatches and 16 missing source rows.,Recalculate beside source after approval.,WAITING_FOR_CORRECTED_DATA
+ME gap,gapME,CALCULATED_GAP,Resolve upstream intake and requirement.,Transparent versioned rule after prerequisites.,WAITING_FOR_CORRECTED_DATA
+Feed/ration class,SAMPLE ID,OBSERVED_DIET_ONLY,Obtain nutritionist-approved or optimized ration labels.,No target repair from existing observed strings.,EXPERT_LABELS_REQUIRED

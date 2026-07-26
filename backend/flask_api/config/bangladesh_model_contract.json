@@ -1,0 +1,62 @@
+{
+  "contract_version": "bangladesh_hf_model_contract_v1",
+  "dataset": {
+    "name": "Bangladesh HF Cross",
+    "source_workbook": "datasets/external/raw/bangladesh_hf_cross/DMI, milk yield and composition.xlsx",
+    "source_sheet": "Sheet1",
+    "licence": "CC BY 4.0",
+    "doi": "10.17632/954f6g36sb.2",
+    "unique_cows": 50,
+    "records": 750,
+    "repeated_measurements": true
+  },
+  "models": {
+    "bangladesh_dmi_regressor": {
+      "target": "dry_matter_intake_kg_day",
+      "source_target": "DMI (kg)",
+      "target_definition": "Dry-matter intake in kilograms per cow per day",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "grouping_field": "cow_id"
+    },
+    "bangladesh_milk_yield_regressor": {
+      "target": "milk_yield_l_day",
+      "source_target": "Milk Yield (L/day/cow)",
+      "target_definition": "Measured milk yield in litres per cow per day",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "grouping_field": "cow_id"
+    }
+  },
+  "lineage_fields": [
+    "source_workbook",
+    "source_sheet",
+    "source_row_number",
+    "cow_id",
+    "replication",
+    "thi_category",
+    "genetic_group"
+  ],
+  "missing_value_policy": "Fail closed when cow ID, a required feature, or the task target is missing. No imputation is performed because the approved source contains no missing values in these fields.",
+  "unknown_category_policy": "OneHotEncoder(handle_unknown='ignore') permits unseen genetic-group and THI labels to transform without crashing; such predictions remain outside validated source support.",
+  "known_limitations": [
+    "DMI offered/refusal measurement protocol is not fully documented.",
+    "Numeric temperature, humidity, and THI values are absent.",
+    "THI is an assigned category.",
+    "Five physiology cow identifiers do not match the DMI/milk workbook.",
+    "Eight of FarmLite's current nine inputs are absent.",
+    "Genetic group maps only partially to FarmLite breed.",
+    "Same-day DMI and milk timing is unresolved.",
+    "Blood data is not available to ordinary FarmLite users.",
+    "Milk-composition outcomes are not prediction-time features.",
+    "No expert feed-recommendation labels exist.",
+    "Results apply to the study population and are not commercially validated."
+  ],
+  "production_approved": false,
+  "commercial_use_approved": false,
+  "veterinary_use_approved": false
+}

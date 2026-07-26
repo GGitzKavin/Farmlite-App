@@ -27,6 +27,8 @@ export interface Livestock {
   weight: number; // in kg or lbs
   birthDate: string;
   notes?: string;
+  batchId?: string;
+  batchName?: string;
   createdAt?: Timestamp | Date;
   updatedAt?: Timestamp | Date;
   userId: string; // to scope records per user if necessary, though it's single user, it's good practice. Wait, prompt says "single user type only... every registered user has access to all available features without separate admin permissions". We'll tie records to the user who created them or make them global if everyone is one farm. Let's tie it to `userId` so each farmer has their own farm data.
@@ -49,6 +51,7 @@ export interface FeedInventory {
   id?: string;
   feedName: string;
   quantity: number;
+  unit?: string;
   targetAnimal: string;
   stockLevel: 'High' | 'Medium' | 'Low' | 'Out of Stock';
   lowStockThreshold: number;

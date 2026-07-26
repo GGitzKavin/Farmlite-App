@@ -1,0 +1,478 @@
+{
+  "lock_version": "phase4_selection_lock_v1",
+  "selected_classifier_configuration": "feed_type_random_forest",
+  "selected_feed_quantity_design": "A",
+  "selected_feed_quantity_configuration": "feed_quantity_hist_gradient_boosting",
+  "selected_feed_quantity_design_a_configuration": "feed_quantity_hist_gradient_boosting",
+  "selected_feed_quantity_design_b_configuration": "feed_quantity_hist_gradient_boosting",
+  "selected_milk_yield_configuration": "milk_yield_hist_gradient_boosting",
+  "selected_milk_yield_feature_version": "FULL_NINE_FEATURES",
+  "selected_milk_yield_ablation_configuration": "milk_yield_hist_gradient_boosting",
+  "validation_selections": {
+    "feed_type": {
+      "task": "feed_type",
+      "selected_configuration_id": "feed_type_random_forest",
+      "selected_algorithm": "RandomForestClassifier",
+      "validation_metrics": {
+        "accuracy": 0.12696,
+        "balanced_accuracy": 0.12693082757259153,
+        "macro_precision": 0.12716236188078034,
+        "macro_recall": 0.12693082757259153,
+        "macro_f1": 0.12688909988368033,
+        "weighted_f1": 0.12689923538323464,
+        "labels": [
+          "Concentrates",
+          "Crop_Residues",
+          "Dry_Fodder",
+          "Green_Fodder",
+          "Hay",
+          "Mixed_Feed",
+          "Pasture_Grass",
+          "Silage"
+        ],
+        "per_class": {
+          "Concentrates": {
+            "precision": 0.13479013414106447,
+            "recall": 0.1327509056040912,
+            "f1": 0.13376274825550188,
+            "support": 4693,
+            "predicted_count": 4622
+          },
+          "Crop_Residues": {
+            "precision": 0.12408759124087591,
+            "recall": 0.1268386271583884,
+            "f1": 0.12544802867383512,
+            "support": 4691,
+            "predicted_count": 4795
+          },
+          "Dry_Fodder": {
+            "precision": 0.12172489082969433,
+            "recall": 0.14125844594594594,
+            "f1": 0.13076622361219703,
+            "support": 4736,
+            "predicted_count": 5496
+          },
+          "Green_Fodder": {
+            "precision": 0.12683982683982684,
+            "recall": 0.12513346145633142,
+            "f1": 0.12598086638718692,
+            "support": 4683,
+            "predicted_count": 4620
+          },
+          "Hay": {
+            "precision": 0.12916962384669978,
+            "recall": 0.11691648822269807,
+            "f1": 0.12273800157356413,
+            "support": 4670,
+            "predicted_count": 4227
+          },
+          "Mixed_Feed": {
+            "precision": 0.12316099201345103,
+            "recall": 0.1254280821917808,
+            "f1": 0.12428419936373276,
+            "support": 4672,
+            "predicted_count": 4758
+          },
+          "Pasture_Grass": {
+            "precision": 0.12722210323409724,
+            "recall": 0.12657148945237587,
+            "f1": 0.12689596240119633,
+            "support": 4693,
+            "predicted_count": 4669
+          },
+          "Silage": {
+            "precision": 0.13030373290053326,
+            "recall": 0.12054912054912055,
+            "f1": 0.12523676880222842,
+            "support": 4662,
+            "predicted_count": 4313
+          }
+        },
+        "confusion_matrix": [
+          [
+            623,
+            584,
+            700,
+            568,
+            537,
+            603,
+            558,
+            520
+          ],
+          [
+            551,
+            595,
+            684,
+            590,
+            532,
+            591,
+            580,
+            568
+          ],
+          [
+            579,
+            600,
+            669,
+            558,
+            562,
+            603,
+            625,
+            540
+          ],
+          [
+            540,
+            609,
+            682,
+            586,
+            539,
+            607,
+            563,
+            557
+          ],
+          [
+            579,
+            622,
+            705,
+            577,
+            546,
+            576,
+            568,
+            497
+          ],
+          [
+            593,
+            580,
+            677,
+            578,
+            509,
+            586,
+            604,
+            545
+          ],
+          [
+            598,
+            616,
+            682,
+            570,
+            502,
+            607,
+            594,
+            524
+          ],
+          [
+            559,
+            589,
+            697,
+            593,
+            500,
+            585,
+            577,
+            562
+          ]
+        ],
+        "predicted_class_distribution": {
+          "Concentrates": 4622,
+          "Crop_Residues": 4795,
+          "Dry_Fodder": 5496,
+          "Green_Fodder": 4620,
+          "Hay": 4227,
+          "Mixed_Feed": 4758,
+          "Pasture_Grass": 4669,
+          "Silage": 4313
+        },
+        "predicted_class_count": 8
+      },
+      "baseline_configuration_id": "feed_type_dummy_stratified",
+      "baseline_metrics": {
+        "accuracy": 0.12392,
+        "balanced_accuracy": 0.12392214422091186,
+        "macro_precision": 0.12396070099173911,
+        "macro_recall": 0.12392214422091186,
+        "macro_f1": 0.1239371343518743,
+        "weighted_f1": 0.12393471781362454,
+        "labels": [
+          "Concentrates",
+          "Crop_Residues",
+          "Dry_Fodder",
+          "Green_Fodder",
+          "Hay",
+          "Mixed_Feed",
+          "Pasture_Grass",
+          "Silage"
+        ],
+        "per_class": {
+          "Concentrates": {
+            "precision": 0.12516018795386588,
+            "recall": 0.12486682292776476,
+            "f1": 0.12501333333333334,
+            "support": 4693,
+            "predicted_count": 4682
+          },
+          "Crop_Residues": {
+            "precision": 0.12489270386266095,
+            "recall": 0.12406736303560008,
+            "f1": 0.12447866538338145,
+            "support": 4691,
+            "predicted_count": 4660
+          },
+          "Dry_Fodder": {
+            "precision": 0.12505263157894736,
+            "recall": 0.12542229729729729,
+            "f1": 0.1252371916508539,
+            "support": 4736,
+            "predicted_count": 4750
+          },
+          "Green_Fodder": {
+            "precision": 0.11423771524569509,
+            "recall": 0.11616485159086055,
+            "f1": 0.11519322392800424,
+            "support": 4683,
+            "predicted_count": 4762
+          },
+          "Hay": {
+            "precision": 0.13008307826847398,
+            "recall": 0.12740899357601712,
+            "f1": 0.1287321505841627,
+            "support": 4670,
+            "predicted_count": 4574
+          },
+          "Mixed_Feed": {
+            "precision": 0.12305427008834666,
+            "recall": 0.1252140410958904,
+            "f1": 0.12412476129853596,
+            "support": 4672,
+            "predicted_count": 4754
+          },
+          "Pasture_Grass": {
+            "precision": 0.12130304329189884,
+            "recall": 0.12060515661623696,
+            "f1": 0.1209530932791965,
+            "support": 4693,
+            "predicted_count": 4666
+          },
+          "Silage": {
+            "precision": 0.12790197764402408,
+            "recall": 0.12762762762762764,
+            "f1": 0.1277646553575263,
+            "support": 4662,
+            "predicted_count": 4652
+          }
+        },
+        "confusion_matrix": [
+          [
+            586,
+            582,
+            602,
+            598,
+            551,
+            614,
+            587,
+            573
+          ],
+          [
+            565,
+            582,
+            587,
+            631,
+            594,
+            599,
+            549,
+            584
+          ],
+          [
+            597,
+            565,
+            594,
+            599,
+            583,
+            577,
+            610,
+            611
+          ],
+          [
+            600,
+            625,
+            604,
+            544,
+            554,
+            613,
+            560,
+            583
+          ],
+          [
+            550,
+            582,
+            595,
+            642,
+            595,
+            554,
+            584,
+            568
+          ],
+          [
+            612,
+            563,
+            600,
+            572,
+            545,
+            585,
+            604,
+            591
+          ],
+          [
+            588,
+            597,
+            589,
+            609,
+            576,
+            621,
+            566,
+            547
+          ],
+          [
+            584,
+            564,
+            579,
+            567,
+            576,
+            591,
+            606,
+            595
+          ]
+        ],
+        "predicted_class_distribution": {
+          "Concentrates": 4682,
+          "Crop_Residues": 4660,
+          "Dry_Fodder": 4750,
+          "Green_Fodder": 4762,
+          "Hay": 4574,
+          "Mixed_Feed": 4754,
+          "Pasture_Grass": 4666,
+          "Silage": 4652
+        },
+        "predicted_class_count": 8
+      },
+      "selection_reason": "Highest validation Macro F1 within the controlled candidate set, then balanced accuracy and class coverage; simplicity breaks near-ties. It does not clear the documented baseline margin and remains research-only despite being the strongest candidate.",
+      "beats_baseline_on_validation": false,
+      "release_status": "RESEARCH_ONLY"
+    },
+    "feed_quantity_design_a": {
+      "task": "feed_quantity_design_a",
+      "selected_configuration_id": "feed_quantity_hist_gradient_boosting",
+      "selected_algorithm": "HistGradientBoostingRegressor",
+      "validation_metrics": {
+        "mae": 3.178907013974234,
+        "rmse": 3.9595673674084475,
+        "r2": 0.0028758132823899496,
+        "median_absolute_error": 2.710618515349972,
+        "mean_residual": -0.029976805441610705,
+        "residual_standard_deviation": 3.9595066864446693,
+        "minimum_prediction": 10.87404456473557,
+        "maximum_prediction": 13.26171838261149,
+        "negative_prediction_count": 0
+      },
+      "baseline_configuration_id": "feed_quantity_dummy_median",
+      "baseline_metrics": {
+        "mae": 3.1803226666666666,
+        "rmse": 3.965277863319711,
+        "r2": -2.3696424868990817e-06,
+        "median_absolute_error": 2.6999999999999993,
+        "mean_residual": -0.006103999999999992,
+        "residual_standard_deviation": 3.965326036548911,
+        "minimum_prediction": 12.0,
+        "maximum_prediction": 12.0,
+        "negative_prediction_count": 0
+      },
+      "selection_reason": "Lowest validation MAE, then RMSE and higher R² within the controlled Design A candidate set. It does not clear the baseline rule and remains research-only.",
+      "beats_baseline_on_validation": false,
+      "release_status": "RESEARCH_ONLY"
+    },
+    "feed_quantity_design_b": {
+      "task": "feed_quantity_design_b",
+      "selected_configuration_id": "feed_quantity_hist_gradient_boosting",
+      "selected_algorithm": "HistGradientBoostingRegressor",
+      "validation_metrics": {
+        "mae": 3.1787966561520804,
+        "rmse": 3.9598853514371775,
+        "r2": 0.0027156532102458053,
+        "median_absolute_error": 2.7102508107338634,
+        "mean_residual": -0.0307723592771675,
+        "residual_standard_deviation": 3.95981858121259,
+        "minimum_prediction": 11.033998922548328,
+        "maximum_prediction": 13.13987359358888,
+        "negative_prediction_count": 0
+      },
+      "baseline_configuration_id": "feed_quantity_dummy_median",
+      "baseline_metrics": {
+        "mae": 3.1803226666666666,
+        "rmse": 3.965277863319711,
+        "r2": -2.3696424868990817e-06,
+        "median_absolute_error": 2.6999999999999993,
+        "mean_residual": -0.006103999999999992,
+        "residual_standard_deviation": 3.965326036548911,
+        "minimum_prediction": 12.0,
+        "maximum_prediction": 12.0,
+        "negative_prediction_count": 0
+      },
+      "selection_reason": "Lowest validation MAE, then RMSE and higher R² within the controlled Design B candidate set. It does not clear the baseline rule and remains research-only.",
+      "beats_baseline_on_validation": false,
+      "release_status": "RESEARCH_ONLY"
+    },
+    "milk_yield": {
+      "task": "milk_yield",
+      "selected_configuration_id": "milk_yield_hist_gradient_boosting",
+      "selected_algorithm": "HistGradientBoostingRegressor",
+      "validation_metrics": {
+        "mae": 1.0809263037904226,
+        "rmse": 1.3525559677178034,
+        "r2": 0.9447814267553013,
+        "median_absolute_error": 0.9127717689180184,
+        "mean_residual": -0.004076437474686489,
+        "residual_standard_deviation": 1.3525678591214019,
+        "minimum_prediction": 0.5126322505266452,
+        "maximum_prediction": 29.566704862011818,
+        "negative_prediction_count": 0
+      },
+      "baseline_configuration_id": "milk_yield_dummy_median",
+      "baseline_metrics": {
+        "mae": 4.573894933333333,
+        "rmse": 5.858123188416804,
+        "r2": -0.035837647286341534,
+        "median_absolute_error": 3.8000000000000003,
+        "mean_residual": 1.0896383999999997,
+        "residual_standard_deviation": 5.7559689841083514,
+        "minimum_prediction": 7.62,
+        "maximum_prediction": 7.62,
+        "negative_prediction_count": 0
+      },
+      "selection_reason": "Lowest validation MAE, then RMSE and higher R² within the controlled candidate set. The full nine-feature contract remains selected; the previous-week-yield removal is a transparency ablation only. The candidate clears the validation baseline rule.",
+      "beats_baseline_on_validation": true,
+      "release_status": "CANDIDATE_ACCEPTED_WITH_LIMITATIONS"
+    },
+    "milk_yield_ablation_validation_metrics": {
+      "mae": 2.6163949101849164,
+      "rmse": 3.4031363652588427,
+      "r2": 0.6504306115001148,
+      "median_absolute_error": 2.1202442681038205,
+      "mean_residual": 3.2986306816580205e-05,
+      "residual_standard_deviation": 3.4031817411580336,
+      "minimum_prediction": 1.8518259959727914,
+      "maximum_prediction": 25.06276228218702,
+      "negative_prediction_count": 0
+    }
+  },
+  "selection_reasons": {
+    "feed_type": "Highest validation Macro F1 within the controlled candidate set, then balanced accuracy and class coverage; simplicity breaks near-ties. It does not clear the documented baseline margin and remains research-only despite being the strongest candidate.",
+    "feed_quantity_design": "Design B validation changes versus A: MAE +0.00%, RMSE -0.01%, R2 -0.000160. It does not clear all 1% MAE/RMSE and +0.01 R2 requirements; Design A is locked to avoid unjustified classifier dependency.",
+    "feed_quantity": "Lowest validation MAE, then RMSE and higher R² within the controlled Design A candidate set. It does not clear the baseline rule and remains research-only.",
+    "milk_yield": "Lowest validation MAE, then RMSE and higher R² within the controlled candidate set. The full nine-feature contract remains selected; the previous-week-yield removal is a transparency ablation only. The candidate clears the validation baseline rule.",
+    "milk_yield_feature_version": "The full nine-feature contract remains locked; ablation is a predeclared transparency comparison, not a selection search."
+  },
+  "random_seed": 42,
+  "contract_version": "1.0.0",
+  "split_manifest_sha256": "A7C206B058CBD04AED428F9C44228653AF4CBEB6F86D90317A0A847BC02DADFB",
+  "dataset_sha256": "26D6D08FE463893253A9923FEFEFC99642438934817F554BFE9E08DEEA2AD1B3",
+  "configuration_hash": "11866658AA41B96CAF6F2C4702C6DE671F8797A1EF51F774780E3EE6C7399DEE",
+  "selection_timestamp": "2026-07-25T16:54:00.136229+00:00",
+  "test_targets_inspected_before_lock": false
+}

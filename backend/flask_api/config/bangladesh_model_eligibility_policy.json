@@ -1,0 +1,150 @@
+{
+  "policy_version": "bangladesh_model_eligibility_policy_v1",
+  "phase": "5",
+  "status": "IMPLEMENTED_BACKEND_PROTOTYPE_DISABLED_BY_DEFAULT",
+  "applies_to": [
+    "bangladesh_dmi_regressor",
+    "bangladesh_milk_yield_regressor"
+  ],
+  "status_values": [
+    "ELIGIBLE",
+    "MISSING_REQUIRED_INPUT",
+    "UNKNOWN_GENETIC_GROUP",
+    "UNKNOWN_THI_CATEGORY",
+    "OUT_OF_SCOPE_POPULATION",
+    "INVALID_ENVIRONMENT_INPUT",
+    "ARTIFACT_UNAVAILABLE",
+    "ARTIFACT_HASH_MISMATCH",
+    "MODEL_ERROR",
+    "FALLBACK_REQUIRED"
+  ],
+  "required_model_features": [
+    "genetic_group",
+    "thi_category"
+  ],
+  "allowed_genetic_groups": [
+    "Local",
+    "HF50",
+    "HF62.5",
+    "HF75",
+    "HF87.5"
+  ],
+  "allowed_thi_categories": [
+    "T0",
+    "T1",
+    "T2"
+  ],
+  "forbidden_inference_features": [
+    "cow_id",
+    "blood_variables",
+    "physiology_variables",
+    "milk_composition",
+    "same_day_dmi",
+    "same_day_milk"
+  ],
+  "deterministic_evaluation_order": [
+    {
+      "priority": 1,
+      "check": "artifact_path_exists",
+      "failure_status": "ARTIFACT_UNAVAILABLE"
+    },
+    {
+      "priority": 2,
+      "check": "artifact_sha256_matches_review_inventory",
+      "failure_status": "ARTIFACT_HASH_MISMATCH"
+    },
+    {
+      "priority": 3,
+      "check": "metadata_exists_parses_and_matches_model_contract",
+      "failure_status": "ARTIFACT_UNAVAILABLE"
+    },
+    {
+      "priority": 4,
+      "check": "population_is_lactating_cow_with_documented_supported_genetic_group",
+      "failure_status": "OUT_OF_SCOPE_POPULATION"
+    },
+    {
+      "priority": 5,
+      "check": "genetic_group_temperature_and_humidity_are_present",
+      "failure_status": "MISSING_REQUIRED_INPUT"
+    },
+    {
+      "priority": 6,
+      "check": "genetic_group_is_exactly_supported",
+      "failure_status": "UNKNOWN_GENETIC_GROUP"
+    },
+    {
+      "priority": 7,
+      "check": "temperature_and_humidity_are_valid_under_thi_contract",
+      "failure_status": "INVALID_ENVIRONMENT_INPUT"
+    },
+    {
+      "priority": 8,
+      "check": "server_calculated_thi_category_is_supported",
+      "failure_status": "UNKNOWN_THI_CATEGORY"
+    },
+    {
+      "priority": 9,
+      "check": "model_deserialization_and_prediction_complete_with_finite_output",
+      "failure_status": "MODEL_ERROR"
+    },
+    {
+      "priority": 10,
+      "check": "all_prior_checks_pass",
+      "success_status": "ELIGIBLE"
+    }
+  ],
+  "population_policy": {
+    "HF50": "IN_SCOPE",
+    "HF62.5": "IN_SCOPE",
+    "HF75": "IN_SCOPE",
+    "HF87.5": "IN_SCOPE",
+    "Local": "LIMITED_SUPPORT",
+    "Local_reason": "Known training category with grouped development evidence but no Local cow in the locked final holdout.",
+    "dry_cow": "OUT_OF_SCOPE",
+    "non_lactating_cow": "OUT_OF_SCOPE",
+    "calf": "OUT_OF_SCOPE",
+    "bull": "OUT_OF_SCOPE",
+    "unknown_crossbreed_percentage": "OUT_OF_SCOPE",
+    "non_study_population": "UNRESOLVED"
+  },
+  "missing_input_policy": {
+    "silent_imputation_allowed": false,
+    "infer_genetic_group_from_breed_allowed": false,
+    "client_supplied_thi_category_allowed": false,
+    "result": "FALLBACK_REQUIRED"
+  },
+  "unknown_category_policy": {
+    "genetic_group": "UNKNOWN_GENETIC_GROUP",
+    "thi_category": "UNKNOWN_THI_CATEGORY",
+    "call_pipeline_anyway": false,
+    "result": "FALLBACK_REQUIRED"
+  },
+  "artifact_policy": {
+    "verify_hash_before_joblib_load": true,
+    "load_metadata_before_joblib": true,
+    "absolute_metadata_artifact_path_is_trusted": false,
+    "resolve_from_trusted_project_configuration": true
+  },
+  "model_specific_output_policy": {
+    "bangladesh_dmi_regressor": {
+      "output": "predicted_dmi_kg_day",
+      "unit": "kg dry matter/cow/day",
+      "may_be_used_as_total_fresh_feed": false
+    },
+    "bangladesh_milk_yield_regressor": {
+      "output": "predicted_milk_yield_l_day",
+      "unit": "L/cow/day",
+      "automatically_replaces_other_milk_model": false
+    }
+  },
+  "fallback_policy": {
+    "candidate_ineligible": "FALLBACK_REQUIRED",
+    "candidate_error": "FALLBACK_REQUIRED",
+    "fallback_must_be_explicit_in_response": true,
+    "silent_unrelated_model_substitution_allowed": false
+  },
+  "runtime_integration_performed": true,
+  "frontend_integration_performed": false,
+  "production_approved": false
+}

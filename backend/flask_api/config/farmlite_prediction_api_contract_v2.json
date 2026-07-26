@@ -1,0 +1,277 @@
+{
+  "schema_version": "2.0.0-design",
+  "phase": "5",
+  "status": "IMPLEMENTED_BACKEND_PROTOTYPE_DISABLED_BY_DEFAULT",
+  "endpoint": "POST /api/v2/predict",
+  "transport_naming": "snake_case",
+  "request": {
+    "content_type": "application/json",
+    "additional_properties_allowed": false,
+    "fields": [
+      {
+        "name": "breed",
+        "type": "string",
+        "required": true,
+        "unit": null,
+        "model_usage": "Scope/display and possible synthetic-model fallback only",
+        "validation": "non-empty trimmed text",
+        "notes": "Never maps automatically to genetic_group."
+      },
+      {
+        "name": "genetic_group",
+        "type": "string or null",
+        "required": false,
+        "conditionally_required_for": [
+          "bangladesh_dmi_regressor",
+          "bangladesh_milk_yield_regressor"
+        ],
+        "unit": "HF inheritance category",
+        "enum": [
+          "Local",
+          "HF50",
+          "HF62.5",
+          "HF75",
+          "HF87.5"
+        ],
+        "missing_behavior": "Bangladesh candidates ineligible; explicit fallback required",
+        "notes": "New input approved only as an explicit, documented category."
+      },
+      {
+        "name": "age_months",
+        "type": "integer",
+        "required": true,
+        "unit": "months",
+        "minimum_exclusive": 0,
+        "model_usage": "Scope validation and possible synthetic-model fallback; not a Bangladesh feature"
+      },
+      {
+        "name": "weight_kg",
+        "type": "number",
+        "required": true,
+        "unit": "kg live body weight",
+        "minimum_exclusive": 0,
+        "model_usage": "Nutrition-rule input and possible synthetic-model fallback; not a Bangladesh feature"
+      },
+      {
+        "name": "lactation_stage",
+        "type": "string",
+        "required": true,
+        "unit": null,
+        "enum": [
+          "Early Lactation",
+          "Mid Lactation",
+          "Late Lactation",
+          "Dry"
+        ],
+        "model_usage": "Population eligibility and possible synthetic-model fallback",
+        "notes": "Dry is OUT_OF_SCOPE for Bangladesh candidates."
+      },
+      {
+        "name": "days_in_milk",
+        "type": "integer or null",
+        "required": false,
+        "unit": "days",
+        "minimum_inclusive": 0,
+        "model_usage": "Possible synthetic-model fallback only"
+      },
+      {
+        "name": "previous_week_avg_yield_l",
+        "type": "number or null",
+        "required": false,
+        "unit": "L over the current historical field's stated window",
+        "minimum_inclusive": 0,
+        "model_usage": "Historical evidence or possible synthetic-model fallback; never a Bangladesh input"
+      },
+      {
+        "name": "body_condition_score",
+        "type": "number or null",
+        "required": false,
+        "unit": "score on FarmLite 1-5 scale",
+        "minimum_inclusive": 1,
+        "maximum_inclusive": 5,
+        "model_usage": "Possible synthetic-model fallback only"
+      },
+      {
+        "name": "ambient_temperature_c",
+        "type": "number or null",
+        "required": false,
+        "conditionally_required_for": [
+          "bangladesh_dmi_regressor",
+          "bangladesh_milk_yield_regressor"
+        ],
+        "unit": "degrees Celsius",
+        "validation": "finite number; study-supported numeric range UNRESOLVED",
+        "silent_default_allowed": false
+      },
+      {
+        "name": "humidity_percent",
+        "type": "number or null",
+        "required": false,
+        "conditionally_required_for": [
+          "bangladesh_dmi_regressor",
+          "bangladesh_milk_yield_regressor"
+        ],
+        "unit": "percent",
+        "minimum_inclusive": 0,
+        "maximum_inclusive": 100,
+        "silent_default_allowed": false
+      },
+      {
+        "name": "health_status",
+        "type": "string or null",
+        "required": false,
+        "unit": null,
+        "enum": [
+          "Healthy",
+          "Sick",
+          "Under Treatment",
+          "Recovering",
+          "Critical",
+          "Unknown"
+        ],
+        "model_usage": "Rule warnings only; never a Bangladesh model feature",
+        "missing_behavior": "Use Unknown and emit warning"
+      }
+    ],
+    "excluded_fields": {
+      "hf_inheritance_percent": "Approximate percentage-to-category mapping is not approved. Use the explicit genetic_group enum only.",
+      "cow_id": "May exist outside this prediction contract as request metadata but must never enter a model feature frame.",
+      "thi_category": "Must be calculated server-side from temperature and humidity.",
+      "blood_variables": "Not available or approved at ordinary FarmLite prediction time.",
+      "physiology_variables": "Not approved prediction-time features.",
+      "milk_composition": "Same-day outcome variables are excluded.",
+      "same_day_dmi": "Target leakage/outcome input is excluded.",
+      "same_day_milk": "Target leakage/outcome input is excluded."
+    }
+  },
+  "response": {
+    "fields": {
+      "schema_version": "string",
+      "prediction_status": "DISABLED | ELIGIBLE | FALLBACK_REQUIRED | PARTIAL | UNAVAILABLE",
+      "eligibility": {
+        "dmi": {
+          "status": "eligibility status string",
+          "scope": "IN_SCOPE | LIMITED_SUPPORT | OUT_OF_SCOPE | UNRESOLVED",
+          "fallback_reason": "stable reason code or null"
+        },
+        "milk": {
+          "status": "eligibility status string",
+          "scope": "IN_SCOPE | LIMITED_SUPPORT | OUT_OF_SCOPE | UNRESOLVED",
+          "fallback_reason": "stable reason code or null"
+        }
+      },
+      "environment": {
+        "calculated_thi": "number or null",
+        "thi_category": "T0 | T1 | T2 | null",
+        "source": "SERVER_CALCULATED | UNAVAILABLE"
+      },
+      "ml_predictions": {
+        "dmi_kg_day": "number or null; kg dry matter/cow/day",
+        "milk_yield_l_day": "number or null; L/cow/day"
+      },
+      "model_sources": {
+        "dmi": "model source enum or null",
+        "milk": "model source enum or null"
+      },
+      "model_provenance": {
+        "dmi": "candidate hash, metadata hash, contract, target, unit and dataset provenance object or null",
+        "milk": "candidate hash, metadata hash, contract, target, unit and dataset provenance object or null"
+      },
+      "rule_recommendation": {
+        "feed_category": "string or null",
+        "roughage_kg_day": "number or null with explicit dry-matter/as-fed basis",
+        "concentrate_kg_day": "number or null with explicit dry-matter/as-fed basis",
+        "mineral_mix": "number or string or null with explicit unit",
+        "water_advice": "string or null",
+        "nutrition_warnings": "array of strings"
+      },
+      "value_sources": "object mapping every output field to ML_PREDICTED, RULE_GENERATED, USER_PROVIDED, DERIVED, FALLBACK, or UNAVAILABLE",
+      "prediction_units": "object declaring DMI dry-matter kg/cow/day and milk L/cow/day",
+      "warnings": "array of stable warning objects",
+      "limitations": "array of strings",
+      "fallback_reasons": "array of stable reason codes"
+    },
+    "model_source_values": {
+      "dmi": [
+        "BANGLADESH_DMI_CANDIDATE_V1",
+        "APPROVED_TRANSPARENT_DMI_RULE",
+        "NONE"
+      ],
+      "milk": [
+        "BANGLADESH_MILK_CANDIDATE_V1",
+        "PHASE4_SYNTHETIC_MILK_CANDIDATE_V1",
+        "EXISTING_FARMLITE_MILK_MODEL",
+        "USER_HISTORICAL_MILK",
+        "NONE"
+      ]
+    },
+    "null_policy": {
+      "ineligible_ml_output": "null",
+      "missing_rule_prerequisite": "null",
+      "unavailable_thi": "calculated_thi and thi_category are null",
+      "never_substitute_zero_for_missing": true
+    }
+  },
+  "errors": {
+    "shape": {
+      "schema_version": "2.0.0-design",
+      "prediction_status": "UNAVAILABLE",
+      "error_code": "stable string",
+      "message": "human-readable string",
+      "field_errors": {}
+    },
+    "validation_error_codes": [
+      "INVALID_JSON",
+      "MISSING_REQUIRED_FIELD",
+      "INVALID_FIELD_TYPE",
+      "INVALID_FIELD_RANGE",
+      "UNKNOWN_GENETIC_GROUP",
+      "UNKNOWN_THI_CATEGORY",
+      "OUT_OF_SCOPE_POPULATION",
+      "ARTIFACT_UNAVAILABLE",
+      "ARTIFACT_HASH_MISMATCH",
+      "MODEL_ERROR"
+    ]
+  },
+  "fallback_reason_values": [
+    "FEATURE_DISABLED",
+    "GENETIC_GROUP_MISSING",
+    "GENETIC_GROUP_UNKNOWN",
+    "ENVIRONMENT_MISSING",
+    "ENVIRONMENT_INVALID",
+    "POPULATION_OUT_OF_SCOPE",
+    "ARTIFACT_UNAVAILABLE",
+    "ARTIFACT_HASH_MISMATCH",
+    "MODEL_ERROR",
+    "NO_APPROVED_DMI_FALLBACK",
+    "NO_APPROVED_MILK_SOURCE"
+  ],
+  "output_ownership": {
+    "ml_outputs": [
+      "ml_predictions.dmi_kg_day",
+      "ml_predictions.milk_yield_l_day"
+    ],
+    "rule_outputs": [
+      "rule_recommendation.feed_category",
+      "rule_recommendation.roughage_kg_day",
+      "rule_recommendation.concentrate_kg_day",
+      "rule_recommendation.mineral_mix",
+      "rule_recommendation.water_advice",
+      "rule_recommendation.nutrition_warnings"
+    ],
+    "derived_or_display_outputs": [
+      "prediction_status",
+      "eligibility",
+      "environment.calculated_thi",
+      "environment.thi_category",
+      "model_sources",
+      "value_sources",
+      "warnings",
+      "limitations"
+    ]
+  },
+  "runtime_integration_performed": true,
+  "frontend_integration_performed": false,
+  "nutrition_integration_performed": false,
+  "production_approved": false
+}

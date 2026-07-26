@@ -1,17 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, onSnapshot, orderBy, addDoc, doc, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, addDoc, doc, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { Users, Plus, ShieldCheck, Wheat, Trash2, Pencil } from 'lucide-react';
 import BatchEntryForm, { type BatchFormSubmission } from './BatchEntryForm';
 import type { Batch } from '../../types';
 import { getDisplaySpecies, getSpeciesFilterValue } from '../../utils/livestockStatus';
+import {
+  reconcileOwnedBatches,
+  upsertOwnedBatch,
+} from '../../features/batchRecords';
 
 interface BatchManagementProps {
   searchTerm: string;
   filterSpecies: string;
   onSuccess: (msg: string) => void;
+  onBatchCreated: () => void;
 }
+
+const getBatchHealthStyle = (status: string) => {
+  if (status === 'Healthy') return 'border-[#606c38]/30 bg-[#606c38]/10 text-[#283618]';
+  if (status === 'Sick') return 'border-[#bc6c25]/40 bg-[#bc6c25]/10 text-[#7c3f12]';
+  return 'border-[#dda15e]/60 bg-[#fefae0] text-[#7c3f12]';
+};
+
+const getBatchVaccinationStyle = (status: string) => {
+  if (status === 'Up to date') return 'border-[#606c38]/30 bg-[#606c38]/10 text-[#283618]';
+  if (status === 'Overdue') return 'border-[#bc6c25]/40 bg-[#bc6c25]/10 text-[#7c3f12]';
+  return 'border-[#dda15e]/60 bg-[#fefae0] text-[#7c3f12]';
+};
 
 const BatchCard: React.FC<{
   batch: Batch;
@@ -62,37 +79,37 @@ const BatchCard: React.FC<{
 
   if (isEditingInline) {
     return (
-      <form onSubmit={handleSaveInline} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden border-l-4 border-l-green-500 p-5 space-y-4 flex flex-col justify-between h-full">
+      <form onSubmit={handleSaveInline} className="flex h-full flex-col justify-between space-y-4 overflow-hidden rounded-xl border border-[#dda15e]/70 border-l-4 border-l-[#606c38] bg-white p-5 shadow-sm">
         <div className="space-y-3">
           <div>
-            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Batch Name *</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#283618]">Batch Name *</label>
             <input
               required
               type="text"
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm"
+              className="block w-full rounded-md border border-[#dda15e]/70 p-2 text-sm shadow-sm focus:border-[#606c38] focus:ring-[#606c38]"
             />
           </div>
-          
+
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Head Count *</label>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#283618]">Head Count *</label>
               <input
                 required
                 type="number"
                 min="1"
                 value={editCount}
                 onChange={(e) => setEditCount(Number(e.target.value))}
-                className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm"
+                className="block w-full rounded-md border border-[#dda15e]/70 p-2 text-sm shadow-sm focus:border-[#606c38] focus:ring-[#606c38]"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Health Status</label>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#283618]">Health Status</label>
               <select
                 value={editHealth}
                 onChange={(e) => setEditHealth(e.target.value)}
-                className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm bg-white font-bold text-green-700"
+                className="block w-full rounded-md border border-[#dda15e]/70 bg-white p-2 text-sm font-semibold text-[#283618] shadow-sm focus:border-[#606c38] focus:ring-[#606c38]"
               >
                 <option value="Healthy">Healthy</option>
                 <option value="Sick">Sick</option>
@@ -103,29 +120,29 @@ const BatchCard: React.FC<{
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Primary Feed</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#283618]">Primary Feed</label>
             <input
               type="text"
               value={editFeed}
               onChange={(e) => setEditFeed(e.target.value)}
               placeholder="e.g., Grain Mix"
-              className="block w-full rounded-md border-gray-300 border p-2 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm"
+              className="block w-full rounded-md border border-[#dda15e]/70 p-2 text-sm shadow-sm focus:border-[#606c38] focus:ring-[#606c38]"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-3 border-t border-gray-100 mt-2">
+        <div className="mt-2 flex justify-end gap-2 border-t border-[#dda15e]/30 pt-3">
           <button
             type="button"
             onClick={() => setIsEditingInline(false)}
-            className="px-3 py-1.5 border border-gray-300 rounded-md text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+            className="rounded-md border border-[#dda15e] bg-white px-3 py-1.5 text-xs font-bold text-[#bc6c25] transition-colors hover:bg-[#fefae0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={savingInline}
-            className="px-4 py-2 bg-[#606c38] hover:bg-[#4f5a2f] text-white rounded-lg text-sm font-medium shadow-sm transition-all disabled:bg-[#606c38]/60"
+            className="rounded-lg bg-[#606c38] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#4f5a2f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#283618] disabled:bg-[#606c38]/60"
           >
             {savingInline ? 'Saving...' : 'Save'}
           </button>
@@ -135,56 +152,49 @@ const BatchCard: React.FC<{
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all overflow-hidden border-l-4 border-l-green-500 group flex flex-col justify-between h-full">
+    <article className="group flex h-full flex-col justify-between overflow-hidden rounded-xl border border-[#dda15e]/70 border-l-4 border-l-[#606c38] bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
       <div className="p-5">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="font-bold text-gray-900 text-lg group-hover:text-green-700 transition-colors">{batch?.batchName}</h3>
+            <h3 className="text-lg font-bold text-[#283618] transition-colors group-hover:text-[#606c38]">{batch?.batchName}</h3>
             <p className="text-xs text-gray-500 font-medium">{getDisplaySpecies(batch?.species)}</p>
           </div>
-          <div className="bg-green-50 text-green-700 px-3 py-1 rounded-lg border border-green-100 text-center">
+          <div className="rounded-lg border border-[#606c38]/30 bg-[#fefae0] px-3 py-1 text-center text-[#283618]">
              <span className="block text-lg font-bold leading-none">{batch?.headCount}</span>
-             <span className="text-[10px] uppercase font-bold tracking-tighter">Animals</span>
+             <span className="text-[10px] uppercase font-bold tracking-tighter">Livestock</span>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Health Status</p>
-            <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${
-                batch?.healthStatus === 'Healthy' ? 'bg-green-500' :
-                batch?.healthStatus === 'Sick' ? 'bg-red-500' :
-                batch?.healthStatus === 'Under Treatment' ? 'bg-yellow-500' : 'bg-orange-500'
-              }`}></div>
-              <span className="text-xs font-bold text-gray-700">{batch?.healthStatus || 'Healthy'}</span>
-            </div>
+          <div className={`rounded-lg border p-3 ${getBatchHealthStyle(batch?.healthStatus || 'Healthy')}`}>
+            <p className="mb-1 text-[10px] font-bold uppercase">Health Status</p>
+            <p className="text-xs font-bold">{batch?.healthStatus || 'Healthy'}</p>
           </div>
-          <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Vaccinations</p>
-            <div className="flex items-center gap-2 text-blue-600">
+          <div className={`rounded-lg border p-3 ${getBatchVaccinationStyle(batch?.vaccinationStatus || 'No records')}`}>
+            <p className="mb-1 text-[10px] font-bold uppercase">Vaccinations</p>
+            <div className="flex items-center gap-2">
               <ShieldCheck className="w-3 h-3" />
               <span className="text-xs font-bold">{batch?.vaccinationStatus || 'No records'}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-amber-50 p-3 rounded-lg border border-amber-100 flex items-center gap-3">
-          <Wheat className="w-5 h-5 text-amber-600" />
+        <div className="flex items-center gap-3 rounded-lg border border-[#dda15e]/60 bg-[#fefae0] p-3">
+          <Wheat className="w-5 h-5 text-[#bc6c25]" />
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-bold text-amber-600 uppercase">Primary Feed</p>
-            <p className="text-xs font-bold text-amber-900 truncate">{batch?.feedType || 'General Forage'}</p>
+            <p className="text-[10px] font-bold uppercase text-[#bc6c25]">Primary Feed</p>
+            <p className="truncate text-xs font-bold text-[#283618]">{batch?.feedType || 'General Forage'}</p>
           </div>
         </div>
       </div>
-      
-      <div className="bg-gray-50 px-5 py-3 border-t border-gray-100 flex justify-between items-center mt-auto">
+
+      <div className="mt-auto flex flex-col gap-3 border-t border-[#dda15e]/30 bg-[#fefae0]/60 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-[10px] text-gray-400">Created: {formatCreatedAt(batch.createdAt)}</span>
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={beginInlineEdit}
-            className="inline-flex items-center rounded-lg bg-[#669bbc] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5588a7]"
+            className="inline-flex items-center rounded-lg bg-[#dda15e] px-3 py-2 text-sm font-medium text-[#283618] shadow-sm transition-colors hover:bg-[#cf8f4b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
             title="Edit Batch"
           >
             <Pencil className="mr-1.5 h-4 w-4" />
@@ -192,7 +202,7 @@ const BatchCard: React.FC<{
           </button>
           <button
             onClick={() => onDelete(batch.id)}
-            className="inline-flex items-center rounded-lg bg-[#c1121f] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a]"
+            className="inline-flex items-center rounded-lg bg-[#bc6c25] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f571d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#283618]"
             title="Delete Batch"
           >
             <Trash2 className="mr-1.5 h-4 w-4" />
@@ -200,23 +210,31 @@ const BatchCard: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
-const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpecies, onSuccess }) => {
+const BatchManagement: React.FC<BatchManagementProps> = ({
+  searchTerm,
+  filterSpecies,
+  onSuccess,
+  onBatchCreated,
+}) => {
   const { currentUser } = useAuth();
   const [batches, setBatches] = useState<Batch[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [listError, setListError] = useState('');
 
   useEffect(() => {
     if (!currentUser?.uid) return;
+    const currentUserId = currentUser.uid;
 
+    // Keep the ownership predicate in Firestore, but sort locally so this
+    // listener does not depend on a userId + createdAt composite index.
     const q = query(
       collection(db, 'batches'),
-      where('userId', '==', currentUser.uid),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', currentUserId)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -224,10 +242,12 @@ const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpe
       snapshot.forEach((doc) => {
         batchData.push({ id: doc.id, ...doc.data() } as Batch);
       });
-      setBatches(batchData);
+      setBatches(reconcileOwnedBatches(batchData, currentUserId));
+      setListError('');
       setLoading(false);
     }, (error) => {
       console.error("Error listening to batches:", error);
+      setListError('Batch Management could not load the latest batches. Please try again.');
       setLoading(false);
     });
 
@@ -236,13 +256,29 @@ const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpe
 
   const handleSave = async (data: BatchFormSubmission) => {
     if (!currentUser?.uid) return;
+    const currentUserId = currentUser.uid;
     setSaving(true);
     try {
-      await addDoc(collection(db, 'batches'), {
+      const savedDocument = await addDoc(collection(db, 'batches'), {
         ...data,
-        userId: currentUser.uid,
+        userId: currentUserId,
         createdAt: serverTimestamp()
       });
+
+      setBatches((currentBatches) =>
+        upsertOwnedBatch(
+          currentBatches,
+          {
+            id: savedDocument.id,
+            ...data,
+            userId: currentUserId,
+            createdAt: new Date(),
+          },
+          currentUserId
+        )
+      );
+      setListError('');
+      onBatchCreated();
       onSuccess('Batch created successfully!');
     } catch (err) {
       console.error("Error creating batch:", err);
@@ -264,57 +300,67 @@ const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpe
   };
 
   const filteredBatches = batches.filter(batch => {
+    if (batch.userId !== currentUser?.uid) return false;
     const name = batch?.batchName?.toLowerCase() || '';
     const species = batch?.species || '';
-    
-    const matchesSearch = 
+
+    const matchesSearch =
       name.includes(searchTerm.toLowerCase());
     const matchesFilter = filterSpecies
       ? getSpeciesFilterValue(species) === filterSpecies
       : true;
-    
+
     return matchesSearch && matchesFilter;
   });
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-        <p className="text-gray-500 font-medium animate-pulse">Loading batch dashboard...</p>
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#606c38]"></div>
+        <p className="animate-pulse font-medium text-[#283618]">Loading Batch Management...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 rounded-xl bg-[#fefae0]/50 p-1 sm:p-3">
       {/* Persistent Inline Batch Entry Card */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-gray-100 bg-gray-50">
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-green-600" /> Create New Batch
+      <section className="overflow-hidden rounded-xl border border-[#dda15e]/70 bg-white shadow-sm">
+        <div className="border-b border-[#dda15e]/40 bg-[#fefae0] p-4">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-[#283618]">
+            <Plus className="w-5 h-5 text-[#606c38]" /> Create New Batch
           </h2>
         </div>
         <BatchEntryForm onSave={handleSave} saving={saving} />
-      </div>
+      </section>
 
       {/* Dashboard Section */}
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <Users className="w-6 h-6 text-green-600" /> Active Batches
+      <section aria-labelledby="active-batches-title">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 id="active-batches-title" className="flex items-center gap-2 text-xl font-bold text-[#283618]">
+            <Users className="w-6 h-6 text-[#606c38]" /> Active Batches
           </h2>
-          <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+          <span className="w-fit rounded-full border border-[#dda15e]/60 bg-[#dda15e]/20 px-3 py-1 text-sm font-semibold text-[#283618]">
             {filteredBatches.length} Total
           </span>
         </div>
-        
+
+        {listError ? (
+          <div
+            role="alert"
+            className="mb-5 rounded-lg border border-[#bc6c25]/50 bg-[#fefae0] p-4 text-sm font-medium text-[#7c3f12]"
+          >
+            {listError}
+          </div>
+        ) : null}
+
         {filteredBatches.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center border-dashed">
-            <Users className="mx-auto h-12 w-12 text-gray-400 mb-3" />
-            <h3 className="text-gray-900 font-bold text-lg">No batches found</h3>
-            <p className="mt-1 text-gray-500 max-w-xs mx-auto">
-              {searchTerm || filterSpecies 
-                ? "No batches match your current search filters." 
+          <div className="rounded-xl border border-dashed border-[#dda15e] bg-[#fefae0] p-8 text-center sm:p-12">
+            <Users className="mx-auto mb-3 h-12 w-12 text-[#606c38]" />
+            <h3 className="text-lg font-bold text-[#283618]">No batches found</h3>
+            <p className="mx-auto mt-1 max-w-xs text-gray-600">
+              {searchTerm || filterSpecies
+                ? "No batches match your current search filters."
                 : "Start managing your groups by creating your first batch using the form above."}
             </p>
           </div>
@@ -330,7 +376,7 @@ const BatchManagement: React.FC<BatchManagementProps> = ({ searchTerm, filterSpe
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 };

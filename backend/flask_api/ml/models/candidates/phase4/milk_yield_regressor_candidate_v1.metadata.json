@@ -1,0 +1,127 @@
+{
+  "artifact_status": "CANDIDATE_ONLY",
+  "model_task": "synthetic_milk_yield_regressor",
+  "model_algorithm": "HistGradientBoostingRegressor",
+  "configuration_id": "milk_yield_hist_gradient_boosting",
+  "hyperparameters": {
+    "max_iter": 100,
+    "learning_rate": 0.08,
+    "max_leaf_nodes": 31,
+    "l2_regularization": 0.1,
+    "random_state": 42
+  },
+  "feature_order": [
+    "breed",
+    "age_months",
+    "weight_kg",
+    "lactation_stage",
+    "days_in_milk",
+    "previous_week_avg_yield_l",
+    "body_condition_score",
+    "ambient_temperature_c",
+    "humidity_percent"
+  ],
+  "target": "milk_yield_l",
+  "preprocessing_description": "Complete sklearn pipeline using the Phase 3 contract-driven training-only imputation, missing indicators, one-hot encoding, and scaling only for linear estimators.",
+  "dataset_source": {
+    "name": "Cattle Health and Feeding Data",
+    "platform": "Kaggle",
+    "publisher_account": "ShahHet2812",
+    "generation_status": "SYNTHETIC_PUBLISHER_DECLARED"
+  },
+  "synthetic_data_declaration": "FarmLite is an undergraduate prototype using publisher-declared synthetic cattle data. Predictions demonstrate an ML pipeline and are not veterinary, nutritional, commercial, or real-world feeding guidance.",
+  "dataset_checksum": "26D6D08FE463893253A9923FEFEFC99642438934817F554BFE9E08DEEA2AD1B3",
+  "split_manifest_hash": "A7C206B058CBD04AED428F9C44228653AF4CBEB6F86D90317A0A847BC02DADFB",
+  "contract_version": "1.0.0",
+  "configuration_hash": "4DFBB3946768D56F2D1650F2A6481D189B1E4850B3A220BD3FE32E8AC7464521",
+  "random_seed": 42,
+  "training_row_count": 175000,
+  "validation_row_count": 37500,
+  "test_row_count": 37500,
+  "validation_metrics": {
+    "mae": 1.0809263037904226,
+    "rmse": 1.3525559677178034,
+    "r2": 0.9447814267553013,
+    "median_absolute_error": 0.9127717689180184,
+    "mean_residual": -0.004076437474686489,
+    "residual_standard_deviation": 1.3525678591214019,
+    "minimum_prediction": 0.5126322505266452,
+    "maximum_prediction": 29.566704862011818,
+    "negative_prediction_count": 0
+  },
+  "test_metrics": {
+    "mae": 1.0758821757269925,
+    "rmse": 1.3471877976312587,
+    "r2": 0.9452182112415201,
+    "median_absolute_error": 0.9088906440821973,
+    "mean_residual": 0.013168569645332452,
+    "residual_standard_deviation": 1.3471413976485904,
+    "minimum_prediction": 0.5126322505266452,
+    "maximum_prediction": 29.477271547003102,
+    "negative_prediction_count": 0
+  },
+  "baseline_metrics": {
+    "validation": {
+      "mae": 4.573894933333333,
+      "rmse": 5.858123188416804,
+      "r2": -0.035837647286341534,
+      "median_absolute_error": 3.8000000000000003,
+      "mean_residual": 1.0896383999999997,
+      "residual_standard_deviation": 5.7559689841083514,
+      "minimum_prediction": 7.62,
+      "maximum_prediction": 7.62,
+      "negative_prediction_count": 0
+    },
+    "test": {
+      "mae": 4.562869066666667,
+      "rmse": 5.856706567801851,
+      "r2": -0.035349216383167015,
+      "median_absolute_error": 3.77,
+      "mean_residual": 1.0821810666666665,
+      "residual_standard_deviation": 5.755934281047123,
+      "minimum_prediction": 7.62,
+      "maximum_prediction": 7.62,
+      "negative_prediction_count": 0
+    }
+  },
+  "library_versions": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.4.4",
+    "pandas": "3.0.2",
+    "scikit_learn": "1.8.0",
+    "joblib": "1.5.3"
+  },
+  "training_timestamp": "2026-07-25T16:54:21.750071+00:00",
+  "training_duration_seconds": 1.181012,
+  "known_limitations": [
+    "Publisher-declared synthetic data with undocumented formulas.",
+    "Dataset population is not verified dairy-only.",
+    "No veterinary, nutritional, commercial, or scientific validation.",
+    "License status remains unresolved.",
+    "Candidate has not been integrated, deployed, or approved for production."
+  ],
+  "deployment_approved": false,
+  "artifact_path": "D:\\UOB\\FarmLite\\backend\\flask_api\\ml\\models\\candidates\\phase4\\milk_yield_regressor_candidate_v1.joblib",
+  "artifact_sha256": "5FDA66E3D9879FD6CF49D83B3235781545E5784781509BCC340FBFE03BBA286E",
+  "artifact_size_bytes": 161719,
+  "reload_verification": {
+    "artifact_path": "D:\\UOB\\FarmLite\\backend\\flask_api\\ml\\models\\candidates\\phase4\\milk_yield_regressor_candidate_v1.joblib",
+    "artifact_sha256": "5FDA66E3D9879FD6CF49D83B3235781545E5784781509BCC340FBFE03BBA286E",
+    "artifact_size_bytes": 161719,
+    "reload_predictions_identical": true,
+    "controlled_sample_rows": 64,
+    "feature_order": [
+      "breed",
+      "age_months",
+      "weight_kg",
+      "lactation_stage",
+      "days_in_milk",
+      "previous_week_avg_yield_l",
+      "body_condition_score",
+      "ambient_temperature_c",
+      "humidity_percent"
+    ],
+    "predictions_finite": true
+  }
+}

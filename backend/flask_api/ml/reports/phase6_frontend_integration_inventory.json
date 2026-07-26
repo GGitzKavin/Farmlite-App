@@ -1,0 +1,61 @@
+{
+  "report_version": "phase6_frontend_integration_inventory_v1",
+  "phase": "6",
+  "generated_date": "2026-07-26",
+  "status": "CONTROLLED_FRONTEND_AND_PDF_IMPLEMENTED_DISABLED_BY_DEFAULT",
+  "feature_flag": {
+    "name": "VITE_BANGLADESH_CANDIDATE_UI_ENABLED",
+    "default_enabled": false,
+    "accepted_true_values": ["1", "true", "yes", "on"],
+    "malformed_value_behavior": "false",
+    "backend_dependency": "BANGLADESH_CANDIDATE_MODELS_ENABLED"
+  },
+  "created_frontend_files": [
+    "frontend/src/api/baseUrl.ts",
+    "frontend/src/api/bangladeshCandidate.ts",
+    "frontend/src/components/ResearchPredictions.tsx",
+    "frontend/src/config/featureFlags.ts",
+    "frontend/src/config/publicFeatureFlag.ts",
+    "frontend/src/features/bangladeshCandidate.ts",
+    "frontend/src/utils/researchPredictionPdf.ts",
+    "frontend/tests/phase6_frontend.test.mjs"
+  ],
+  "modified_frontend_files": [
+    "frontend/src/pages/FeedRecommendation.tsx",
+    "frontend/package.json",
+    "frontend/README.md"
+  ],
+  "documentation_files": [
+    "README.md",
+    "documentation/phase6_frontend_existing_flow_audit.md",
+    "documentation/phase6_frontend_integration_design.md",
+    "documentation/phase6_frontend_safety_review.md",
+    "documentation/phase6_pdf_integration_review.md",
+    "documentation/phase6_user_interface_handoff.md",
+    "documentation/phase6_frontend_integration_approval_gate.md"
+  ],
+  "report_files": [
+    "backend/flask_api/ml/reports/phase6_frontend_integration_inventory.json",
+    "backend/flask_api/ml/reports/phase6_frontend_test_summary.json",
+    "backend/flask_api/ml/reports/phase6_ui_contract_validation.md",
+    "backend/flask_api/ml/reports/phase6_pdf_validation.md",
+    "backend/flask_api/ml/reports/phase6_manual_ui_validation.csv"
+  ],
+  "test_snapshot_updates": [
+    "backend/flask_api/tests/test_bangladesh_integration_review.py",
+    "backend/flask_api/tests/test_phase4_training.py",
+    "backend/flask_api/tests/test_phase5_backend_integration.py",
+    "backend/flask_api/tests/test_preprocessing_validation.py"
+  ],
+  "candidate_request_path": "POST /api/v2/predict",
+  "legacy_request_path": "POST /api/ai/feed-recommendation",
+  "request_paths_are_independent": true,
+  "frontend_calculates_thi": false,
+  "dmi_to_ration_conversion": false,
+  "candidate_artifact_bundled_in_frontend": false,
+  "backend_runtime_logic_modified": false,
+  "nutrition_rules_modified": false,
+  "model_training_performed": false,
+  "candidate_promotion_performed": false,
+  "production_approved": false
+}

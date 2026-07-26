@@ -1,0 +1,16 @@
+farmlite_feature,present_in_bangladesh,exact_source_column,unit,missing_percentage,available_before_prediction,suitable_for_model_use,mapping_required,farmlite_frontend_change_required
+breed,PARTIAL,Genetic Group,% HF category,0.0,YES,YES,YES,YES
+age_months,NO,UNCLEAR,UNCLEAR,100.0,UNCLEAR,NO,NO,NO
+weight_kg,NO,UNCLEAR,kg,100.0,UNCLEAR,NO,NO,NO
+lactation_stage,NO,UNCLEAR,UNCLEAR,100.0,UNCLEAR,NO,NO,NO
+days_in_milk,NO,UNCLEAR,days,100.0,UNCLEAR,NO,NO,NO
+previous_week_avg_yield_l,NO,UNCLEAR,L/day,100.0,UNCLEAR,NO,NO,NO
+body_condition_score,NO,UNCLEAR,score,100.0,UNCLEAR,NO,NO,NO
+ambient_temperature_c,NO,UNCLEAR,°C,100.0,UNCLEAR,NO,NO,NO
+humidity_percent,NO,UNCLEAR,%,100.0,UNCLEAR,NO,NO,NO
+genetic_group,YES,Genetic Group,% HF category,0.0,YES,YES,YES,YES
+thi_group,YES,THI Range,category,0.0,CONDITIONAL,WITH_LIMITATIONS,YES,YES
+respiration_rate,YES,Respiration Rate (bpm),breaths/min,0.0,UNCLEAR,WITH_LIMITATIONS,YES,YES
+rectal_temperature,YES,Rectal Temp (F),°F,0.0,UNCLEAR,WITH_LIMITATIONS,YES,YES
+pulse_rate,YES,Pulse Rate (bpm),beats/min,0.0,UNCLEAR,WITH_LIMITATIONS,YES,YES
+sampling_replication,YES,Replication No,identifier,0.0,NO,NO,YES,NO

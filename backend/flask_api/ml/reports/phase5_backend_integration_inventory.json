@@ -1,0 +1,86 @@
+{
+  "report_version": "phase5_backend_integration_inventory_v1",
+  "phase": "5",
+  "status": "COMPLETE_BACKEND_ONLY",
+  "generated_date": "2026-07-26",
+  "endpoint": "POST /api/v2/predict",
+  "feature_flag": {
+    "name": "BANGLADESH_CANDIDATE_MODELS_ENABLED",
+    "default_enabled": false,
+    "accepted_true_values": [
+      "1",
+      "true",
+      "yes",
+      "on"
+    ],
+    "malformed_value_behavior": "false",
+    "artifact_load_while_disabled": false
+  },
+  "created_backend_modules": [
+    "api/v2_routes.py",
+    "api/v2_schemas.py",
+    "ml/inference/bangladesh_artifact_loader.py",
+    "ml/inference/bangladesh_thi.py",
+    "ml/inference/bangladesh_eligibility.py",
+    "ml/inference/bangladesh_model_service.py"
+  ],
+  "modified_backend_files": [
+    "app.py",
+    "config/settings.py",
+    "config/bangladesh_thi_mapping_contract.json",
+    "config/bangladesh_model_eligibility_policy.json",
+    "config/farmlite_prediction_api_contract_v2.json",
+    "README.md",
+    "tests/test_bangladesh_integration_review.py"
+  ],
+  "created_test_files": [
+    "tests/test_phase5_backend_integration.py"
+  ],
+  "created_reports": [
+    "ml/reports/phase5_backend_integration_inventory.json",
+    "ml/reports/phase5_artifact_integrity_report.json",
+    "ml/reports/phase5_api_v2_validation_report.md",
+    "ml/reports/phase5_thi_mapping_validation.csv",
+    "ml/reports/phase5_eligibility_validation.csv",
+    "ml/reports/phase5_nutrition_isolation_verification.md",
+    "ml/reports/phase5_runtime_compatibility_report.md",
+    "ml/reports/phase5_backend_test_summary.json"
+  ],
+  "created_documentation": [
+    "documentation/phase5_backend_integration_design.md",
+    "documentation/phase5_backend_security_and_failure_review.md",
+    "documentation/phase5_frontend_handoff_contract.md",
+    "documentation/phase5_backend_integration_approval_gate.md"
+  ],
+  "candidate_tasks": {
+    "dmi": {
+      "source": "BANGLADESH_DMI_CANDIDATE_V1",
+      "status": "CANDIDATE_ONLY",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "output": "ml_predictions.dmi_kg_day",
+      "unit": "kg dry matter/cow/day",
+      "connected_to_nutrition_rules": false
+    },
+    "milk": {
+      "source": "BANGLADESH_MILK_CANDIDATE_V1",
+      "status": "CANDIDATE_ONLY",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "output": "ml_predictions.milk_yield_l_day",
+      "unit": "L/cow/day",
+      "automatic_fallback_model": null
+    }
+  },
+  "legacy_v1_route_modified": false,
+  "frontend_modified_in_phase5": false,
+  "pdf_modified_in_phase5": false,
+  "nutrition_rules_modified_in_phase5": false,
+  "training_performed_in_phase5": false,
+  "candidate_artifacts_modified_in_phase5": false,
+  "production_approved": false
+}

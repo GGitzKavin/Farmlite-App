@@ -1,0 +1,324 @@
+{
+  "report_version": "phase7_system_inventory_v1",
+  "phase": "7",
+  "generated_date": "2026-07-26",
+  "project": "FarmLite",
+  "repository_root": "D:/UOB/FarmLite",
+  "system_description": "Implemented AI-assisted livestock management and decision-support system",
+  "frontend": {
+    "root": "frontend",
+    "architecture": [
+      "React 19",
+      "TypeScript",
+      "Vite 8",
+      "React Router",
+      "Tailwind CSS",
+      "Firebase Web SDK",
+      "Axios",
+      "jsPDF"
+    ],
+    "routes": [
+      {
+        "path": "/login",
+        "protected": false
+      },
+      {
+        "path": "/register",
+        "protected": false
+      },
+      {
+        "path": "/forgot-password",
+        "protected": false
+      },
+      {
+        "path": "/",
+        "protected": true
+      },
+      {
+        "path": "/livestock",
+        "protected": true
+      },
+      {
+        "path": "/livestock/:id",
+        "protected": true
+      },
+      {
+        "path": "/livestock/edit/:id",
+        "protected": true
+      },
+      {
+        "path": "/vaccinations",
+        "protected": true
+      },
+      {
+        "path": "/feed",
+        "protected": true
+      },
+      {
+        "path": "/ai-feed",
+        "protected": true
+      },
+      {
+        "path": "/health",
+        "protected": true
+      },
+      {
+        "path": "/health-tracking",
+        "protected": true
+      },
+      {
+        "path": "/notifications",
+        "protected": true
+      },
+      {
+        "path": "/settings",
+        "protected": true
+      },
+      {
+        "path": "/profile",
+        "protected": true
+      }
+    ],
+    "authentication_flow": {
+      "provider": "Firebase Authentication email/password",
+      "session_observer": "onAuthStateChanged",
+      "route_guard": "frontend/src/components/ProtectedRoute.tsx",
+      "logout": "Firebase signOut",
+      "firebase_user_console_logging": false
+    },
+    "feature_flags": {
+      "VITE_BANGLADESH_CANDIDATE_UI_ENABLED": {
+        "default": false,
+        "accepted_true_values": [
+          "1",
+          "true",
+          "yes",
+          "on"
+        ]
+      }
+    },
+    "test_files": [
+      "frontend/tests/phase6_frontend.test.mjs",
+      "frontend/tests/phase6_1_frontend.test.mjs",
+      "frontend/tests/phase6_2_frontend.test.mjs",
+      "frontend/tests/phase6_3_frontend.test.mjs"
+    ]
+  },
+  "firebase": {
+    "initialization": "frontend/src/firebase/config.ts",
+    "collections": [
+      "users",
+      "livestock",
+      "batches",
+      "healthRecords",
+      "vaccinations",
+      "feedInventory"
+    ],
+    "farm_record_ownership_field": "userId",
+    "profile_document_ownership": "users/{firebase_uid}",
+    "environment_variable_names": [
+      "VITE_FIREBASE_API_KEY",
+      "VITE_FIREBASE_AUTH_DOMAIN",
+      "VITE_FIREBASE_PROJECT_ID",
+      "VITE_FIREBASE_STORAGE_BUCKET",
+      "VITE_FIREBASE_MESSAGING_SENDER_ID",
+      "VITE_FIREBASE_APP_ID"
+    ],
+    "environment_values_recorded": false,
+    "rules_file_present": false,
+    "firebase_json_present": false,
+    "rules_changed_or_deployed": false,
+    "limitation": "The deployed temporary Firestore Security Rules are not source-visible and were not modified."
+  },
+  "backend": {
+    "root": "backend/flask_api",
+    "architecture": [
+      "Flask application factory",
+      "Flask blueprints",
+      "Flask-CORS",
+      "scikit-learn joblib inference",
+      "schema and eligibility validation",
+      "hash-verified model artifacts"
+    ],
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/api/health",
+        "version": "v1"
+      },
+      {
+        "method": "POST",
+        "path": "/api/ai/feed-recommendation",
+        "version": "v1"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v2/predict",
+        "version": "v2"
+      }
+    ],
+    "feature_flags": {
+      "BANGLADESH_CANDIDATE_MODELS_ENABLED": {
+        "default": false,
+        "accepted_true_values": [
+          "1",
+          "true",
+          "yes",
+          "on"
+        ]
+      }
+    },
+    "debug_default": false,
+    "unexpected_client_error_detail": "generic"
+  },
+  "output_ownership": {
+    "expected_milk_yield": "FarmLite milk prediction model",
+    "predicted_dry_matter_intake": "Collected-data DMI model",
+    "thi_value_and_category": "Backend THI calculation",
+    "advisory_ration_and_components": "FarmLite nutrition rule engine"
+  },
+  "model_and_rule_integrity": {
+    "retained_milk_model": {
+      "path": "backend/flask_api/ml/models/milk_yield_model.joblib",
+      "sha256": "B9AD64E0EC62C75D70568D9D4F9136F240CD223DCC8851EC545D67B909C52BFA"
+    },
+    "phase4_milk_candidate": {
+      "path": "backend/flask_api/ml/models/candidates/phase4/milk_yield_regressor_candidate_v1.joblib",
+      "sha256": "5FDA66E3D9879FD6CF49D83B3235781545E5784781509BCC340FBFE03BBA286E",
+      "metadata_path": "backend/flask_api/ml/models/candidates/phase4/milk_yield_regressor_candidate_v1.metadata.json",
+      "metadata_sha256": "27FC611A3B4E3A470DC8ABC97EB2E70EC62DBB6205FD4E1D7F441674E91AF766"
+    },
+    "collected_data_milk_candidate": {
+      "path": "backend/flask_api/ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.joblib",
+      "sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
+      "metadata_path": "backend/flask_api/ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.metadata.json",
+      "metadata_sha256": "1D5D2D019B2AE0595D421298386DB4527C1C2D5771BAD69724E6E2727708F303",
+      "farmer_facing": false
+    },
+    "collected_data_dmi_candidate": {
+      "path": "backend/flask_api/ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.joblib",
+      "sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
+      "metadata_path": "backend/flask_api/ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.metadata.json",
+      "metadata_sha256": "0016C843FAA9A5BA7C8533F987FA748E8BC021A1ED24F65D9AA53E27D9EAF0DF",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "unit": "kg dry matter/cow/day"
+    },
+    "nutrition_rules": {
+      "path": "backend/flask_api/ml/validation/nutrition_rules.py",
+      "sha256": "3D7A4448EF66409C2D53B9EA97DE725915E53060D71A9DF619E28B9F6DADEC4C"
+    },
+    "artifact_or_rule_changed_in_phase7": false
+  },
+  "approved_phase_file_check": {
+    "phase6_test": true,
+    "phase6_1_test": true,
+    "phase6_2_test": true,
+    "phase6_3_test": true,
+    "phase6_frontend_reports_present": true,
+    "phase6_1_reports_present": true,
+    "phase6_2_reports_present": true,
+    "historical_phase6_3_test_summary_present_at_baseline": false,
+    "result": "PASS_WITH_NOTE_PHASE7_REPORTS_SUPERSEDE_MISSING_PHASE6_3_SUMMARY"
+  },
+  "existing_documentation_groups": [
+    "dataset provenance and methodology",
+    "preprocessing and model contracts",
+    "Phase 4 training approval",
+    "Phase 5 backend integration",
+    "Phase 6 frontend integration",
+    "Phase 6.1 unified recommendation and PDF",
+    "Phase 6.2 dashboard and UI consistency",
+    "Firebase configuration freeze"
+  ],
+  "baseline_git_state_before_phase7_edits": {
+    "staged_file_count": 0,
+    "tracked_changes": [
+      "M .gitignore",
+      "M backend/flask_api/app.py",
+      "D backend/flask_api/ml/candidate_model_evaluation_report.txt",
+      "D backend/flask_api/ml/dataset_inspection_report.txt",
+      "D backend/flask_api/ml/evaluate_candidate_models.py",
+      "D backend/flask_api/ml/feed_model_report.txt",
+      "D backend/flask_api/ml/feed_planner.py",
+      "D backend/flask_api/ml/inspect_datasets.py",
+      "D backend/flask_api/ml/milk_yield_model.joblib",
+      "D backend/flask_api/ml/milk_yield_model_report.txt",
+      "D backend/flask_api/ml/model_service.py",
+      "D backend/flask_api/ml/train_feed_model.py",
+      "D backend/flask_api/ml/train_milk_yield_model.py",
+      "M frontend/README.md",
+      "M frontend/package.json",
+      "M frontend/src/index.css",
+      "M frontend/src/layouts/MainLayout.tsx",
+      "M frontend/src/pages/Dashboard.tsx",
+      "M frontend/src/pages/FeedRecommendation.tsx",
+      "M frontend/src/pages/HealthTracking.tsx",
+      "M frontend/src/pages/Livestock/AnimalEntryForm.tsx",
+      "M frontend/src/pages/Livestock/BatchEntryForm.tsx",
+      "M frontend/src/pages/Livestock/BatchManagement.tsx",
+      "M frontend/src/pages/Livestock/EditLivestock.tsx",
+      "M frontend/src/pages/Livestock/LivestockDetail.tsx",
+      "M frontend/src/pages/Livestock/LivestockList.tsx",
+      "M frontend/src/pages/Livestock/LivestockTable.tsx",
+      "M frontend/src/pages/Notifications.tsx",
+      "M frontend/src/pages/Profile.tsx",
+      "M frontend/src/pages/Vaccinations.tsx",
+      "M frontend/src/types/index.ts"
+    ],
+    "untracked_entries": [
+      "README.md",
+      "backend/flask_api/README.md",
+      "backend/flask_api/api/",
+      "backend/flask_api/config/",
+      "backend/flask_api/ml/__init__.py",
+      "backend/flask_api/ml/data_integration/",
+      "backend/flask_api/ml/inference/",
+      "backend/flask_api/ml/models/",
+      "backend/flask_api/ml/preprocessing/",
+      "backend/flask_api/ml/reports/",
+      "backend/flask_api/ml/training/",
+      "backend/flask_api/ml/validation/",
+      "backend/flask_api/tests/",
+      "datasets/",
+      "documentation/",
+      "frontend/src/api/",
+      "frontend/src/components/ResearchPredictions.tsx",
+      "frontend/src/config/",
+      "frontend/src/features/",
+      "frontend/src/utils/farmerRecommendationPdf.ts",
+      "frontend/tests/",
+      "notes/"
+    ]
+  },
+  "phase7_created_files": [
+    "documentation/final_system_architecture.md",
+    "documentation/final_user_guide.md",
+    "documentation/final_installation_and_run_guide.md",
+    "documentation/final_api_reference.md",
+    "documentation/final_ai_model_and_data_sources.md",
+    "documentation/final_testing_and_evaluation.md",
+    "documentation/final_security_and_privacy_review.md",
+    "documentation/final_limitations_and_future_validation.md",
+    "documentation/final_contextual_report_alignment.md",
+    "documentation/phase7_release_approval_gate.md",
+    "backend/flask_api/ml/reports/phase7_system_inventory.json",
+    "backend/flask_api/ml/reports/phase7_end_to_end_validation.md",
+    "backend/flask_api/ml/reports/phase7_security_review.md",
+    "backend/flask_api/ml/reports/phase7_performance_summary.json",
+    "backend/flask_api/ml/reports/phase7_test_summary.json",
+    "backend/flask_api/ml/reports/phase7_manual_validation.csv"
+  ],
+  "final_git_state": {
+    "porcelain_entry_count": 54,
+    "modified_tracked_count": 21,
+    "deleted_tracked_count": 11,
+    "untracked_entry_count": 22,
+    "staged_file_count": 0,
+    "git_diff_check": "PASS_WITH_LINE_ENDING_NOTICES_ONLY",
+    "note": "The dirty worktree includes the pre-existing Phase 1-6 changes recorded in the baseline plus Phase 7 files and narrow corrections; nothing was staged or committed."
+  },
+  "decision": "SYSTEM_READY_WITH_DOCUMENTED_LIMITATIONS"
+}

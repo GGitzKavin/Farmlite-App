@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Save, Calendar, Weight, Tag, Info } from 'lucide-react';
 import { calculateAgeInMonths } from '../../utils/livestockStatus';
+import { INDIVIDUAL_LIVESTOCK_TYPES } from '../../features/livestockTypes';
 
 interface AnimalFormValues {
   animalId: string;
@@ -92,15 +93,26 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
               <input type="text" name="animalName" value={formData.animalName} onChange={handleFormChange} placeholder="e.g., Bessie" className={inputClassName} />
             </div>
             <div>
-              <label className={labelClassName}>Species</label>
-              <select name="species" value={formData.species} onChange={handleFormChange} className={inputClassName}>
-                <option>Dairy Cattle</option>
-                <option>Cattle (Beef)</option>
-                <option>Sheep/Goats</option>
-                <option>Chicken</option>
-                <option>Duck</option>
-                <option>Swine</option>
+              <label htmlFor="individual-livestock-type" className={labelClassName}>
+                Livestock
+              </label>
+              <select
+                id="individual-livestock-type"
+                name="species"
+                value={formData.species}
+                onChange={handleFormChange}
+                aria-describedby="individual-livestock-type-help"
+                className={inputClassName}
+              >
+                {INDIVIDUAL_LIVESTOCK_TYPES.map((livestockType) => (
+                  <option key={livestockType} value={livestockType}>
+                    {livestockType}
+                  </option>
+                ))}
               </select>
+              <p id="individual-livestock-type-help" className="mt-1.5 text-xs text-gray-500">
+                Choose livestock tracked as an individual record.
+              </p>
             </div>
             <div>
               <label className={labelClassName}>Breed</label>
@@ -118,11 +130,11 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
             <label className={labelClassName}>Birth Date</label>
             <div className="relative group">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-green-500 transition-colors pointer-events-none" />
-              <input 
-                type="date" 
-                name="birthDate" 
-                value={formData.birthDate} 
-                onChange={handleFormChange} 
+              <input
+                type="date"
+                name="birthDate"
+                value={formData.birthDate}
+                onChange={handleFormChange}
                 className={`${iconInputClassName} cursor-pointer`}
                 onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.showPicker?.()}
               />
