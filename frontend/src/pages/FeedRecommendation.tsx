@@ -1,14 +1,29 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { jsPDF } from 'jspdf';
-import { AlertCircle, Bot, Download, Droplets, Leaf, Loader2, Sparkles, Wheat } from 'lucide-react';
+import { AlertCircle, Bot, Download, Droplets, Leaf, Loader2, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
 import { calculateAgeInMonths, getDisplaySpecies, parseDateValue, toText } from '../utils/livestockStatus';
-
-const API_BASE_URL = import.meta.env.VITE_FLASK_API_URL || 'http://127.0.0.1:5000';
+import {
+  CandidateApiError,
+  predictBangladeshCandidates,
+  type BangladeshPredictionResponse,
+} from '../api/bangladeshCandidate';
+import { FLASK_API_BASE_URL } from '../api/baseUrl';
+import CandidateDmiAndThiCards from '../components/ResearchPredictions';
+import { BANGLADESH_CANDIDATE_UI_ENABLED } from '../config/featureFlags';
+import {
+  BANGLADESH_GENETIC_GROUP_OPTIONS,
+  buildCandidateRequest,
+} from '../features/bangladeshCandidate';
+import {
+  createFarmerRecommendationPdf,
+  DMI_RATION_EXPLANATION,
+  FARMER_ADVISORY_DISCLAIMER,
+} from '../utils/farmerRecommendationPdf';
 
 interface LivestockRecord {
   id: string;
@@ -41,6 +56,7 @@ interface FeedFormData {
   animalId: string;
   animalName: string;
   breed: string;
+  geneticGroup: string;
   ageMonths: string;
   weightKg: string;
   lactationStage: string;
@@ -51,6 +67,25 @@ interface FeedFormData {
   bodyConditionScore: string;
   healthStatus: string;
 }
+
+type CandidateFieldError = {
+  field: 'geneticGroup' | 'ambientTemperatureC' | 'humidityPercent';
+  message: string;
+};
+
+const CANDIDATE_REQUEST_FORM_FIELDS = new Set([
+  'breed',
+  'geneticGroup',
+  'ageMonths',
+  'weightKg',
+  'lactationStage',
+  'daysInMilk',
+  'ambientTemperatureC',
+  'humidityPercent',
+  'previousWeekAvgYield',
+  'bodyConditionScore',
+  'healthStatus',
+]);
 
 interface FeedRecommendationResponse {
   success: boolean;
@@ -78,17 +113,77 @@ interface FeedRecommendationResponse {
   limitations: string[];
 }
 
+const UNKNOWN_GENETIC_GROUP = 'Unknown';
+
+const uniqueText = (values: string[]): string[] =>
+  Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
+
+const geneticGroupDisplayLabel = (value: string): string => {
+  if (value === UNKNOWN_GENETIC_GROUP) return 'Unknown / Not sure';
+  return (
+    BANGLADESH_GENETIC_GROUP_OPTIONS.find((option) => option.value === value)
+      ?.label ?? 'Unavailable'
+  );
+};
+
+const farmerRuleExplanation = (
+  recommendation: FeedRecommendationResponse
+): string[] => [
+  `The FarmLite nutrition rule engine calculated an advisory ration quantity of ${recommendation.recommendation.totalFeedKg} kg/day.`,
+  ...recommendation.recommendation.explanation.filter(
+    (item) => !/model supplied an estimated feed quantity/i.test(item)
+  ),
+];
+
+const candidateCowWarning = (
+  response: BangladeshPredictionResponse | null,
+  notice: string
+): string => {
+  const reasons = new Set(response?.fallback_reasons ?? []);
+  if (
+    reasons.has('ENVIRONMENT_MISSING') ||
+    reasons.has('ENVIRONMENT_INVALID') ||
+    reasons.has('THI_CATEGORY_UNKNOWN')
+  ) {
+    return 'Temperature or humidity could not be used for the heat-stress calculation.';
+  }
+  if (reasons.has('POPULATION_OUT_OF_SCOPE')) {
+    return 'The dry-matter intake model does not support this cow’s current production stage.';
+  }
+  if (/temperature|humidity/i.test(notice)) return notice;
+  return '';
+};
+
+const dmiScopeMessage = (
+  response: BangladeshPredictionResponse | null,
+  loading: boolean
+): string => {
+  if (loading) return 'Dry-matter intake estimate is being calculated.';
+  if (
+    response?.ml_predictions.dmi_kg_day !== null &&
+    response?.ml_predictions.dmi_kg_day !== undefined &&
+    Number.isFinite(response.ml_predictions.dmi_kg_day)
+  ) {
+    if (response.eligibility.dmi.scope === 'LIMITED_SUPPORT') {
+      return 'Available with limited validation support for the supplied genetic group.';
+    }
+    return 'Validated within the current supported model scope.';
+  }
+  return 'Dry-matter intake estimate is currently unavailable.';
+};
+
 const createInitialFormData = (): FeedFormData => ({
   selectedAnimalId: '',
   animalId: '',
   animalName: '',
   breed: '',
+  geneticGroup: '',
   ageMonths: '',
   weightKg: '',
   lactationStage: 'Mid Lactation',
   daysInMilk: '0',
-  ambientTemperatureC: '28',
-  humidityPercent: '70',
+  ambientTemperatureC: BANGLADESH_CANDIDATE_UI_ENABLED ? '' : '28',
+  humidityPercent: BANGLADESH_CANDIDATE_UI_ENABLED ? '' : '70',
   previousWeekAvgYield: '0',
   bodyConditionScore: '3.0',
   healthStatus: 'Healthy',
@@ -249,7 +344,16 @@ const FeedRecommendation: React.FC = () => {
   const [pdfError, setPdfError] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
   const [recommendation, setRecommendation] = useState<FeedRecommendationResponse | null>(null);
+  const [candidateResponse, setCandidateResponse] =
+    useState<BangladeshPredictionResponse | null>(null);
+  const [candidateLoading, setCandidateLoading] = useState(false);
+  const [candidateError, setCandidateError] = useState('');
+  const [candidateNotice, setCandidateNotice] = useState('');
+  const [candidateFieldError, setCandidateFieldError] =
+    useState<CandidateFieldError | null>(null);
   const [formData, setFormData] = useState<FeedFormData>(createInitialFormData);
+  const candidateAbortController = useRef<AbortController | null>(null);
+  const candidateRequestSequence = useRef(0);
 
   const requestedAnimalId = searchParams.get('id') || '';
 
@@ -328,12 +432,20 @@ const FeedRecommendation: React.FC = () => {
         animalId: requestedAnimal.animalId,
         animalName: requestedAnimal.animalName,
         breed: requestedAnimal.breed,
+        geneticGroup: '',
         ageMonths: requestedAnimal.ageMonths,
         weightKg: requestedAnimal.weightKg,
         healthStatus: deriveLatestHealthStatus(healthRecords, requestedAnimal),
       };
     });
   }, [animals, healthRecords, requestedAnimalId]);
+
+  useEffect(
+    () => () => {
+      candidateAbortController.current?.abort();
+    },
+    []
+  );
 
   const selectedAnimal = useMemo(
     () => animals.find((animal) => animal.id === formData.selectedAnimalId) ?? null,
@@ -343,6 +455,12 @@ const FeedRecommendation: React.FC = () => {
   const handleAnimalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const animal = animals.find((item) => item.id === event.target.value);
     setRecommendation(null);
+    setCandidateResponse(null);
+    setCandidateError('');
+    setCandidateNotice('');
+    setCandidateFieldError(null);
+    candidateAbortController.current?.abort();
+    candidateRequestSequence.current += 1;
     setValidationMessage('');
 
     if (!animal) {
@@ -356,6 +474,7 @@ const FeedRecommendation: React.FC = () => {
       animalId: animal.animalId,
       animalName: animal.animalName,
       breed: animal.breed,
+      geneticGroup: '',
       ageMonths: animal.ageMonths,
       weightKg: animal.weightKg,
       healthStatus: deriveLatestHealthStatus(healthRecords, animal),
@@ -365,7 +484,70 @@ const FeedRecommendation: React.FC = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setFormData((previous) => ({ ...previous, [name]: value }));
+    if (
+      BANGLADESH_CANDIDATE_UI_ENABLED &&
+      CANDIDATE_REQUEST_FORM_FIELDS.has(name)
+    ) {
+      candidateAbortController.current?.abort();
+      candidateRequestSequence.current += 1;
+      setCandidateLoading(false);
+      setCandidateFieldError(null);
+      setCandidateNotice('');
+      setCandidateError('');
+      setCandidateResponse(null);
+    }
     setValidationMessage('');
+  };
+
+  const startCandidateRequest = () => {
+    candidateAbortController.current?.abort();
+    candidateRequestSequence.current += 1;
+    const decision = buildCandidateRequest(formData);
+    setCandidateResponse(null);
+    setCandidateError('');
+    setCandidateNotice('');
+    setCandidateFieldError(null);
+
+    if (!decision.request) {
+      setCandidateLoading(false);
+      setCandidateNotice(decision.message);
+      if (decision.field) {
+        setCandidateFieldError({
+          field: decision.field,
+          message: decision.message,
+        });
+      }
+      return;
+    }
+
+    setCandidateNotice(decision.message);
+    const controller = new AbortController();
+    candidateAbortController.current = controller;
+    const requestSequence = candidateRequestSequence.current;
+    setCandidateLoading(true);
+
+    void predictBangladeshCandidates(decision.request, controller.signal)
+      .then((response) => {
+        if (candidateRequestSequence.current !== requestSequence) return;
+        setCandidateResponse(response);
+      })
+      .catch((requestError: unknown) => {
+        if (candidateRequestSequence.current !== requestSequence) return;
+        if (
+          requestError instanceof CandidateApiError &&
+          requestError.code === 'REQUEST_CANCELLED'
+        ) {
+          return;
+        }
+        setCandidateError(
+          'Dry-matter intake estimate is currently unavailable.'
+        );
+      })
+      .finally(() => {
+        if (candidateRequestSequence.current === requestSequence) {
+          setCandidateLoading(false);
+        }
+      });
   };
 
   const validateForm = () => {
@@ -392,6 +574,10 @@ const FeedRecommendation: React.FC = () => {
     setValidationMessage('');
     setRecommendation(null);
 
+    if (BANGLADESH_CANDIDATE_UI_ENABLED) {
+      startCandidateRequest();
+    }
+
     const payload = {
       animalId: formData.animalId || formData.selectedAnimalId,
       animalName: formData.animalName,
@@ -410,7 +596,7 @@ const FeedRecommendation: React.FC = () => {
 
     try {
       const response = await axios.post<FeedRecommendationResponse>(
-        `${API_BASE_URL}/api/ai/feed-recommendation`,
+        `${FLASK_API_BASE_URL}/api/ai/feed-recommendation`,
         payload
       );
       setRecommendation(response.data);
@@ -439,6 +625,69 @@ const FeedRecommendation: React.FC = () => {
 
     try {
       setPdfError('');
+
+      const generatedAt = new Date();
+      const reportDate = generatedAt.toISOString().slice(0, 10);
+      const animalName = formData.animalName || recommendation.animalName || selectedAnimal?.animalName || 'Animal';
+      const animalTag = formData.animalId || recommendation.animalId || selectedAnimal?.animalId || 'N/A';
+
+      if (BANGLADESH_CANDIDATE_UI_ENABLED) {
+        const warnings = uniqueText([
+          ...recommendation.recommendation.warnings,
+          candidateCowWarning(candidateResponse, candidateNotice),
+        ]);
+        const report = createFarmerRecommendationPdf({
+          generatedAt,
+          animal: {
+            name: animalName,
+            tag: animalTag,
+            breed: formData.breed,
+            ageMonths: formData.ageMonths,
+            weightKg: formData.weightKg,
+            lactationStage: formData.lactationStage,
+            healthStatus: formData.healthStatus,
+            daysInMilk: formData.daysInMilk,
+            previousWeekAvgYieldL: formData.previousWeekAvgYield,
+            bodyConditionScore: formData.bodyConditionScore,
+            ambientTemperatureC: formData.ambientTemperatureC,
+            humidityPercent: formData.humidityPercent,
+            geneticGroupLabel: geneticGroupDisplayLabel(
+              formData.geneticGroup
+            ),
+          },
+          expectedMilkYieldLDay:
+            recommendation.prediction.predictedMilkYieldL,
+          predictedDmiKgDay:
+            candidateResponse?.ml_predictions.dmi_kg_day ?? null,
+          calculatedThi:
+            candidateResponse?.environment.calculated_thi ?? null,
+          thiCategory: candidateResponse?.environment.thi_category ?? null,
+          ration: {
+            totalKgDay: recommendation.recommendation.totalFeedKg,
+            roughageKgDay: recommendation.recommendation.roughageKg,
+            concentrateKgDay:
+              recommendation.recommendation.concentrateKg,
+            mineralMixKgDay:
+              recommendation.recommendation.mineralMixKg,
+            waterAdvice: recommendation.recommendation.waterAdvice,
+            feedingFrequency:
+              recommendation.recommendation.feedingFrequency,
+            confidenceLevel:
+              recommendation.recommendation.confidenceLevel,
+          },
+          ruleExplanation: farmerRuleExplanation(recommendation),
+          cowAndRationWarnings: warnings,
+          dmiScopeMessage: dmiScopeMessage(
+            candidateResponse,
+            candidateLoading
+          ),
+          limitations: recommendation.limitations,
+        });
+        report.save(
+          `FarmLite_Decision_Support_Report_${makePdfSafeName(animalName)}_${reportDate}.pdf`
+        );
+        return;
+      }
 
       const report = new jsPDF();
       const margin = 16;
@@ -482,11 +731,6 @@ const FeedRecommendation: React.FC = () => {
         addWrappedText(`- ${text}`, { indent: 4 });
       };
 
-      const generatedAt = new Date();
-      const reportDate = generatedAt.toISOString().slice(0, 10);
-      const animalName = formData.animalName || recommendation.animalName || selectedAnimal?.animalName || 'Animal';
-      const animalTag = formData.animalId || recommendation.animalId || selectedAnimal?.animalId || 'N/A';
-
       report.setFont('helvetica', 'bold');
       report.setFontSize(17);
       report.text('FarmLite AI Feed Recommendation Report', margin, yPosition);
@@ -513,8 +757,10 @@ const FeedRecommendation: React.FC = () => {
       addRow('Predicted milk yield', `${recommendation.prediction.predictedMilkYieldL} L/day`);
       addRow('Model used', recommendation.prediction.modelUsed);
       addRow('Target', recommendation.prediction.target);
+      addRow('Value source', 'Existing FarmLite prediction flow');
 
       addSectionTitle('Feed Recommendation');
+      addRow('Value source', 'Existing FarmLite rule engine');
       addRow('Total feed', `${recommendation.recommendation.totalFeedKg} kg`);
       addRow('Roughage', `${recommendation.recommendation.roughageKg} kg`);
       addRow('Concentrate', `${recommendation.recommendation.concentrateKg} kg`);
@@ -549,11 +795,26 @@ const FeedRecommendation: React.FC = () => {
     }
   };
 
+  const displayedRuleExplanation = recommendation
+    ? farmerRuleExplanation(recommendation)
+    : [];
+  const cowAndRationWarnings = recommendation
+    ? uniqueText([
+        ...recommendation.recommendation.warnings,
+        candidateCowWarning(candidateResponse, candidateNotice),
+      ])
+    : [];
+  const recommendationAnimalName =
+    formData.animalName ||
+    recommendation?.animalName ||
+    selectedAnimal?.animalName ||
+    'selected cow';
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900 flex items-center">
         <Bot className="h-6 w-6 mr-2 text-green-600" />
-        AI Feed Recommendation
+        FarmLite Feed Recommendation
       </h1>
 
       {error ? (
@@ -574,8 +835,9 @@ const FeedRecommendation: React.FC = () => {
 
           <div className="space-y-5 p-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Animal</label>
+              <label htmlFor="selected-animal" className="block text-sm font-medium text-gray-700">Animal</label>
               <select
+                id="selected-animal"
                 value={formData.selectedAnimalId}
                 onChange={handleAnimalChange}
                 disabled={loadingAnimals}
@@ -599,57 +861,38 @@ const FeedRecommendation: React.FC = () => {
             </div>
 
             {selectedAnimal ? (
-              <div className="rounded-md border border-green-100 bg-green-50 p-3 text-sm text-green-800">
-                Auto-filled from Livestock: {selectedAnimal.animalName}, {selectedAnimal.species}
+              <div className="rounded-lg border border-[#dda15e]/70 bg-[#fefae0] p-4">
+                <h3 className="text-sm font-semibold text-[#283618]">
+                  Selected Animal
+                </h3>
+                <dl className="mt-3 grid grid-cols-1 gap-x-4 gap-y-2 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt className="text-xs font-medium uppercase text-gray-500">Name</dt>
+                    <dd className="font-semibold text-gray-900">{formData.animalName || 'Unavailable'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase text-gray-500">ID / Tag</dt>
+                    <dd className="font-semibold text-gray-900">{formData.animalId || 'Unavailable'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase text-gray-500">Breed</dt>
+                    <dd className="font-semibold text-gray-900">{formData.breed || 'Unavailable'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase text-gray-500">Age</dt>
+                    <dd className="font-semibold text-gray-900">{formData.ageMonths ? `${formData.ageMonths} months` : 'Unavailable'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase text-gray-500">Weight</dt>
+                    <dd className="font-semibold text-gray-900">{formData.weightKg ? `${formData.weightKg} kg` : 'Unavailable'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase text-gray-500">Record type</dt>
+                    <dd className="font-semibold text-gray-900">{selectedAnimal.species}</dd>
+                  </div>
+                </dl>
               </div>
             ) : null}
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Animal Name</label>
-                <input
-                  type="text"
-                  name="animalName"
-                  value={formData.animalName}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Breed *</label>
-                <input
-                  type="text"
-                  name="breed"
-                  value={formData.breed}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Age (months) *</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  name="ageMonths"
-                  value={formData.ageMonths}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Weight (kg) *</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  name="weightKg"
-                  value={formData.weightKg}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500"
-                />
-              </div>
-            </div>
 
             <div className="border-t border-gray-100 pt-5">
               <h3 className="text-sm font-semibold text-gray-900">Feeding Inputs</h3>
@@ -683,6 +926,53 @@ const FeedRecommendation: React.FC = () => {
                     <option>Critical</option>
                   </select>
                 </div>
+                {BANGLADESH_CANDIDATE_UI_ENABLED ? (
+                  <div>
+                    <label
+                      htmlFor="genetic-group"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Genetic Group
+                    </label>
+                    <select
+                      id="genetic-group"
+                      name="geneticGroup"
+                      value={formData.geneticGroup}
+                      onChange={handleChange}
+                      aria-describedby={
+                        candidateFieldError?.field === 'geneticGroup'
+                          ? 'genetic-group-help genetic-group-error'
+                          : 'genetic-group-help'
+                      }
+                      aria-invalid={
+                        candidateFieldError?.field === 'geneticGroup'
+                      }
+                      className="mt-1 block w-full rounded-md border border-gray-300 bg-white p-2 text-sm shadow-sm focus:border-[#606c38] focus:ring-[#606c38]"
+                    >
+                      <option value="">Select genetic group</option>
+                      {BANGLADESH_GENETIC_GROUP_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                      <option value={UNKNOWN_GENETIC_GROUP}>
+                        Unknown / Not sure
+                      </option>
+                    </select>
+                    <p id="genetic-group-help" className="mt-2 text-xs text-gray-600">
+                      Select the cow’s verified genetic group for the dry-matter intake model. Do not estimate this value from the breed name.
+                    </p>
+                    {candidateFieldError?.field === 'geneticGroup' ? (
+                      <p
+                        id="genetic-group-error"
+                        role="alert"
+                        className="mt-2 text-xs font-medium text-red-700"
+                      >
+                        {candidateFieldError.message}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Days in Milk</label>
                   <input type="number" min="0" name="daysInMilk" value={formData.daysInMilk} onChange={handleChange} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
@@ -696,14 +986,30 @@ const FeedRecommendation: React.FC = () => {
                   <input type="number" min="1" max="5" step="0.1" name="bodyConditionScore" value={formData.bodyConditionScore} onChange={handleChange} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Ambient Temperature (C)</label>
-                  <input type="number" step="0.1" name="ambientTemperatureC" value={formData.ambientTemperatureC} onChange={handleChange} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
+                  <label htmlFor="ambient-temperature-c" className="block text-sm font-medium text-gray-700">Ambient Temperature (C)</label>
+                  <input id="ambient-temperature-c" type="number" step="0.1" name="ambientTemperatureC" value={formData.ambientTemperatureC} onChange={handleChange} aria-describedby={BANGLADESH_CANDIDATE_UI_ENABLED ? candidateFieldError?.field === 'ambientTemperatureC' ? 'candidate-weather-help ambient-temperature-error' : 'candidate-weather-help' : undefined} aria-invalid={candidateFieldError?.field === 'ambientTemperatureC'} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
+                  {candidateFieldError?.field === 'ambientTemperatureC' ? (
+                    <p id="ambient-temperature-error" role="alert" className="mt-2 text-xs font-medium text-red-700">
+                      {candidateFieldError.message}
+                    </p>
+                  ) : null}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Humidity (%)</label>
-                  <input type="number" min="0" max="100" step="0.1" name="humidityPercent" value={formData.humidityPercent} onChange={handleChange} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
+                  <label htmlFor="humidity-percent" className="block text-sm font-medium text-gray-700">Humidity (%)</label>
+                  <input id="humidity-percent" type="number" min="0" max="100" step="0.1" name="humidityPercent" value={formData.humidityPercent} onChange={handleChange} aria-describedby={BANGLADESH_CANDIDATE_UI_ENABLED ? candidateFieldError?.field === 'humidityPercent' ? 'candidate-weather-help humidity-error' : 'candidate-weather-help' : undefined} aria-invalid={candidateFieldError?.field === 'humidityPercent'} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
+                  {candidateFieldError?.field === 'humidityPercent' ? (
+                    <p id="humidity-error" role="alert" className="mt-2 text-xs font-medium text-red-700">
+                      {candidateFieldError.message}
+                    </p>
+                  ) : null}
                 </div>
               </div>
+              {BANGLADESH_CANDIDATE_UI_ENABLED ? (
+                <p id="candidate-weather-help" className="mt-3 text-xs text-gray-500">
+                  Temperature and humidity are sent to the backend THI
+                  calculation. FarmLite does not calculate THI in the browser.
+                </p>
+              ) : null}
             </div>
 
             {validationMessage ? (
@@ -734,11 +1040,22 @@ const FeedRecommendation: React.FC = () => {
 
         <div className="space-y-6">
           {recommendation ? (
-            <>
-              <div className="flex flex-col gap-3 rounded-lg border border-green-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <section
+              aria-labelledby="unified-recommendation-title"
+              className="min-w-0 space-y-5 rounded-xl border border-[#dda15e]/70 bg-white p-5 shadow-sm"
+            >
+              <div className="flex flex-col gap-3 border-b border-[#dda15e]/40 pb-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Generated Recommendation</h2>
-                  <p className="text-sm text-gray-500">Download a PDF copy for your project demo or farm notes.</p>
+                  <h2
+                    id="unified-recommendation-title"
+                    className="text-xl font-bold text-[#283618]"
+                  >
+                    FarmLite Recommendation for {recommendationAnimalName}
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-600">
+                    One combined view of production, intake, heat stress and
+                    advisory feeding guidance.
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -751,75 +1068,128 @@ const FeedRecommendation: React.FC = () => {
               </div>
 
               {pdfError ? (
-                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                <div role="alert" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                   {pdfError}
                 </div>
               ) : null}
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="rounded-lg border border-green-200 bg-white p-5 shadow-sm md:col-span-1">
-                  <p className="text-sm font-medium text-gray-500">Predicted Milk Yield</p>
-                  <p className="mt-2 text-3xl font-bold text-green-700">
+              <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
+                <article className="min-w-0 rounded-xl border border-[#dda15e]/70 bg-white p-5 shadow-sm">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-[#283618]">
+                    Expected Milk Yield
+                  </h3>
+                  <p className="mt-3 break-words text-3xl font-bold text-[#283618]">
                     {recommendation.prediction.predictedMilkYieldL} L/day
                   </p>
-                  <p className="mt-3 text-xs text-gray-500">Model: {recommendation.prediction.modelUsed}</p>
-                  <p className="text-xs text-gray-500">Target: {recommendation.prediction.target}</p>
-                </div>
+                  <p className="mt-2 text-sm text-gray-700">
+                    Estimated using the selected cow’s production and
+                    management inputs.
+                  </p>
+                  <p className="mt-3 text-xs font-medium text-[#606c38]">
+                    Source: FarmLite milk prediction model
+                  </p>
+                </article>
 
-                <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm md:col-span-2">
-                  <h2 className="flex items-center text-lg font-semibold text-gray-900">
-                    <Wheat className="mr-2 h-5 w-5 text-green-600" />
-                    Recommendation
-                  </h2>
-                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    <Metric label="Total Feed" value={`${recommendation.recommendation.totalFeedKg} kg`} />
-                    <Metric label="Roughage" value={`${recommendation.recommendation.roughageKg} kg`} />
-                    <Metric label="Concentrate" value={`${recommendation.recommendation.concentrateKg} kg`} />
-                    <Metric label="Mineral Mix" value={`${recommendation.recommendation.mineralMixKg} kg`} />
+                {BANGLADESH_CANDIDATE_UI_ENABLED ? (
+                  <CandidateDmiAndThiCards
+                    response={candidateResponse}
+                    loading={candidateLoading}
+                    error={candidateError}
+                    notice={candidateNotice}
+                  />
+                ) : null}
+
+                <article className="min-w-0 rounded-xl border border-[#dda15e]/70 bg-[#fefae0] p-5 shadow-sm">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-[#283618]">
+                    Advisory Daily Ration
+                  </h3>
+                  <p className="mt-3 break-words text-3xl font-bold text-[#283618]">
+                    {recommendation.recommendation.totalFeedKg} kg/day
+                  </p>
+                  <p className="mt-2 text-xs font-medium text-[#606c38]">
+                    Source: FarmLite nutrition rule engine
+                  </p>
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    <Metric label="Roughage" value={`${recommendation.recommendation.roughageKg} kg/day`} />
+                    <Metric label="Concentrate" value={`${recommendation.recommendation.concentrateKg} kg/day`} />
+                    <Metric label="Mineral mix" value={`${recommendation.recommendation.mineralMixKg} kg/day`} />
                     <Metric label="Frequency" value={recommendation.recommendation.feedingFrequency} />
                     <Metric label="Confidence" value={recommendation.recommendation.confidenceLevel} />
                   </div>
-                  <div className="mt-4 rounded-md bg-blue-50 p-3">
-                    <p className="flex items-start gap-2 text-sm text-blue-800">
+                  <div className="mt-4 rounded-md border border-[#dda15e]/50 bg-white p-3">
+                    <p className="flex items-start gap-2 text-sm text-[#283618]">
                       <Droplets className="mt-0.5 h-4 w-4 flex-shrink-0" />
                       {recommendation.recommendation.waterAdvice}
                     </p>
                   </div>
-                </div>
+                </article>
               </div>
 
-              <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Explanation</h2>
+              {BANGLADESH_CANDIDATE_UI_ENABLED ? (
+                <div className="rounded-lg border border-[#606c38]/30 bg-[#fefae0] p-4">
+                  <h3 className="font-semibold text-[#283618]">
+                    Dry-matter intake and ration quantity
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-700">
+                    {DMI_RATION_EXPLANATION}
+                  </p>
+                </div>
+              ) : null}
+
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
+                <h3 className="font-semibold text-[#283618]">
+                  How the advisory ration was produced
+                </h3>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-700">
-                  {recommendation.recommendation.explanation.map((item) => (
+                  {displayedRuleExplanation.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
               </div>
 
-              <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Warnings</h2>
-                {recommendation.recommendation.warnings.length > 0 ? (
+              <div className="rounded-lg border border-[#dda15e]/60 bg-white p-4">
+                <h3 className="font-semibold text-[#283618]">
+                  Cow and Ration Warnings
+                </h3>
+                {cowAndRationWarnings.length > 0 ? (
                   <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-amber-800">
-                    {recommendation.recommendation.warnings.map((warning) => (
+                    {cowAndRationWarnings.map((warning) => (
                       <li key={warning}>{warning}</li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-3 text-sm text-gray-600">No major warnings for this input.</p>
+                  <p className="mt-3 text-sm text-gray-700">
+                    No cow or ration warnings were identified for the supplied inputs.
+                  </p>
                 )}
               </div>
 
-              <div className="rounded-lg border border-amber-200 bg-amber-50 p-5">
-                <h2 className="text-lg font-semibold text-amber-900">Limitations / Disclaimer</h2>
-                <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-amber-800">
-                  {recommendation.limitations.map((limitation) => (
-                    <li key={limitation}>{limitation}</li>
-                  ))}
-                  <li>{recommendation.recommendation.disclaimer}</li>
-                </ul>
+              {BANGLADESH_CANDIDATE_UI_ENABLED ? (
+                <div className="rounded-lg border border-[#606c38]/40 bg-[#fefae0] p-4">
+                  <h3 className="font-semibold text-[#283618]">
+                    AI Model Scope
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-700">
+                    AI estimates are decision-support values and are not
+                    guaranteed outcomes. The DMI model was developed using a
+                    collected research dataset and requires wider multi-farm
+                    validation.
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-[#606c38]">
+                    {dmiScopeMessage(candidateResponse, candidateLoading)}
+                  </p>
+                </div>
+              ) : null}
+
+              <div className="rounded-lg border border-[#bc6c25]/40 bg-[#fefae0] p-4">
+                <p className="text-sm font-semibold text-[#283618]">
+                  AI-assisted decision support
+                </p>
+                <p className="mt-2 text-sm leading-6 text-gray-700">
+                  {FARMER_ADVISORY_DISCLAIMER}
+                </p>
               </div>
-            </>
+            </section>
           ) : (
             <div className="flex min-h-[420px] flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 p-10 text-center">
               <Leaf className="h-14 w-14 text-gray-300" />

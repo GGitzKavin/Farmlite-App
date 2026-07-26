@@ -1,0 +1,83 @@
+{
+  "artifact_status": "CANDIDATE_ONLY",
+  "model_name": "bangladesh_milk_yield_regressor",
+  "model_task": "milk",
+  "model_algorithm": "Ridge",
+  "hyperparameters": {
+    "alpha": 0.1
+  },
+  "feature_order": [
+    "genetic_group",
+    "thi_category"
+  ],
+  "target": "milk_yield_l_day",
+  "target_definition": "Measured milk yield in litres per cow per day",
+  "dataset_source": "Bangladesh HF Cross",
+  "synthetic_data": false,
+  "study_dataset": "Bangladesh HF Cross",
+  "dataset_checksum": "EC3FECE684C40343C2A4F8F527F2BBE274E7B5B6EBD2B200FCDA623DBDC6A508",
+  "dataset_doi": "10.17632/954f6g36sb.2",
+  "dataset_licence": "CC BY 4.0",
+  "dataset_citation": "Pehan Eshtiak Ahamed (2026), Physiological responses, Dry matter Intake, milk yield, composition and blood metabolites of HF Cross cows, Mendeley Data V2, doi:10.17632/954f6g36sb.2",
+  "number_of_unique_cows": 50,
+  "development_cow_count": 40,
+  "final_holdout_cow_count": 10,
+  "repeated_measurements": true,
+  "observations_per_cow": 15,
+  "group_validation_method": "GroupKFold(n_splits=5) by cow_id on development cows; LeaveOneGroupOut sensitivity analysis",
+  "final_holdout_method": "GroupShuffleSplit(test_size=0.20, random_state=42) by cow_id",
+  "split_manifest_sha256": "F350D093C39CF7CC90D13F372CA50476E43FD1279DAF58308E40A61D95A5C301",
+  "group_validation_metrics": {
+    "mae": 0.4631435533824558,
+    "rmse": 0.5764546971894028,
+    "r2": 0.9549006984109062,
+    "median_absolute_error": 0.3969547885753242,
+    "mean_residual": -0.0009615968869144294,
+    "residual_standard_deviation": 0.5769348747122606,
+    "minimum_prediction": 0.8369962197527556,
+    "maximum_prediction": 9.485858620677625,
+    "negative_prediction_count": 0
+  },
+  "holdout_metrics": {
+    "mae": 0.4838789028843907,
+    "rmse": 0.60305841667845,
+    "r2": 0.8590290149820388,
+    "median_absolute_error": 0.3978037818298401,
+    "mean_residual": -0.006161730054283282,
+    "residual_standard_deviation": 0.6050471336202974,
+    "minimum_prediction": 4.5853244221237635,
+    "maximum_prediction": 9.426003421961308,
+    "negative_prediction_count": 0
+  },
+  "holdout_gate_passed": true,
+  "random_seed": 42,
+  "contract_version": "bangladesh_hf_model_contract_v1",
+  "production_approved": false,
+  "commercial_use_approved": false,
+  "veterinary_use_approved": false,
+  "known_limitations": [
+    "DMI offered/refusal measurement protocol is not fully documented.",
+    "Numeric temperature, humidity, and THI values are absent.",
+    "THI is an assigned category.",
+    "Five physiology cow identifiers do not match the DMI/milk workbook.",
+    "Eight of FarmLite's current nine inputs are absent.",
+    "Genetic group maps only partially to FarmLite breed.",
+    "Same-day DMI and milk timing is unresolved.",
+    "Blood data is not available to ordinary FarmLite users.",
+    "Milk-composition outcomes are not prediction-time features.",
+    "No expert feed-recommendation labels exist.",
+    "Results apply to the study population and are not commercially validated."
+  ],
+  "reload_check": {
+    "artifact_path": "D:\\UOB\\FarmLite\\backend\\flask_api\\ml\\models\\candidates\\bangladesh\\bangladesh_milk_yield_regressor_candidate_v1.joblib",
+    "artifact_sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
+    "artifact_size_bytes": 1267,
+    "reload_predictions_identical": true,
+    "controlled_sample_rows": 30,
+    "feature_order": [
+      "genetic_group",
+      "thi_category"
+    ]
+  },
+  "created_at": "2026-07-25T20:01:40.887185+00:00"
+}

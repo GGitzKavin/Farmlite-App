@@ -1,0 +1,96 @@
+{
+  "animal_type": [
+    "species",
+    "animalType",
+    "type"
+  ],
+  "animal_name": [
+    "animalName",
+    "name"
+  ],
+  "breed": [
+    "Breed",
+    "breed"
+  ],
+  "age_months": [
+    "Age_Months",
+    "ageMonths",
+    "ageInMonths"
+  ],
+  "weight_kg": [
+    "Weight_kg",
+    "weightKg",
+    "weight"
+  ],
+  "parity": [
+    "Parity"
+  ],
+  "health_status": [
+    "healthStatus",
+    "status",
+    "condition",
+    "recoveryStatus"
+  ],
+  "lactation_stage": [
+    "Lactation_Stage",
+    "lactationStage"
+  ],
+  "production_stage": [
+    "productionStage"
+  ],
+  "days_in_milk": [
+    "Days_in_Milk",
+    "daysInMilk"
+  ],
+  "previous_week_avg_yield_l": [
+    "Previous_Week_Avg_Yield",
+    "previousWeekAvgYield"
+  ],
+  "body_condition_score": [
+    "Body_Condition_Score",
+    "bodyConditionScore"
+  ],
+  "ambient_temperature_c": [
+    "Ambient_Temperature_C",
+    "ambientTemperatureC"
+  ],
+  "humidity_percent": [
+    "Humidity_percent",
+    "humidityPercent"
+  ],
+  "season": [
+    "Season"
+  ],
+  "climate_zone": [
+    "Climate_Zone"
+  ],
+  "management_system": [
+    "Management_System"
+  ],
+  "feed_type": [
+    "Feed_Type"
+  ],
+  "feed_quantity_kg": [
+    "Feed_Quantity_kg"
+  ],
+  "milk_yield_l": [
+    "Milk_Yield_L"
+  ],
+  "cattle_id": [
+    "Cattle_ID",
+    "animalId",
+    "tagId",
+    "tagID"
+  ],
+  "farm_id": [
+    "Farm_ID"
+  ],
+  "observation_date": [
+    "Date",
+    "date"
+  ],
+  "disease_status": [
+    "Disease_Status",
+    "diseaseType"
+  ]
+}

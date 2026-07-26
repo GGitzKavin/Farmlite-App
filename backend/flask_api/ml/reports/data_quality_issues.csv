@@ -1,0 +1,74 @@
+dataset,status,severity,issue,column,affected_rows,percentage,evidence
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Duplicate complete rows,ALL_COLUMNS,0,0.0,Exact duplicate across all parsed columns.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Empty physical CSV rows,ALL_COLUMNS,0,0.0,Blank physical lines after the header; pandas normally skips these.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Negative age,Age_Months,0,0.0,Age below 0 months.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Zero age,Age_Months,0,0.0,Age exactly 0 months.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Implausible age,Age_Months,0,0.0,Audit threshold: age under 12 months or over 300 months.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Negative weight,Weight_kg,0,0.0,Weight below 0 kg.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Zero weight,Weight_kg,0,0.0,Weight exactly 0 kg.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Implausible weight,Weight_kg,0,0.0,"Audit threshold: weight under 50 kg or over 1,200 kg."
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Negative milk yield,Milk_Yield_L,0,0.0,Milk_Yield_L below 0.
+global_cattle_milk_yield_prediction_dataset.csv,FLAGGED,WARNING,Zero milk yield,Milk_Yield_L,5940,2.376,Milk_Yield_L exactly 0.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Suspiciously high milk yield,Milk_Yield_L,0,0.0,Conservative audit threshold: Milk_Yield_L over 100; its period is UNCLEAR.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Negative feed quantity,Feed_Quantity_kg,0,0.0,Feed_Quantity_kg below 0.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Zero feed quantity,Feed_Quantity_kg,0,0.0,Feed_Quantity_kg exactly 0.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Suspiciously high feed quantity,Feed_Quantity_kg,0,0.0,Conservative audit threshold: Feed_Quantity_kg over 100; basis/period are UNCLEAR.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Negative days in milk,Days_in_Milk,0,0.0,Days_in_Milk below 0.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Suspiciously high days in milk,Days_in_Milk,0,0.0,Audit threshold: Days_in_Milk over 730.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Humidity outside 0-100,Humidity_percent,0,0.0,Humidity_percent outside the physical percentage range.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Implausible ambient temperature,Ambient_Temperature_C,0,0.0,Audit threshold: ambient temperature below -20 C or above 55 C.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Body-condition score outside detected 1-5 scale,Body_Condition_Score,0,0.0,Observed values are assessed against the common 1-5 scale; source scale is undocumented.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Invalid parity,Parity,0,0.0,"Audit threshold: negative, non-integer, or above 20."
+global_cattle_milk_yield_prediction_dataset.csv,PASS,ERROR,Impossible age/lactation combination,Days_in_Milk + Age_Months,0,0.0,Days_in_Milk exceeds approximate lifetime in days (Age_Months x 31).
+global_cattle_milk_yield_prediction_dataset.csv,PASS,ERROR,Impossible young-age/parity combination,Parity + Age_Months,0,0.0,Positive parity with age below 18 months.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Cattle_ID,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Breed,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Region,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Country,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Climate_Zone,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Management_System,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Lactation_Stage,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Feed_Type,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Season,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Date,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Farm_ID,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_milk_yield_prediction_dataset.csv,FLAGGED,WARNING,Extremely high-cardinality categorical column,Cattle_ID,250000,100.0,"250,000 unique values across 250,000 rows."
+global_cattle_milk_yield_prediction_dataset.csv,UNCLEAR,WARNING,Mixed or undocumented feed units,Feed_Quantity_kg,,,The name states kg but supplies no material basis or time period; mixed units cannot be ruled out.
+global_cattle_milk_yield_prediction_dataset.csv,UNCLEAR,WARNING,Mixed or undocumented milk-yield period,Milk_Yield_L,,,The name states litres but supplies no daily/weekly/other period metadata.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Duplicate complete rows,ALL_COLUMNS,0,0.0,Exact duplicate across all parsed columns.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Empty physical CSV rows,ALL_COLUMNS,0,0.0,Blank physical lines after the header; pandas normally skips these.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Negative age,Age_Months,0,0.0,Age below 0 months.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Zero age,Age_Months,0,0.0,Age exactly 0 months.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Implausible age,Age_Months,0,0.0,Audit threshold: age under 12 months or over 300 months.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Negative weight,Weight_kg,0,0.0,Weight below 0 kg.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Zero weight,Weight_kg,0,0.0,Weight exactly 0 kg.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Implausible weight,Weight_kg,0,0.0,"Audit threshold: weight under 50 kg or over 1,200 kg."
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Negative milk yield,Milk_Yield_L,0,0.0,Milk_Yield_L below 0.
+global_cattle_disease_detection_dataset.csv,FLAGGED,WARNING,Zero milk yield,Milk_Yield_L,5940,2.376,Milk_Yield_L exactly 0.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Suspiciously high milk yield,Milk_Yield_L,0,0.0,Conservative audit threshold: Milk_Yield_L over 100; its period is UNCLEAR.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Negative feed quantity,Feed_Quantity_kg,0,0.0,Feed_Quantity_kg below 0.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Zero feed quantity,Feed_Quantity_kg,0,0.0,Feed_Quantity_kg exactly 0.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Suspiciously high feed quantity,Feed_Quantity_kg,0,0.0,Conservative audit threshold: Feed_Quantity_kg over 100; basis/period are UNCLEAR.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Negative days in milk,Days_in_Milk,0,0.0,Days_in_Milk below 0.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Suspiciously high days in milk,Days_in_Milk,0,0.0,Audit threshold: Days_in_Milk over 730.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Humidity outside 0-100,Humidity_percent,0,0.0,Humidity_percent outside the physical percentage range.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Implausible ambient temperature,Ambient_Temperature_C,0,0.0,Audit threshold: ambient temperature below -20 C or above 55 C.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Body-condition score outside detected 1-5 scale,Body_Condition_Score,0,0.0,Observed values are assessed against the common 1-5 scale; source scale is undocumented.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Invalid parity,Parity,0,0.0,"Audit threshold: negative, non-integer, or above 20."
+global_cattle_disease_detection_dataset.csv,PASS,ERROR,Impossible age/lactation combination,Days_in_Milk + Age_Months,0,0.0,Days_in_Milk exceeds approximate lifetime in days (Age_Months x 31).
+global_cattle_disease_detection_dataset.csv,PASS,ERROR,Impossible young-age/parity combination,Parity + Age_Months,0,0.0,Positive parity with age below 18 months.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Cattle_ID,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Breed,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Region,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Country,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Climate_Zone,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Management_System,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Lactation_Stage,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Feed_Type,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Season,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Date,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Farm_ID,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,PASS,WARNING,Inconsistent categorical spelling,Disease_Status,0,0.0,No case/spacing/punctuation-only duplicate categories detected.
+global_cattle_disease_detection_dataset.csv,FLAGGED,WARNING,Extremely high-cardinality categorical column,Cattle_ID,250000,100.0,"250,000 unique values across 250,000 rows."
+global_cattle_disease_detection_dataset.csv,UNCLEAR,WARNING,Mixed or undocumented feed units,Feed_Quantity_kg,,,The name states kg but supplies no material basis or time period; mixed units cannot be ruled out.
+global_cattle_disease_detection_dataset.csv,UNCLEAR,WARNING,Mixed or undocumented milk-yield period,Milk_Yield_L,,,The name states litres but supplies no daily/weekly/other period metadata.

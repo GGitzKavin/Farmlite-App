@@ -1,29 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  writeBatch,
+} from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import type { Livestock, HealthRecord, Vaccination } from '../../types';
-import { ArrowLeft, Trash2, Activity, Syringe, FileText, Pencil } from 'lucide-react';
 import {
+  ArrowLeft,
+  Trash2,
+  Activity,
+  Syringe,
+  FileText,
+  Pencil,
+  Save,
+} from 'lucide-react';
+import {
+  calculateAgeInMonths,
   getDerivedHealthStatus,
   getHealthBadgeStyle,
   parseDateValue,
   getVaccinationStatus,
   getVaccinationStatusStyle,
   getDisplaySpecies,
+  normalizeHealthStatus,
 } from '../../utils/livestockStatus';
+import {
+  buildInlineLivestockUpdate,
+  createInlineLivestockForm,
+  EMPTY_INLINE_LIVESTOCK_FORM,
+  getInlineLivestockTypeOptions,
+  type InlineLivestockEditFormData,
+} from '../../features/inlineLivestockEdit';
 
 const LivestockDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [animal, setAnimal] = useState<Livestock | null>(null);
   const [healthRecords, setHealthRecords] = useState<HealthRecord[]>([]);
   const [vaccinations, setVaccinations] = useState<Vaccination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('details');
+  const [isEditing, setIsEditing] = useState(
+    () => searchParams.get('edit') === 'true'
+  );
+  const [editForm, setEditForm] = useState<InlineLivestockEditFormData>({
+    ...EMPTY_INLINE_LIVESTOCK_FORM,
+  });
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchAnimalAndRecords = async () => {
@@ -38,9 +73,14 @@ const LivestockDetail: React.FC = () => {
         setLoading(true);
         const docRef = doc(db, 'livestock', id);
         const docSnap = await getDoc(docRef);
-        
+
         if (docSnap.exists() && docSnap.data().userId === currentUser.uid) {
-          setAnimal({ id: docSnap.id, ...docSnap.data() } as Livestock);
+          const loadedAnimal = {
+            id: docSnap.id,
+            ...docSnap.data(),
+          } as Livestock;
+          setAnimal(loadedAnimal);
+          setEditForm(createInlineLivestockForm(loadedAnimal));
           canLoadRelatedRecords = true;
         } else {
           setError('Animal not found or you do not have permission.');
@@ -95,6 +135,82 @@ const LivestockDetail: React.FC = () => {
     };
     fetchAnimalAndRecords();
   }, [id, currentUser]);
+
+  const handleStartEditing = () => {
+    if (!animal || !id) return;
+    setEditForm(createInlineLivestockForm(animal));
+    setEditError('');
+    setSuccessMessage('');
+    setIsEditing(true);
+    navigate(`/livestock/${id}?edit=true`, { replace: true });
+  };
+
+  const handleCancelEditing = () => {
+    if (!animal || !id) return;
+    setEditForm(createInlineLivestockForm(animal));
+    setEditError('');
+    setIsEditing(false);
+    navigate(`/livestock/${id}`, { replace: true });
+  };
+
+  const handleEditChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    setEditError('');
+    setEditForm((previous) => {
+      if (name !== 'birthDate') {
+        return { ...previous, [name]: value };
+      }
+
+      const derivedAge = calculateAgeInMonths(value);
+      return {
+        ...previous,
+        birthDate: value,
+        age: value && derivedAge !== null ? String(derivedAge) : previous.age,
+      };
+    });
+  };
+
+  const handleSaveChanges = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!animal || !id || !currentUser || animal.userId !== currentUser.uid) {
+      setEditError('This livestock record is not available for editing.');
+      return;
+    }
+
+    const update = buildInlineLivestockUpdate(editForm);
+    if (!update.value) {
+      setEditError(update.error);
+      return;
+    }
+
+    setSaving(true);
+    setEditError('');
+    try {
+      const updatedAt = new Date();
+      await updateDoc(doc(db, 'livestock', id), {
+        ...update.value,
+        updatedAt,
+      });
+
+      const updatedAnimal: Livestock = {
+        ...animal,
+        ...update.value,
+        updatedAt,
+      };
+      setAnimal(updatedAnimal);
+      setEditForm(createInlineLivestockForm(updatedAnimal));
+      setIsEditing(false);
+      setSuccessMessage('Livestock details updated successfully.');
+      navigate(`/livestock/${id}`, { replace: true });
+    } catch (saveError) {
+      console.error('Failed to update livestock:', saveError);
+      setEditError('Could not save livestock changes. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this livestock record?')) return;
@@ -153,158 +269,413 @@ const LivestockDetail: React.FC = () => {
     return rightTime - leftTime;
   });
   const displaySpecies = getDisplaySpecies(animal.species);
+  const latestHealthRecord = sortedHealthRecords[0] ?? null;
+  const dateAdded = parseDateValue(animal.createdAt)?.toLocaleDateString() ?? 'Unavailable';
+  const batchAssignment = animal.batchName || animal.batchId || 'Not assigned';
+  const livestockTypeOptions = getInlineLivestockTypeOptions(editForm.species);
+  const hasLegacyLivestockType = livestockTypeOptions.some(
+    (option) => option.legacy && option.value === editForm.species
+  );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="min-w-0 space-y-6 overflow-x-hidden">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-4">
-          <Link to="/livestock" className="p-2 bg-white border border-gray-200 rounded-md hover:bg-gray-50 text-gray-600">
+          <Link
+            to="/livestock"
+            aria-label="Back to Livestock"
+            className="rounded-md border border-[#dda15e]/70 bg-white p-2 text-[#283618] hover:bg-[#fefae0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+          >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{animal.animalName}</h1>
+            <h1 className="text-2xl font-bold text-[#283618]">{animal.animalName}</h1>
             <p className="text-sm text-gray-500">ID: {animal.animalId} &bull; {displaySpecies}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {/* Edit is not implemented yet, just a placeholder link */}
-          <Link to={`/livestock/edit/${animal.id}`} className="inline-flex items-center rounded-lg bg-[#669bbc] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5588a7]">
-            <Pencil className="mr-1.5 h-4 w-4" />
-            Edit
-          </Link>
-          <button onClick={handleDelete} className="inline-flex items-center rounded-lg bg-[#c1121f] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f0f1a]">
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="inline-flex flex-1 items-center justify-center rounded-lg bg-[#bc6c25] px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#9f571d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#283618] sm:flex-none"
+          >
             <Trash2 className="w-4 h-4 mr-2" />
             Delete
           </button>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
-          <button onClick={() => setActiveTab('details')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'details' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
-            Full Details
-          </button>
-          <button onClick={() => setActiveTab('health')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'health' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
-            Medical & Vaccines
-          </button>
-        </nav>
-      </div>
+      <section
+        aria-labelledby="animal-profile-title"
+        className="rounded-xl border border-[#dda15e]/60 bg-white p-5 shadow-sm sm:p-6"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 id="animal-profile-title" className="flex items-center text-xl font-bold text-[#283618]">
+            <FileText className="mr-2 h-5 w-5 text-[#606c38]" />
+            Animal Profile
+          </h2>
+          {!isEditing ? (
+            <button
+              type="button"
+              onClick={handleStartEditing}
+              className="inline-flex w-full items-center justify-center rounded-lg bg-[#dda15e] px-4 py-2 text-sm font-semibold text-[#283618] shadow-sm transition-colors hover:bg-[#cf8f4b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38] sm:w-auto"
+            >
+              <Pencil aria-hidden="true" className="mr-2 h-4 w-4" />
+              Edit Livestock
+            </button>
+          ) : null}
+        </div>
 
-      {/* Tab Content */}
-      <div className="bg-white shadow rounded-lg border border-gray-200">
-        {activeTab === 'details' && (
-          <div className="p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><FileText className="w-5 h-5 mr-2 text-gray-400" /> Animal Profile</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm font-medium text-gray-500">Species</p>
-                  <p className="mt-1 text-base text-gray-900">{displaySpecies}</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm font-medium text-gray-500">Breed</p>
-                  <p className="mt-1 text-base text-gray-900">{animal.breed || 'N/A'}</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm font-medium text-gray-500">Gender</p>
-                  <p className="mt-1 text-base text-gray-900">{animal.gender}</p>
-                </div>
+        {successMessage ? (
+          <p
+            role="status"
+            className="mt-5 rounded-lg border border-[#606c38]/40 bg-[#fefae0] px-4 py-3 text-sm font-medium text-[#283618]"
+          >
+            {successMessage}
+          </p>
+        ) : null}
+
+        {isEditing ? (
+          <form
+            aria-label="Edit livestock details"
+            aria-busy={saving}
+            onSubmit={handleSaveChanges}
+            className="mt-5 min-w-0 space-y-5 overflow-hidden"
+          >
+            {editError ? (
+              <p
+                id="inline-livestock-edit-error"
+                role="alert"
+                className="rounded-lg border border-[#bc6c25]/50 bg-[#fefae0] px-4 py-3 text-sm font-medium text-[#8b4518]"
+              >
+                {editError}
+              </p>
+            ) : null}
+
+            <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="min-w-0">
+                <label htmlFor="inline-animal-id" className="block text-sm font-semibold text-[#283618]">
+                  Animal ID / Tag
+                </label>
+                <input
+                  id="inline-animal-id"
+                  required
+                  type="text"
+                  name="animalId"
+                  value={editForm.animalId}
+                  onChange={handleEditChange}
+                  aria-describedby={editError ? 'inline-livestock-edit-error' : undefined}
+                  className="mt-1 block w-full min-w-0 rounded-lg border border-[#dda15e] bg-white px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+                />
               </div>
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm font-medium text-gray-500">Age</p>
-                  <p className="mt-1 text-base text-gray-900">{animal.age} Months</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm font-medium text-gray-500">Weight</p>
-                  <p className="mt-1 text-base text-gray-900">{animal.weight} kg</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm font-medium text-gray-500">Birth Date</p>
-                  <p className="mt-1 text-base text-gray-900">{animal.birthDate || 'N/A'}</p>
-                </div>
+
+              <div className="min-w-0">
+                <label htmlFor="inline-animal-name" className="block text-sm font-semibold text-[#283618]">
+                  Animal Name
+                </label>
+                <input
+                  id="inline-animal-name"
+                  required
+                  type="text"
+                  name="animalName"
+                  value={editForm.animalName}
+                  onChange={handleEditChange}
+                  className="mt-1 block w-full min-w-0 rounded-lg border border-[#dda15e] bg-white px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="inline-livestock-type" className="block text-sm font-semibold text-[#283618]">
+                  Livestock
+                </label>
+                <select
+                  id="inline-livestock-type"
+                  name="species"
+                  value={editForm.species}
+                  onChange={handleEditChange}
+                  className="mt-1 block w-full min-w-0 rounded-lg border border-[#dda15e] bg-white px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+                >
+                  {livestockTypeOptions.map((option) => (
+                    <option
+                      key={`${option.legacy ? 'legacy' : 'approved'}-${option.value}`}
+                      value={option.value}
+                      disabled={option.legacy}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {hasLegacyLivestockType ? (
+                  <p className="mt-1 text-xs text-[#bc6c25]">
+                    This stored legacy value is retained unless you choose an approved livestock type.
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="inline-breed" className="block text-sm font-semibold text-[#283618]">
+                  Breed
+                </label>
+                <input
+                  id="inline-breed"
+                  required
+                  type="text"
+                  name="breed"
+                  value={editForm.breed}
+                  onChange={handleEditChange}
+                  className="mt-1 block w-full min-w-0 rounded-lg border border-[#dda15e] bg-white px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="inline-birth-date" className="block text-sm font-semibold text-[#283618]">
+                  Birth Date
+                </label>
+                <input
+                  id="inline-birth-date"
+                  type="date"
+                  name="birthDate"
+                  value={editForm.birthDate}
+                  onChange={handleEditChange}
+                  className="mt-1 block w-full min-w-0 rounded-lg border border-[#dda15e] bg-white px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="inline-age" className="block text-sm font-semibold text-[#283618]">
+                  Age (Months)
+                </label>
+                <input
+                  id="inline-age"
+                  type="number"
+                  min="0"
+                  name="age"
+                  value={editForm.age}
+                  onChange={handleEditChange}
+                  readOnly={Boolean(editForm.birthDate)}
+                  className={`mt-1 block w-full min-w-0 rounded-lg border px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38] ${
+                    editForm.birthDate
+                      ? 'cursor-not-allowed border-[#dda15e]/40 bg-[#fefae0]'
+                      : 'border-[#dda15e] bg-white'
+                  }`}
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="inline-weight" className="block text-sm font-semibold text-[#283618]">
+                  Weight (kg)
+                </label>
+                <input
+                  id="inline-weight"
+                  required
+                  type="number"
+                  min="0.1"
+                  step="0.1"
+                  name="weight"
+                  value={editForm.weight}
+                  onChange={handleEditChange}
+                  className="mt-1 block w-full min-w-0 rounded-lg border border-[#dda15e] bg-white px-3 py-2 text-[#283618] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+                />
               </div>
             </div>
-            
-            {animal.notes && (
-              <div className="mt-6 bg-yellow-50 border border-yellow-200 p-4 rounded-md">
-                <h4 className="text-sm font-medium text-yellow-800 mb-1">Notes</h4>
-                <p className="text-sm text-yellow-700 whitespace-pre-wrap">{animal.notes}</p>
+
+            <div className="flex flex-col-reverse gap-3 border-t border-[#dda15e]/50 pt-5 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={handleCancelEditing}
+                disabled={saving}
+                className="inline-flex w-full items-center justify-center rounded-lg border border-[#606c38] bg-white px-4 py-2 text-sm font-semibold text-[#606c38] hover:bg-[#fefae0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38] disabled:opacity-60 sm:w-auto"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="inline-flex w-full items-center justify-center rounded-lg bg-[#606c38] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#4f5a2f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#283618] disabled:opacity-60 sm:w-auto"
+              >
+                <Save aria-hidden="true" className="mr-2 h-4 w-4" />
+                {saving ? 'Saving Changes...' : 'Save Changes'}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <dl className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ProfileValue label="Animal Name" value={animal.animalName} />
+              <ProfileValue label="Animal ID / Tag" value={animal.animalId} />
+              <ProfileValue label="Livestock Type" value={displaySpecies} />
+              <ProfileValue label="Breed" value={animal.breed || 'Unavailable'} />
+              <ProfileValue label="Age" value={`${animal.age} months`} />
+              <ProfileValue label="Weight" value={`${animal.weight} kg`} />
+              <ProfileValue label="Birth Date" value={animal.birthDate || 'Unavailable'} />
+              <ProfileValue label="Date Added" value={dateAdded} />
+              <ProfileValue label="Batch Assignment" value={batchAssignment} />
+            </dl>
+
+            {animal.notes ? (
+              <div className="mt-5 rounded-lg border border-[#dda15e]/60 bg-[#fefae0] p-4">
+                <h3 className="text-sm font-semibold text-[#283618]">Management Notes</h3>
+                <p className="mt-1 whitespace-pre-wrap text-sm text-gray-700">{animal.notes}</p>
+              </div>
+            ) : null}
+          </>
+        )}
+      </section>
+
+      <section
+        aria-labelledby="health-status-title"
+        className="rounded-xl border border-[#dda15e]/60 bg-white p-5 shadow-sm sm:p-6"
+      >
+        <h2 id="health-status-title" className="flex items-center text-xl font-bold text-[#283618]">
+          <Activity className="mr-2 h-5 w-5 text-[#606c38]" />
+          Health Status
+        </h2>
+        <div className={`mt-5 rounded-lg border p-4 ${getHealthBadgeStyle(derivedHealthStatus, 'card')}`}>
+          <p className="text-lg font-bold">{derivedHealthStatus}</p>
+          <p className="mt-1 text-sm text-gray-700">
+            Based on the latest health tracking record when available.
+          </p>
+        </div>
+
+        {latestHealthRecord ? (
+          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <h3 className="font-semibold text-[#283618]">Latest Recorded Health Information</h3>
+            <dl className="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="font-medium text-gray-500">Condition</dt>
+                <dd className="mt-1 text-gray-900">{latestHealthRecord.diseaseType || 'Unavailable'}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-gray-500">Recorded</dt>
+                <dd className="mt-1 text-gray-900">
+                  {parseDateValue(latestHealthRecord.updatedAt)?.toLocaleDateString() ||
+                    parseDateValue(latestHealthRecord.createdAt)?.toLocaleDateString() ||
+                    'Unavailable'}
+                </dd>
+              </div>
+              <div className="sm:col-span-2">
+                <dt className="font-medium text-gray-500">Current Notes</dt>
+                <dd className="mt-1 whitespace-pre-wrap text-gray-900">
+                  {latestHealthRecord.vetNotes ||
+                    latestHealthRecord.treatment ||
+                    latestHealthRecord.symptoms ||
+                    'No current health notes were recorded.'}
+                </dd>
+              </div>
+            </dl>
+          </div>
+        ) : (
+          <p className="mt-4 text-sm text-gray-600">No health records are available for this animal.</p>
+        )}
+      </section>
+
+      <section
+        aria-labelledby="medical-vaccinations-title"
+        className="rounded-xl border border-[#dda15e]/60 bg-white p-5 shadow-sm sm:p-6"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 id="medical-vaccinations-title" className="flex items-center text-xl font-bold text-[#283618]">
+            <Syringe className="mr-2 h-5 w-5 text-[#606c38]" />
+            Medical and Vaccinations
+          </h2>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Link
+              to="/health"
+              className="inline-flex items-center justify-center rounded-lg border border-[#606c38] px-3 py-2 text-sm font-medium text-[#606c38] hover:bg-[#fefae0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#606c38]"
+            >
+              Add Health Record
+            </Link>
+            <Link
+              to="/vaccinations"
+              className="inline-flex items-center justify-center rounded-lg bg-[#606c38] px-3 py-2 text-sm font-medium text-white hover:bg-[#4f5a2f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#283618]"
+            >
+              Record Vaccination
+            </Link>
+          </div>
+        </div>
+
+        <div className={`mt-5 rounded-lg border p-4 ${getVaccinationStatusStyle(derivedVaccinationStatus, 'card')}`}>
+          <p className="text-sm font-medium">Vaccination Status</p>
+          <p className="mt-1 text-lg font-bold">{derivedVaccinationStatus}</p>
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-8 xl:grid-cols-2">
+          <div className="min-w-0">
+            <h3 className="font-bold text-[#283618]">Vaccination History</h3>
+            {sortedVaccinations.length > 0 ? (
+              <ul className="mt-4 space-y-3">
+                {sortedVaccinations.map((vaccination) => {
+                  const status = getVaccinationStatus([vaccination]);
+                  return (
+                    <li key={vaccination.id} className="rounded-lg border border-gray-200 p-4">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <p className="font-semibold text-[#283618]">{vaccination.vaccineName}</p>
+                        <span className={`w-fit rounded-full px-2.5 py-1 text-xs font-semibold ${getVaccinationStatusStyle(status, 'badge')}`}>
+                          {status}
+                        </span>
+                      </div>
+                      <dl className="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+                        <div>
+                          <dt className="text-gray-500">Date administered</dt>
+                          <dd className="font-medium text-gray-900">{vaccination.vaccinationDate || 'Unavailable'}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-gray-500">Next due date</dt>
+                          <dd className="font-medium text-gray-900">{vaccination.nextDueDate || 'Unavailable'}</dd>
+                        </div>
+                      </dl>
+                      {vaccination.notes ? (
+                        <p className="mt-3 whitespace-pre-wrap text-sm text-gray-700">{vaccination.notes}</p>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div className="mt-4 rounded-lg border border-dashed border-[#dda15e] bg-[#fefae0] p-5 text-sm text-gray-700">
+                No vaccination records found for this animal.
               </div>
             )}
           </div>
-        )}
 
-        {activeTab === 'health' && (
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><Activity className="w-5 h-5 mr-2 text-gray-400" /> Health Status</h3>
-                <div className={`p-4 rounded-md border ${getHealthBadgeStyle(derivedHealthStatus, 'card')}`}>
-                  <p className="text-lg font-bold">{derivedHealthStatus}</p>
-                  <p className="text-sm mt-1 text-gray-600">Based on the latest health tracking record when available.</p>
-                </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-[#283618]">Medical History</h3>
+            {sortedHealthRecords.length > 0 ? (
+              <div className="mt-4 space-y-3">
+                {sortedHealthRecords.map((record) => (
+                  <article key={record.id} className="rounded-lg border border-gray-200 p-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <p className="font-semibold text-[#283618]">{record.diseaseType || 'Health record'}</p>
+                      <span className={`w-fit rounded-full px-2.5 py-1 text-xs font-semibold ${getHealthBadgeStyle(normalizeHealthStatus(record.recoveryStatus), 'badge')}`}>
+                        {record.recoveryStatus}
+                      </span>
+                    </div>
+                    <div className="mt-3 space-y-2 text-sm text-gray-700">
+                      <p><strong>Symptoms:</strong> {record.symptoms || 'Not recorded'}</p>
+                      <p><strong>Treatment:</strong> {record.treatment || 'Not recorded'}</p>
+                      {record.medicine ? <p><strong>Medicine:</strong> {record.medicine}</p> : null}
+                      {record.vetNotes ? <p><strong>Notes:</strong> {record.vetNotes}</p> : null}
+                    </div>
+                  </article>
+                ))}
               </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center"><Syringe className="w-5 h-5 mr-2 text-gray-400" /> Vaccination Status</h3>
-                <div className={`p-4 rounded-md border ${getVaccinationStatusStyle(derivedVaccinationStatus, 'card')}`}>
-                  <p className="text-lg font-bold">{derivedVaccinationStatus}</p>
-                  <p className="text-sm mt-1 text-gray-600">Derived from this animal&apos;s vaccination records when available.</p>
-                </div>
+            ) : (
+              <div className="mt-4 rounded-lg border border-dashed border-[#dda15e] bg-[#fefae0] p-5 text-sm text-gray-700">
+                No medical history found for this animal.
               </div>
-            </div>
-            <div className="mt-8 space-y-8">
-              <div>
-                <h3 className="text-md font-bold text-gray-900 mb-4 flex items-center"><Syringe className="w-5 h-5 mr-2 text-green-600" /> Vaccination History</h3>
-                {vaccinations.length > 0 ? (
-                  <div className="overflow-hidden bg-white border border-gray-200 rounded-md">
-                    <ul className="divide-y divide-gray-200">
-                      {sortedVaccinations.map((vac) => (
-                        <li key={vac.id} className="p-4 hover:bg-gray-50">
-                          <div className="flex justify-between">
-                            <p className="text-sm font-medium text-green-600">{vac.vaccineName}</p>
-                            <p className="text-xs text-gray-500">Given: {vac.vaccinationDate}</p>
-                          </div>
-                          <p className="text-xs text-gray-500 mt-1">Next Due: <span className="font-bold">{vac.nextDueDate}</span></p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500 italic">No vaccination records found for this animal.</p>
-                )}
-              </div>
-
-              <div>
-                <h3 className="text-md font-bold text-gray-900 mb-4 flex items-center"><Activity className="w-5 h-5 mr-2 text-red-600" /> Medical History</h3>
-                {healthRecords.length > 0 ? (
-                  <div className="space-y-4">
-                    {sortedHealthRecords.map((hr) => (
-                      <div key={hr.id} className="p-4 border border-gray-200 rounded-md bg-white shadow-sm">
-                        <div className="flex justify-between items-start">
-                          <p className="text-sm font-bold text-gray-900">{hr.diseaseType}</p>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${hr.recoveryStatus === 'Recovered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                            {hr.recoveryStatus}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600 mt-2"><strong>Symptoms:</strong> {hr.symptoms}</p>
-                        <p className="text-sm text-gray-600 mt-1"><strong>Treatment:</strong> {hr.treatment}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500 italic">No medical history found for this animal.</p>
-                )}
-              </div>
-            </div>
+            )}
           </div>
-        )}
-
-      </div>
+        </div>
+      </section>
     </div>
   );
 };
+
+const ProfileValue: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div className="rounded-lg border border-[#dda15e]/30 bg-[#fefae0]/70 p-4">
+    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</dt>
+    <dd className="mt-1 break-words text-base font-medium text-[#283618]">{value}</dd>
+  </div>
+);
 
 export default LivestockDetail;

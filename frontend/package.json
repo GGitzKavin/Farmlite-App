@@ -5,6 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test:phase6": "node --test tests/phase6_frontend.test.mjs",
+    "test:phase6.1": "node --test tests/phase6_1_frontend.test.mjs",
+    "test:phase6.2": "node --test tests/phase6_2_frontend.test.mjs",
+    "test:phase6.3": "node --test tests/phase6_3_frontend.test.mjs",
+    "test:inline-livestock-edit": "node --test tests/inline_livestock_edit.test.mjs",
+    "test:feed-stock": "node --test tests/feed_stock_controls.test.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

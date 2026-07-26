@@ -1,0 +1,63 @@
+{
+  "report_version": "phase5_artifact_integrity_report_v1",
+  "phase": "5",
+  "generated_date": "2026-07-26",
+  "verification_order": [
+    "resolve repository-controlled path",
+    "confirm artifact and metadata files exist",
+    "calculate and compare artifact SHA-256",
+    "calculate and compare metadata SHA-256",
+    "parse and validate metadata contract",
+    "deserialize joblib",
+    "validate pipeline structure and encoded categories",
+    "cache successful load"
+  ],
+  "trusted_root": "ml/models/candidates/bangladesh",
+  "binary_content_included": false,
+  "candidates": {
+    "dmi": {
+      "artifact": "ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.joblib",
+      "expected_sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
+      "observed_sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
+      "metadata_sha256": "0016C843FAA9A5BA7C8533F987FA748E8BC021A1ED24F65D9AA53E27D9EAF0DF",
+      "artifact_status": "CANDIDATE_ONLY",
+      "production_approved": false,
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "target": "dry_matter_intake_kg_day",
+      "unit": "kg dry matter/cow/day",
+      "study_observed_sanity_range": [
+        4.48,
+        14.82
+      ],
+      "integrity_result": "PASS"
+    },
+    "milk": {
+      "artifact": "ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.joblib",
+      "expected_sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
+      "observed_sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
+      "metadata_sha256": "1D5D2D019B2AE0595D421298386DB4527C1C2D5771BAD69724E6E2727708F303",
+      "artifact_status": "CANDIDATE_ONLY",
+      "production_approved": false,
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "target": "milk_yield_l_day",
+      "unit": "L/cow/day",
+      "study_observed_sanity_range": [
+        0.3,
+        10.47
+      ],
+      "integrity_result": "PASS"
+    }
+  },
+  "metadata_contract_result": "PASS",
+  "pipeline_compatibility_result": "PASS",
+  "hash_mismatch_simulation": "PASS_BLOCKED_BEFORE_JOBLIB_LOAD",
+  "missing_artifact_simulation": "PASS_BLOCKED",
+  "invalid_metadata_simulation": "PASS_BLOCKED",
+  "final_result": "PASS_CANDIDATE_ONLY"
+}

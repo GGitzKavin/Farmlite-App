@@ -471,7 +471,7 @@ const Notifications: React.FC = () => {
             toText(linkedAnimal?.animalName) ||
             batchName ||
             toText(linkedBatch?.batchName) ||
-            (targetType === 'Batch' || record.batchId ? 'Batch record' : 'Animal record');
+            (targetType === 'Batch' || record.batchId ? 'Batch record' : 'Livestock record');
 
           const targetDetails =
             animalId && (record.livestockId || linkedAnimal?.id)
@@ -699,7 +699,6 @@ const Notifications: React.FC = () => {
             <Bell className="h-7 w-7 text-green-600" />
             Notifications
           </h1>
-          <p className="mt-1 text-sm text-gray-500">Farm alerts and reminders</p>
         </div>
       </div>
 
@@ -738,7 +737,7 @@ const Notifications: React.FC = () => {
           icon={<Activity className="h-6 w-6 text-rose-600" />}
           title="Health Alerts"
           count={data.healthAlerts.length}
-          description="Animals that still need monitoring or care."
+          description="Livestock that still need monitoring or care."
           accentClass="text-rose-600"
           backgroundClass="bg-rose-50"
         />

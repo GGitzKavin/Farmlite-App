@@ -421,7 +421,7 @@ const HealthTracking: React.FC = () => {
                       ? 'Select an animal...'
                       : editingRecord
                         ? 'Animal unavailable'
-                        : 'No animals available'}
+                        : 'No livestock available'}
                   </option>
                   {selectedAnimalMissing ? (
                     <option value={formData.livestockId}>
@@ -454,7 +454,7 @@ const HealthTracking: React.FC = () => {
                 <input type="text" name="medicine" value={formData.medicine} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm" />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Symptoms</label>
@@ -522,13 +522,13 @@ const HealthTracking: React.FC = () => {
                     <p className="text-sm font-medium text-red-600">{record.diseaseType || 'Unspecified Issue'}</p>
                   </div>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    record.recoveryStatus === 'Recovered' ? 'bg-green-100 text-green-800' : 
+                    record.recoveryStatus === 'Recovered' ? 'bg-green-100 text-green-800' :
                     record.recoveryStatus === 'Critical' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {record.recoveryStatus || 'In Treatment'}
                   </span>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div>
                     <h4 className="text-xs font-medium text-gray-500 uppercase">Symptoms</h4>

@@ -1,0 +1,138 @@
+{
+  "review_version": "farmlite_bangladesh_phase_4_5e_review_v1",
+  "phase": "4.5E",
+  "review_status": "COMPLETE",
+  "review_scope": "GUARDED_STANDALONE_PROTOTYPE_ONLY",
+  "final_recommendation": "CONDITIONAL_INTEGRATION_REQUIRES_NEW_INPUT",
+  "runtime_integration_performed": false,
+  "candidate_status_after_review": "CANDIDATE_ONLY",
+  "production_approved": false,
+  "commercial_use_approved": false,
+  "veterinary_use_approved": false,
+  "candidate_artifacts": {
+    "dmi": {
+      "model_name": "bangladesh_dmi_regressor",
+      "artifact_path": "ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.joblib",
+      "metadata_path": "ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.metadata.json",
+      "sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
+      "artifact_status": "CANDIDATE_ONLY",
+      "target": "dry_matter_intake_kg_day",
+      "output_field": "predicted_dmi_kg_day",
+      "output_unit": "kg dry matter/cow/day",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "allowed_runtime_use": "STANDALONE_INFORMATIONAL_PROTOTYPE_PREDICTION",
+      "forbidden_runtime_use": "FEED_RATION_OR_TOTAL_AS_FED_QUANTITY"
+    },
+    "milk": {
+      "model_name": "bangladesh_milk_yield_regressor",
+      "artifact_path": "ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.joblib",
+      "metadata_path": "ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.metadata.json",
+      "sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
+      "artifact_status": "CANDIDATE_ONLY",
+      "target": "milk_yield_l_day",
+      "output_field": "predicted_milk_yield_l_day",
+      "output_unit": "L/cow/day",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "allowed_runtime_use": "STANDALONE_INFORMATIONAL_PROTOTYPE_PREDICTION",
+      "forbidden_runtime_use": "AUTOMATIC_REPLACEMENT_OF_RETAINED_MILK_MODEL"
+    }
+  },
+  "request_adapter": {
+    "status": "DESIGN_ONLY_NOT_IMPLEMENTED",
+    "required_fields": [
+      "genetic_group",
+      "ambient_temperature_c",
+      "humidity_percent"
+    ],
+    "genetic_group": {
+      "api_field": "genetic_group",
+      "accepted_exact_values": [
+        "Local",
+        "HF50",
+        "HF62.5",
+        "HF75",
+        "HF87.5"
+      ],
+      "limited_support_values": [
+        "Local"
+      ],
+      "limited_support_reason": "Local is a known training category with grouped development evidence, but the locked final unseen-cow holdout contained no Local cows.",
+      "derive_from_free_text_breed": false,
+      "unknown_value_policy": "REJECT"
+    },
+    "thi_derivation": {
+      "temperature_field": "ambient_temperature_c",
+      "temperature_unit": "degrees Celsius",
+      "humidity_field": "humidity_percent",
+      "humidity_unit": "percent",
+      "formula": "(1.8 * T + 32) - ((0.55 - 0.0055 * RH) * (1.8 * T - 26))",
+      "category_rules": {
+        "T0": "THI <= 75",
+        "T1": "75 < THI < 80",
+        "T2": "THI >= 80"
+      },
+      "source_doi": "10.1016/j.anopes.2026.100139",
+      "temperature_validation": "REQUIRE_FINITE_NUMBER",
+      "humidity_validation": "REQUIRE_FINITE_NUMBER_INCLUSIVE_0_TO_100",
+      "direct_client_thi_category_allowed": false,
+      "silent_weather_defaults_allowed": false,
+      "historical_back_calculation_allowed": false
+    }
+  },
+  "response_requirements": {
+    "preserve_candidate_label": true,
+    "include_derived_thi_value": true,
+    "include_derived_thi_category": true,
+    "include_artifact_sha256": true,
+    "include_model_and_contract_versions": true,
+    "include_dataset_doi_and_licence": true,
+    "include_scope_limitations": true,
+    "include_value_sources": true,
+    "prediction_failure_policy": "FAIL_CLOSED",
+    "numeric_adjustment_policy": "DO_NOT_CLAMP_OR_CONVERT_DMI_TO_FEED"
+  },
+  "loading_controls": {
+    "default_enabled": false,
+    "feature_flag_required": true,
+    "verify_sha256_before_joblib_load": true,
+    "verify_metadata_before_joblib_load": true,
+    "reject_absolute_metadata_artifact_path_as_runtime_locator": true,
+    "pin_compatible_python_ml_dependencies_before_enablement": true,
+    "review_environment_scikit_learn_version": "1.8.0",
+    "non_finite_prediction_policy": "REJECT"
+  },
+  "prohibited_changes_in_phase_4_5e": [
+    "Flask route integration",
+    "Existing model-service replacement",
+    "Feed-planner or nutrition-rule changes",
+    "Frontend form or result changes",
+    "PDF changes",
+    "Candidate artifact promotion",
+    "Production, commercial, or veterinary claims"
+  ],
+  "future_implementation_acceptance_criteria": [
+    "Use a separate disabled-by-default candidate inference path.",
+    "Require an exact supported genetic_group value; never infer it from breed text.",
+    "Require measured temperature and relative humidity; never use the retained model's silent weather defaults.",
+    "Derive THI and its category server-side with exact boundary tests.",
+    "Classify Local as LIMITED_SUPPORT with a warning and reject unknown categories before model prediction.",
+    "Verify artifact hashes and metadata before deserializing joblib artifacts.",
+    "Return DMI and milk as standalone candidate predictions with explicit units and provenance.",
+    "Do not route predicted DMI into the legacy totalFeedKg field, roughage, concentrate, mineral, water, or feeding-frequency rules.",
+    "Do not replace the retained synthetic milk model automatically.",
+    "Keep all production, commercial, and veterinary approval flags false."
+  ],
+  "phase_4_5e_runtime_baseline_sha256": {
+    "api/routes.py": "87E1CE9F617A7FF5109AF91286F5704AE7FE3FF4DA1EDB2CFB16C698D3D43B17",
+    "ml/inference/model_service.py": "08F9BD778000E823FB4F33E42C411A2592A3D7C0574D82050E9ACB9CFBCA8297",
+    "ml/inference/feed_planner.py": "27C17A8DBDF8111FC961DD4DF06CB51201C7C480600494AA52D871C777B72F2A",
+    "ml/validation/nutrition_rules.py": "3D7A4448EF66409C2D53B9EA97DE725915E53060D71A9DF619E28B9F6DADEC4C",
+    "../../frontend/src/pages/FeedRecommendation.tsx": "7EAEEE2FC8882946DA64398D3C35ECF4E0957AC5CEB8DDC2F3A2CD153D4CDF3E"
+  }
+}

@@ -3,9 +3,15 @@ import LivestockTable from './LivestockTable';
 import BatchManagement from './BatchManagement';
 import { Tractor, Users, Search, CheckCircle, AlertCircle } from 'lucide-react';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { useSearchParams } from 'react-router-dom';
+import { ALL_LIVESTOCK_TYPES } from '../../features/livestockTypes';
+import { getSpeciesFilterValue } from '../../utils/livestockStatus';
 
 const LivestockList: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'individual' | 'batch'>('individual');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'individual' | 'batch'>(() =>
+    searchParams.get('view') === 'batch' ? 'batch' : 'individual'
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSpecies, setFilterSpecies] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -13,13 +19,18 @@ const LivestockList: React.FC = () => {
   // Auto-hide success message with cleanup
   useEffect(() => {
     if (!successMessage) return;
-    
+
     const timer = setTimeout(() => setSuccessMessage(''), 3000);
     return () => clearTimeout(timer);
   }, [successMessage]);
 
   const handleSuccess = useCallback((msg: string) => {
     setSuccessMessage(msg);
+  }, []);
+
+  const handleBatchCreated = useCallback(() => {
+    setSearchTerm('');
+    setFilterSpecies('');
   }, []);
 
   return (
@@ -36,33 +47,37 @@ const LivestockList: React.FC = () => {
         )}
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <h1 className="text-3xl font-bold text-gray-900">Livestock Management</h1>
+          <h1 className="text-3xl font-bold text-[#283618]">Livestock Management</h1>
         </div>
 
         {/* Tabs and Primary Search */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="border-b border-gray-200 bg-gray-50/60 px-4 sm:px-5">
+        <div className="overflow-hidden rounded-xl border border-[#dda15e]/60 bg-white shadow-sm">
+          <div className="border-b border-[#dda15e]/40 bg-[#fefae0] px-4 sm:px-5">
             <div className="flex flex-col gap-3 py-3 lg:flex-row lg:items-center lg:justify-between">
             <nav className="-mb-px flex space-x-6" aria-label="Tabs">
               <button
+                type="button"
+                aria-selected={activeTab === 'individual'}
                 onClick={() => setActiveTab('individual')}
                 className={`
                   flex items-center py-2.5 px-1 border-b-2 font-semibold text-sm whitespace-nowrap transition-all
                   ${activeTab === 'individual'
                     ? 'border-[#606c38] text-[#606c38]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
+                    : 'border-transparent text-gray-600 hover:border-[#dda15e] hover:text-[#283618]'}
                 `}
               >
                 <Tractor className="w-4 h-4 mr-2" />
-                Individual Animals
+                Individual Livestock
               </button>
               <button
+                type="button"
+                aria-selected={activeTab === 'batch'}
                 onClick={() => setActiveTab('batch')}
                 className={`
                   flex items-center py-2.5 px-1 border-b-2 font-semibold text-sm whitespace-nowrap transition-all
                   ${activeTab === 'batch'
                     ? 'border-[#606c38] text-[#606c38]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
+                    : 'border-transparent text-gray-600 hover:border-[#dda15e] hover:text-[#283618]'}
                 `}
               >
                 <Users className="w-4 h-4 mr-2" />
@@ -75,25 +90,33 @@ const LivestockList: React.FC = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder={`Search ${activeTab === 'individual' ? 'animals' : 'batches'}...`}
-                  className="block h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-3 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500"
+                  aria-label={`Search ${activeTab === 'individual' ? 'livestock' : 'batches'}`}
+                  placeholder={`Search ${activeTab === 'individual' ? 'livestock' : 'batches'}...`}
+                  className="block h-10 w-full rounded-lg border border-[#dda15e]/70 bg-white pl-10 pr-3 text-sm focus:border-[#606c38] focus:ring-2 focus:ring-[#606c38]"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div className="relative sm:w-48">
+                <label htmlFor="livestock-type-filter" className="sr-only">
+                  Livestock type
+                </label>
                 <select
-                  className="block h-10 w-full rounded-lg border border-gray-300 bg-white pl-3 pr-10 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  id="livestock-type-filter"
+                  aria-label="Filter by livestock type"
+                  className="block h-10 w-full rounded-lg border border-gray-300 bg-white pl-3 pr-10 text-sm focus:border-[#606c38] focus:outline-none focus:ring-2 focus:ring-[#606c38]"
                   value={filterSpecies}
                   onChange={(e) => setFilterSpecies(e.target.value)}
                 >
-                  <option value="">All Species</option>
-                  <option value="dairy-cattle">Dairy Cattle</option>
-                  <option value="cattle-beef">Cattle (Beef)</option>
-                  <option value="sheep-goats">Sheep/Goats</option>
-                  <option value="chicken">Chicken</option>
-                  <option value="duck">Duck</option>
-                  <option value="swine">Swine</option>
+                  <option value="">All Livestock</option>
+                  {ALL_LIVESTOCK_TYPES.map((livestockType) => (
+                    <option
+                      key={livestockType}
+                      value={getSpeciesFilterValue(livestockType)}
+                    >
+                      {livestockType}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -109,16 +132,17 @@ const LivestockList: React.FC = () => {
               </div>
             }>
               {activeTab === 'individual' ? (
-                <LivestockTable 
-                  searchTerm={searchTerm} 
-                  filterSpecies={filterSpecies} 
+                <LivestockTable
+                  searchTerm={searchTerm}
+                  filterSpecies={filterSpecies}
                   onSuccess={handleSuccess}
                 />
               ) : (
-                <BatchManagement 
-                  searchTerm={searchTerm} 
-                  filterSpecies={filterSpecies} 
+                <BatchManagement
+                  searchTerm={searchTerm}
+                  filterSpecies={filterSpecies}
                   onSuccess={handleSuccess}
+                  onBatchCreated={handleBatchCreated}
                 />
               )}
             </ErrorBoundary>

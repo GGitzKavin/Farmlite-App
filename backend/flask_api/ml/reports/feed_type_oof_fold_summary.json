@@ -1,0 +1,194 @@
+{
+  "training_row_count": 175000,
+  "number_of_folds": 5,
+  "fold_counts": {
+    "1": 35000,
+    "2": 35000,
+    "3": 35000,
+    "4": 35000,
+    "5": 35000
+  },
+  "random_seed": 42,
+  "fold_version": "phase3_feed_type_oof_v1",
+  "fold_algorithm": "StratifiedKFold on training rows only",
+  "stratification_column": "feed_type",
+  "feed_type_distribution_by_fold": {
+    "1": {
+      "Concentrates": {
+        "count": 4380,
+        "percentage": 12.514286
+      },
+      "Crop_Residues": {
+        "count": 4378,
+        "percentage": 12.508571
+      },
+      "Dry_Fodder": {
+        "count": 4419,
+        "percentage": 12.625714
+      },
+      "Green_Fodder": {
+        "count": 4372,
+        "percentage": 12.491429
+      },
+      "Hay": {
+        "count": 4359,
+        "percentage": 12.454286
+      },
+      "Mixed_Feed": {
+        "count": 4361,
+        "percentage": 12.46
+      },
+      "Pasture_Grass": {
+        "count": 4380,
+        "percentage": 12.514286
+      },
+      "Silage": {
+        "count": 4351,
+        "percentage": 12.431429
+      }
+    },
+    "2": {
+      "Concentrates": {
+        "count": 4380,
+        "percentage": 12.514286
+      },
+      "Crop_Residues": {
+        "count": 4378,
+        "percentage": 12.508571
+      },
+      "Dry_Fodder": {
+        "count": 4419,
+        "percentage": 12.625714
+      },
+      "Green_Fodder": {
+        "count": 4371,
+        "percentage": 12.488571
+      },
+      "Hay": {
+        "count": 4359,
+        "percentage": 12.454286
+      },
+      "Mixed_Feed": {
+        "count": 4362,
+        "percentage": 12.462857
+      },
+      "Pasture_Grass": {
+        "count": 4380,
+        "percentage": 12.514286
+      },
+      "Silage": {
+        "count": 4351,
+        "percentage": 12.431429
+      }
+    },
+    "3": {
+      "Concentrates": {
+        "count": 4379,
+        "percentage": 12.511429
+      },
+      "Crop_Residues": {
+        "count": 4378,
+        "percentage": 12.508571
+      },
+      "Dry_Fodder": {
+        "count": 4420,
+        "percentage": 12.628571
+      },
+      "Green_Fodder": {
+        "count": 4371,
+        "percentage": 12.488571
+      },
+      "Hay": {
+        "count": 4359,
+        "percentage": 12.454286
+      },
+      "Mixed_Feed": {
+        "count": 4361,
+        "percentage": 12.46
+      },
+      "Pasture_Grass": {
+        "count": 4381,
+        "percentage": 12.517143
+      },
+      "Silage": {
+        "count": 4351,
+        "percentage": 12.431429
+      }
+    },
+    "4": {
+      "Concentrates": {
+        "count": 4379,
+        "percentage": 12.511429
+      },
+      "Crop_Residues": {
+        "count": 4378,
+        "percentage": 12.508571
+      },
+      "Dry_Fodder": {
+        "count": 4420,
+        "percentage": 12.628571
+      },
+      "Green_Fodder": {
+        "count": 4371,
+        "percentage": 12.488571
+      },
+      "Hay": {
+        "count": 4359,
+        "percentage": 12.454286
+      },
+      "Mixed_Feed": {
+        "count": 4361,
+        "percentage": 12.46
+      },
+      "Pasture_Grass": {
+        "count": 4381,
+        "percentage": 12.517143
+      },
+      "Silage": {
+        "count": 4351,
+        "percentage": 12.431429
+      }
+    },
+    "5": {
+      "Concentrates": {
+        "count": 4379,
+        "percentage": 12.511429
+      },
+      "Crop_Residues": {
+        "count": 4379,
+        "percentage": 12.511429
+      },
+      "Dry_Fodder": {
+        "count": 4420,
+        "percentage": 12.628571
+      },
+      "Green_Fodder": {
+        "count": 4371,
+        "percentage": 12.488571
+      },
+      "Hay": {
+        "count": 4358,
+        "percentage": 12.451429
+      },
+      "Mixed_Feed": {
+        "count": 4361,
+        "percentage": 12.46
+      },
+      "Pasture_Grass": {
+        "count": 4381,
+        "percentage": 12.517143
+      },
+      "Silage": {
+        "count": 4351,
+        "percentage": 12.431429
+      }
+    }
+  },
+  "checks": {
+    "every_training_row_assigned_once": true,
+    "validation_and_test_rows_excluded": true,
+    "duplicate_source_row_count": 0,
+    "contains_predictions": false
+  },
+  "reproducibility_hash_sha256": "B1B546A11903F65E9A91824B6E25E2897E15F80A1619E08A5918652CAB377EB1"
+}

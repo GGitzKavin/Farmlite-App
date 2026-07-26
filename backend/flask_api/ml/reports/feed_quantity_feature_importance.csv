@@ -1,0 +1,10 @@
+canonical_feature,importance_mean,importance_standard_deviation,scoring,validation_sample_rows,n_repeats
+previous_week_avg_yield_l,0.011469158521962175,0.0026366641029074893,neg_mean_absolute_error,5000,3
+breed,0.006432225811633756,0.0016562759672884278,neg_mean_absolute_error,5000,3
+days_in_milk,0.002759317638080313,0.0015169094155783984,neg_mean_absolute_error,5000,3
+ambient_temperature_c,0.0009304440789354255,0.0003692816603695039,neg_mean_absolute_error,5000,3
+body_condition_score,0.0007482061840794844,0.0001496375767461453,neg_mean_absolute_error,5000,3
+humidity_percent,5.8796723772551e-05,0.0003438401222233941,neg_mean_absolute_error,5000,3
+age_months,-1.716013336020931e-06,0.0002168059553931661,neg_mean_absolute_error,5000,3
+weight_kg,-0.0008261913503352739,0.0003785117003355147,neg_mean_absolute_error,5000,3
+lactation_stage,-0.0008672954272475053,0.0010197441834487015,neg_mean_absolute_error,5000,3

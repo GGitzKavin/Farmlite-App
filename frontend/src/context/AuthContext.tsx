@@ -20,13 +20,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("AuthProvider: Setting up onAuthStateChanged");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("AuthProvider: onAuthStateChanged fired, user:", user);
       setCurrentUser(user);
       setLoading(false);
-    }, (error) => {
-      console.error("AuthProvider: onAuthStateChanged error:", error);
+    }, () => {
       setLoading(false);
     });
 

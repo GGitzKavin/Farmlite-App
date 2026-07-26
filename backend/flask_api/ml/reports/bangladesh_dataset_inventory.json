@@ -1,0 +1,1128 @@
+{
+  "audit_version": "4.5C",
+  "audit_order": [
+    "metadata.docx",
+    "DMI, milk yield and composition.xlsx",
+    "physiological responses.xlsx",
+    "Blood metabolites.xlsx"
+  ],
+  "expected_file_count": 4,
+  "files": [
+    {
+      "filename": "metadata.docx",
+      "relative_path": "datasets/external/raw/bangladesh_hf_cross/metadata.docx",
+      "file_type": "DOCX",
+      "file_size_bytes": 17131,
+      "sha256": "B5C652DAA3C0DB3BCACF6931D46D072ECF6793863821856991B17A994F737A03",
+      "last_modified_timestamp": "2026-07-25T19:08:46.157979012+00:00",
+      "opens_successfully": true,
+      "package_properties": {
+        "creator": "GSIT",
+        "last_modified_by": "GSIT",
+        "created": "2025-11-11T17:09:00Z",
+        "modified": "2026-03-29T17:38:00Z"
+      },
+      "archive_entry_count": 13,
+      "excel_sheet_count": 0,
+      "sheet_names": [],
+      "hidden_sheets": [],
+      "merged_cells": {},
+      "formula_count": 0,
+      "comment_or_note_count": 0,
+      "embedded_table_count": 0,
+      "metadata_content": {
+        "paragraph_count": 46,
+        "heading_count": 4,
+        "table_count": 0,
+        "properties": {
+          "creator": "GSIT",
+          "last_modified_by": "GSIT",
+          "created": "2025-11-11T17:09:00Z",
+          "modified": "2026-03-29T17:38:00Z"
+        }
+      },
+      "licence_information": "Local file: UNCLEAR; matched repository record: CC BY 4.0",
+      "citation_information": "Pehan Eshtiak Ahamed (2026), Physiological responses, Dry matter Intake, milk yield, composition and blood metabolites of HF Cross cows, V2, doi:10.17632/954f6g36sb.2"
+    },
+    {
+      "filename": "DMI, milk yield and composition.xlsx",
+      "relative_path": "datasets/external/raw/bangladesh_hf_cross/DMI, milk yield and composition.xlsx",
+      "file_type": "XLSX",
+      "file_size_bytes": 63313,
+      "sha256": "EC3FECE684C40343C2A4F8F527F2BBE274E7B5B6EBD2B200FCDA623DBDC6A508",
+      "last_modified_timestamp": "2026-07-25T19:08:46.167490482+00:00",
+      "opens_successfully": true,
+      "package_properties": {
+        "last_modified_by": "GSIT",
+        "created": "2025-10-27T09:16:26Z",
+        "modified": "2026-03-29T17:41:35Z"
+      },
+      "archive_entry_count": 10,
+      "excel_sheet_count": 1,
+      "sheet_names": [
+        "Sheet1"
+      ],
+      "hidden_sheets": [],
+      "merged_cells": {
+        "Sheet1": []
+      },
+      "formula_count": 0,
+      "comment_or_note_count": 0,
+      "embedded_table_count": 0,
+      "metadata_content": {
+        "last_modified_by": "GSIT",
+        "created": "2025-10-27T09:16:26Z",
+        "modified": "2026-03-29T17:41:35Z"
+      },
+      "licence_information": "Local file: UNCLEAR; matched repository record: CC BY 4.0",
+      "citation_information": "Pehan Eshtiak Ahamed (2026), Physiological responses, Dry matter Intake, milk yield, composition and blood metabolites of HF Cross cows, V2, doi:10.17632/954f6g36sb.2"
+    },
+    {
+      "filename": "physiological responses.xlsx",
+      "relative_path": "datasets/external/raw/bangladesh_hf_cross/physiological responses.xlsx",
+      "file_type": "XLSX",
+      "file_size_bytes": 35999,
+      "sha256": "58F5B01BC771E618C19EE33EC18A96F698EB61E262FE501182E3A2BDDAD01F65",
+      "last_modified_timestamp": "2026-07-25T19:08:46.177016735+00:00",
+      "opens_successfully": true,
+      "package_properties": {
+        "last_modified_by": "GSIT",
+        "created": "2025-10-27T08:58:50Z",
+        "modified": "2025-10-27T09:26:35Z"
+      },
+      "archive_entry_count": 10,
+      "excel_sheet_count": 1,
+      "sheet_names": [
+        "Sheet1"
+      ],
+      "hidden_sheets": [],
+      "merged_cells": {
+        "Sheet1": []
+      },
+      "formula_count": 0,
+      "comment_or_note_count": 0,
+      "embedded_table_count": 0,
+      "metadata_content": {
+        "last_modified_by": "GSIT",
+        "created": "2025-10-27T08:58:50Z",
+        "modified": "2025-10-27T09:26:35Z"
+      },
+      "licence_information": "Local file: UNCLEAR; matched repository record: CC BY 4.0",
+      "citation_information": "Pehan Eshtiak Ahamed (2026), Physiological responses, Dry matter Intake, milk yield, composition and blood metabolites of HF Cross cows, V2, doi:10.17632/954f6g36sb.2"
+    },
+    {
+      "filename": "Blood metabolites.xlsx",
+      "relative_path": "datasets/external/raw/bangladesh_hf_cross/Blood metabolites.xlsx",
+      "file_type": "XLSX",
+      "file_size_bytes": 71056,
+      "sha256": "1328BE3360353212B34E4321C1B77EEC5BB3081CE4002E7E93252310B4C07541",
+      "last_modified_timestamp": "2026-07-25T19:08:46.172508478+00:00",
+      "opens_successfully": true,
+      "package_properties": {
+        "last_modified_by": "GSIT",
+        "created": "2025-10-27T09:16:26Z",
+        "modified": "2025-10-27T09:51:04Z"
+      },
+      "archive_entry_count": 12,
+      "excel_sheet_count": 1,
+      "sheet_names": [
+        "Sheet1"
+      ],
+      "hidden_sheets": [],
+      "merged_cells": {
+        "Sheet1": []
+      },
+      "formula_count": 0,
+      "comment_or_note_count": 0,
+      "embedded_table_count": 0,
+      "metadata_content": {
+        "last_modified_by": "GSIT",
+        "created": "2025-10-27T09:16:26Z",
+        "modified": "2025-10-27T09:51:04Z"
+      },
+      "licence_information": "Local file: UNCLEAR; matched repository record: CC BY 4.0",
+      "citation_information": "Pehan Eshtiak Ahamed (2026), Physiological responses, Dry matter Intake, milk yield, composition and blood metabolites of HF Cross cows, V2, doi:10.17632/954f6g36sb.2"
+    }
+  ],
+  "repository_record": {
+    "title": "Physiological responses, Dry matter Intake, milk yield, composition and blood metabolites of HF Cross cows",
+    "contributor": "Pehan Eshtiak Ahamed",
+    "version": "2",
+    "published": "2026-03-30",
+    "doi": "10.17632/954f6g36sb.2",
+    "url": "https://data.mendeley.com/datasets/954f6g36sb/2",
+    "licence": "CC BY 4.0",
+    "study_period": "January to December 2024",
+    "study_location": "Central Cattle Breeding and Dairy Farm, Savar, Bangladesh",
+    "cow_count": 50,
+    "sampling": "Five milk and blood samples per cow per THI category; physiological parameters twice daily on sampling dates and averaged."
+  },
+  "related_article": {
+    "title": "Effects of cyclic temperature-humidity index on milk production, physiological and haematobiochemical responses in Holstein-Friesian cows of varied genetic proportions",
+    "doi": "10.1016/j.anopes.2026.100139",
+    "url": "https://www.sciencedirect.com/science/article/pii/S2772694026000130",
+    "thi_formula": "THI = (1.8 × T + 32) − [(0.55 − 0.0055 × RH) × (1.8 × T − 26)]",
+    "thi_inputs": "T = dry-bulb temperature (°C); RH = relative humidity (%)"
+  },
+  "workbook_profiles": {
+    "DMI, milk yield and composition.xlsx": {
+      "filename": "DMI, milk yield and composition.xlsx",
+      "sheet_name": "Sheet1",
+      "sheet_state": "visible",
+      "row_count_excluding_header": 750,
+      "column_count": 13,
+      "exact_column_names": [
+        "Animal ID",
+        "Genetic Group",
+        "THI Range",
+        "Replication No",
+        "DMI (kg)",
+        "Milk Yield (L/day/cow)",
+        "SCC cells per mL",
+        "Fat%",
+        "SNF%",
+        "Protein %",
+        "Salt%",
+        "Lactose%",
+        "pH"
+      ],
+      "data_types": {
+        "Animal ID": [
+          "str"
+        ],
+        "Genetic Group": [
+          "str"
+        ],
+        "THI Range": [
+          "str"
+        ],
+        "Replication No": [
+          "int"
+        ],
+        "DMI (kg)": [
+          "float"
+        ],
+        "Milk Yield (L/day/cow)": [
+          "float"
+        ],
+        "SCC cells per mL": [
+          "int"
+        ],
+        "Fat%": [
+          "float"
+        ],
+        "SNF%": [
+          "float"
+        ],
+        "Protein %": [
+          "float"
+        ],
+        "Salt%": [
+          "float"
+        ],
+        "Lactose%": [
+          "float"
+        ],
+        "pH": [
+          "float"
+        ]
+      },
+      "missing_values": [
+        {
+          "column": "Animal ID",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Genetic Group",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "THI Range",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Replication No",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "DMI (kg)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Milk Yield (L/day/cow)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "SCC cells per mL",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Fat%",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "SNF%",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Protein %",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Salt%",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Lactose%",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "pH",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        }
+      ],
+      "duplicate_rows": 0,
+      "duplicate_composite_keys": 0,
+      "numeric_summaries": {
+        "Animal ID": {
+          "count": 750,
+          "minimum": 102.0,
+          "maximum": 511.0,
+          "mean": 306.5,
+          "median": 306.5,
+          "standard_deviation": 141.54491613752566,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Replication No": {
+          "count": 750,
+          "minimum": 1.0,
+          "maximum": 5.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "standard_deviation": 1.4151573152725079,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "DMI (kg)": {
+          "count": 750,
+          "minimum": 4.48,
+          "maximum": 14.82,
+          "mean": 10.0496,
+          "median": 10.15,
+          "standard_deviation": 2.462994009870279,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Milk Yield (L/day/cow)": {
+          "count": 750,
+          "minimum": 0.3,
+          "maximum": 10.47,
+          "mean": 5.529413333333332,
+          "median": 5.805,
+          "standard_deviation": 2.5724333889418682,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "SCC cells per mL": {
+          "count": 750,
+          "minimum": 97000.0,
+          "maximum": 364000.0,
+          "mean": 218884.0,
+          "median": 217500.0,
+          "standard_deviation": 48790.783946672156,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Fat%": {
+          "count": 750,
+          "minimum": 2.87,
+          "maximum": 4.31,
+          "mean": 3.5645866666666675,
+          "median": 3.56,
+          "standard_deviation": 0.28195583805809427,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "SNF%": {
+          "count": 750,
+          "minimum": 6.33,
+          "maximum": 10.38,
+          "mean": 8.44516,
+          "median": 8.42,
+          "standard_deviation": 0.6862921902225616,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Protein %": {
+          "count": 750,
+          "minimum": 2.46,
+          "maximum": 3.6,
+          "mean": 3.0960933333333336,
+          "median": 3.09,
+          "standard_deviation": 0.21066191527092973,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Salt%": {
+          "count": 750,
+          "minimum": 0.589,
+          "maximum": 0.82,
+          "mean": 0.6889293333333333,
+          "median": 0.687,
+          "standard_deviation": 0.043748572430139035,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Lactose%": {
+          "count": 750,
+          "minimum": 3.7,
+          "maximum": 5.5,
+          "mean": 4.641533333333333,
+          "median": 4.62,
+          "standard_deviation": 0.3107867974461668,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "pH": {
+          "count": 750,
+          "minimum": 6.67,
+          "maximum": 7.16,
+          "mean": 6.9098533333333325,
+          "median": 6.9,
+          "standard_deviation": 0.09614661053053772,
+          "zero_count": 0,
+          "negative_count": 0
+        }
+      },
+      "categorical_summaries": {
+        "Genetic Group": {
+          "unique_count": 5,
+          "top_values": {
+            "Local": 150,
+            "HF50": 150,
+            "HF62.5": 150,
+            "HF75": 150,
+            "HF87.5": 150
+          }
+        },
+        "THI Range": {
+          "unique_count": 3,
+          "top_values": {
+            "T0": 250,
+            "T1": 250,
+            "T2": 250
+          }
+        }
+      },
+      "example_values": {
+        "Animal ID": [
+          "102",
+          "102",
+          "102"
+        ],
+        "Genetic Group": [
+          "Local",
+          "Local",
+          "Local"
+        ],
+        "THI Range": [
+          "T0",
+          "T0",
+          "T0"
+        ],
+        "Replication No": [
+          1,
+          2,
+          3
+        ],
+        "DMI (kg)": [
+          6.91,
+          6.61,
+          7.31
+        ],
+        "Milk Yield (L/day/cow)": [
+          2.05,
+          1.14,
+          1.74
+        ],
+        "SCC cells per mL": [
+          138000,
+          146000,
+          122000
+        ],
+        "Fat%": [
+          3.91,
+          3.72,
+          3.93
+        ],
+        "SNF%": [
+          9.85,
+          8.68,
+          8.76
+        ],
+        "Protein %": [
+          3.4,
+          3.54,
+          3.44
+        ],
+        "Salt%": [
+          0.746,
+          0.746,
+          0.712
+        ],
+        "Lactose%": [
+          5.24,
+          5.06,
+          4.9
+        ],
+        "pH": [
+          7.02,
+          6.91,
+          6.99
+        ]
+      },
+      "identifier_fields": [
+        "Animal ID",
+        "Replication No"
+      ],
+      "date_or_observation_fields": [
+        "Replication No"
+      ],
+      "date_fields": [],
+      "cow_grouping_fields": [
+        "Animal ID"
+      ],
+      "genetic_group_fields": [
+        "Genetic Group"
+      ],
+      "environmental_groups": [
+        "THI Range"
+      ],
+      "treatment_groups": [
+        "THI Range"
+      ],
+      "repeated_measurements": {
+        "status": "REPEATED",
+        "unique_cows": 50,
+        "repeated_cow_count": 50,
+        "minimum_records_per_cow": 15,
+        "maximum_records_per_cow": 15,
+        "observations_per_cow_distribution": {
+          "15": 50
+        },
+        "grouped_validation_possible": true
+      },
+      "row_structure": "ONE_ROW_PER_COW_PER_THI_CATEGORY_PER_REPLICATION",
+      "hidden_sheet_count": 0,
+      "formula_count": 0,
+      "merged_cell_count": 0,
+      "comment_count": 0
+    },
+    "physiological responses.xlsx": {
+      "filename": "physiological responses.xlsx",
+      "sheet_name": "Sheet1",
+      "sheet_state": "visible",
+      "row_count_excluding_header": 750,
+      "column_count": 7,
+      "exact_column_names": [
+        "Animal ID",
+        "Genetic group",
+        "THI Range",
+        "Replication No",
+        "Rectal Temp (F)",
+        "Pulse Rate (bpm)",
+        "Respiration Rate (bpm)"
+      ],
+      "data_types": {
+        "Animal ID": [
+          "str"
+        ],
+        "Genetic group": [
+          "str"
+        ],
+        "THI Range": [
+          "str"
+        ],
+        "Replication No": [
+          "int"
+        ],
+        "Rectal Temp (F)": [
+          "float"
+        ],
+        "Pulse Rate (bpm)": [
+          "float"
+        ],
+        "Respiration Rate (bpm)": [
+          "float"
+        ]
+      },
+      "missing_values": [
+        {
+          "column": "Animal ID",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Genetic group",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "THI Range",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Replication No",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Rectal Temp (F)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Pulse Rate (bpm)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Respiration Rate (bpm)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        }
+      ],
+      "duplicate_rows": 0,
+      "duplicate_composite_keys": 0,
+      "numeric_summaries": {
+        "Animal ID": {
+          "count": 750,
+          "minimum": 101.0,
+          "maximum": 510.0,
+          "mean": 305.5,
+          "median": 305.5,
+          "standard_deviation": 141.54491613752566,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Replication No": {
+          "count": 750,
+          "minimum": 1.0,
+          "maximum": 5.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "standard_deviation": 1.4151573152725079,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Rectal Temp (F)": {
+          "count": 750,
+          "minimum": 101.23,
+          "maximum": 103.46,
+          "mean": 102.39089333333334,
+          "median": 102.41,
+          "standard_deviation": 0.37225990724260904,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Pulse Rate (bpm)": {
+          "count": 750,
+          "minimum": 58.8,
+          "maximum": 72.5,
+          "mean": 65.12173333333334,
+          "median": 65.1,
+          "standard_deviation": 2.464464602421997,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Respiration Rate (bpm)": {
+          "count": 750,
+          "minimum": 25.0,
+          "maximum": 46.2,
+          "mean": 34.361599999999996,
+          "median": 33.349999999999994,
+          "standard_deviation": 4.76055696778483,
+          "zero_count": 0,
+          "negative_count": 0
+        }
+      },
+      "categorical_summaries": {
+        "Genetic group": {
+          "unique_count": 5,
+          "top_values": {
+            "Local": 150,
+            "HF_50": 150,
+            "HF_62.5": 150,
+            "HF_75": 150,
+            "HF_87.5": 150
+          }
+        },
+        "THI Range": {
+          "unique_count": 3,
+          "top_values": {
+            "T0 (≤75)": 250,
+            "T1 (75-80)": 250,
+            "T2 (≥80)": 250
+          }
+        }
+      },
+      "example_values": {
+        "Animal ID": [
+          "101",
+          "101",
+          "101"
+        ],
+        "Genetic group": [
+          "Local",
+          "Local",
+          "Local"
+        ],
+        "THI Range": [
+          "T0 (≤75)",
+          "T0 (≤75)",
+          "T0 (≤75)"
+        ],
+        "Replication No": [
+          1,
+          2,
+          3
+        ],
+        "Rectal Temp (F)": [
+          101.59,
+          101.48,
+          101.25
+        ],
+        "Pulse Rate (bpm)": [
+          64.5,
+          62.6,
+          62.8
+        ],
+        "Respiration Rate (bpm)": [
+          29.2,
+          31.3,
+          30.7
+        ]
+      },
+      "identifier_fields": [
+        "Animal ID",
+        "Replication No"
+      ],
+      "date_or_observation_fields": [
+        "Replication No"
+      ],
+      "date_fields": [],
+      "cow_grouping_fields": [
+        "Animal ID"
+      ],
+      "genetic_group_fields": [
+        "Genetic group"
+      ],
+      "environmental_groups": [
+        "THI Range"
+      ],
+      "treatment_groups": [
+        "THI Range"
+      ],
+      "repeated_measurements": {
+        "status": "REPEATED",
+        "unique_cows": 50,
+        "repeated_cow_count": 50,
+        "minimum_records_per_cow": 15,
+        "maximum_records_per_cow": 15,
+        "observations_per_cow_distribution": {
+          "15": 50
+        },
+        "grouped_validation_possible": true
+      },
+      "row_structure": "ONE_ROW_PER_COW_PER_THI_CATEGORY_PER_REPLICATION",
+      "hidden_sheet_count": 0,
+      "formula_count": 0,
+      "merged_cell_count": 0,
+      "comment_count": 0
+    },
+    "Blood metabolites.xlsx": {
+      "filename": "Blood metabolites.xlsx",
+      "sheet_name": "Sheet1",
+      "sheet_state": "visible",
+      "row_count_excluding_header": 750,
+      "column_count": 13,
+      "exact_column_names": [
+        "Animal ID",
+        "Genetic Group",
+        "THI Range",
+        "Replication No",
+        "Glucose (mmol/L)",
+        "Total Protein (g/dL)",
+        "Uric Acid (mg/dL)",
+        "Cholesterol (mg/dL)",
+        "Calcium (mg/dL)",
+        "HDL (mg/dL)",
+        "AST (U/I)",
+        "ALT (U/I)",
+        "Cortisol (µg/dL)"
+      ],
+      "data_types": {
+        "Animal ID": [
+          "int",
+          "str"
+        ],
+        "Genetic Group": [
+          "str"
+        ],
+        "THI Range": [
+          "str"
+        ],
+        "Replication No": [
+          "int"
+        ],
+        "Glucose (mmol/L)": [
+          "float"
+        ],
+        "Total Protein (g/dL)": [
+          "float"
+        ],
+        "Uric Acid (mg/dL)": [
+          "float"
+        ],
+        "Cholesterol (mg/dL)": [
+          "float"
+        ],
+        "Calcium (mg/dL)": [
+          "float"
+        ],
+        "HDL (mg/dL)": [
+          "float"
+        ],
+        "AST (U/I)": [
+          "float"
+        ],
+        "ALT (U/I)": [
+          "float"
+        ],
+        "Cortisol (µg/dL)": [
+          "float"
+        ]
+      },
+      "missing_values": [
+        {
+          "column": "Animal ID",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Genetic Group",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "THI Range",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Replication No",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Glucose (mmol/L)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Total Protein (g/dL)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Uric Acid (mg/dL)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Cholesterol (mg/dL)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Calcium (mg/dL)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "HDL (mg/dL)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "AST (U/I)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "ALT (U/I)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        },
+        {
+          "column": "Cortisol (µg/dL)",
+          "missing_count": 0,
+          "missing_percentage": 0.0
+        }
+      ],
+      "duplicate_rows": 0,
+      "duplicate_composite_keys": 0,
+      "numeric_summaries": {
+        "Animal ID": {
+          "count": 750,
+          "minimum": 102.0,
+          "maximum": 511.0,
+          "mean": 306.5,
+          "median": 306.5,
+          "standard_deviation": 141.54491613752566,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Replication No": {
+          "count": 750,
+          "minimum": 1.0,
+          "maximum": 5.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "standard_deviation": 1.4151573152725079,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Glucose (mmol/L)": {
+          "count": 750,
+          "minimum": 2.49,
+          "maximum": 3.78,
+          "mean": 3.147426666666666,
+          "median": 3.15,
+          "standard_deviation": 0.22133631493265216,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Total Protein (g/dL)": {
+          "count": 750,
+          "minimum": 5.94,
+          "maximum": 9.29,
+          "mean": 7.328373333333333,
+          "median": 7.16,
+          "standard_deviation": 0.7505778952633984,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Uric Acid (mg/dL)": {
+          "count": 750,
+          "minimum": 0.63,
+          "maximum": 1.93,
+          "mean": 1.2232,
+          "median": 1.22,
+          "standard_deviation": 0.20578132715613803,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Cholesterol (mg/dL)": {
+          "count": 750,
+          "minimum": 80.52,
+          "maximum": 284.27,
+          "mean": 168.15888,
+          "median": 149.07,
+          "standard_deviation": 57.093276737958995,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Calcium (mg/dL)": {
+          "count": 750,
+          "minimum": 1.91,
+          "maximum": 6.25,
+          "mean": 3.9920133333333334,
+          "median": 3.89,
+          "standard_deviation": 0.9135422773352423,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "HDL (mg/dL)": {
+          "count": 750,
+          "minimum": 47.85,
+          "maximum": 156.12,
+          "mean": 106.65590666666665,
+          "median": 116.805,
+          "standard_deviation": 29.768966778992187,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "AST (U/I)": {
+          "count": 750,
+          "minimum": 17.93,
+          "maximum": 35.19,
+          "mean": 26.420453333333338,
+          "median": 26.21,
+          "standard_deviation": 3.355473309285591,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "ALT (U/I)": {
+          "count": 750,
+          "minimum": 24.51,
+          "maximum": 40.97,
+          "mean": 32.985319999999994,
+          "median": 32.94,
+          "standard_deviation": 3.166260060064125,
+          "zero_count": 0,
+          "negative_count": 0
+        },
+        "Cortisol (µg/dL)": {
+          "count": 750,
+          "minimum": 2.62,
+          "maximum": 10.87,
+          "mean": 5.609613333333334,
+          "median": 5.29,
+          "standard_deviation": 1.8515899377433147,
+          "zero_count": 0,
+          "negative_count": 0
+        }
+      },
+      "categorical_summaries": {
+        "Genetic Group": {
+          "unique_count": 5,
+          "top_values": {
+            "Local": 150,
+            "HF50": 150,
+            "HF62.5": 150,
+            "HF75": 150,
+            "HF87.5": 150
+          }
+        },
+        "THI Range": {
+          "unique_count": 3,
+          "top_values": {
+            "T0": 250,
+            "T1": 250,
+            "T2": 250
+          }
+        }
+      },
+      "example_values": {
+        "Animal ID": [
+          102,
+          102,
+          "102"
+        ],
+        "Genetic Group": [
+          "Local",
+          "Local",
+          "Local"
+        ],
+        "THI Range": [
+          "T0",
+          "T0",
+          "T0"
+        ],
+        "Replication No": [
+          1,
+          2,
+          3
+        ],
+        "Glucose (mmol/L)": [
+          3.47,
+          3.46,
+          3.61
+        ],
+        "Total Protein (g/dL)": [
+          6.52,
+          6.41,
+          6.43
+        ],
+        "Uric Acid (mg/dL)": [
+          1.16,
+          1.06,
+          1.21
+        ],
+        "Cholesterol (mg/dL)": [
+          90.88,
+          97.61,
+          92.2
+        ],
+        "Calcium (mg/dL)": [
+          4.94,
+          4.73,
+          4.51
+        ],
+        "HDL (mg/dL)": [
+          106.07,
+          115.8,
+          113.23
+        ],
+        "AST (U/I)": [
+          19.75,
+          21.44,
+          21.65
+        ],
+        "ALT (U/I)": [
+          34.17,
+          37.79,
+          36.6
+        ],
+        "Cortisol (µg/dL)": [
+          3.23,
+          3.08,
+          3.27
+        ]
+      },
+      "identifier_fields": [
+        "Animal ID",
+        "Replication No"
+      ],
+      "date_or_observation_fields": [
+        "Replication No"
+      ],
+      "date_fields": [],
+      "cow_grouping_fields": [
+        "Animal ID"
+      ],
+      "genetic_group_fields": [
+        "Genetic Group"
+      ],
+      "environmental_groups": [
+        "THI Range"
+      ],
+      "treatment_groups": [
+        "THI Range"
+      ],
+      "repeated_measurements": {
+        "status": "REPEATED",
+        "unique_cows": 50,
+        "repeated_cow_count": 50,
+        "minimum_records_per_cow": 15,
+        "maximum_records_per_cow": 15,
+        "observations_per_cow_distribution": {
+          "15": 50
+        },
+        "grouped_validation_possible": true
+      },
+      "row_structure": "ONE_ROW_PER_COW_PER_THI_CATEGORY_PER_REPLICATION",
+      "hidden_sheet_count": 0,
+      "formula_count": 0,
+      "merged_cell_count": 0,
+      "comment_count": 0
+    }
+  },
+  "contains_full_source_records": false
+}

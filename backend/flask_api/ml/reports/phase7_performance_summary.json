@@ -1,0 +1,108 @@
+{
+  "report_version": "phase7_performance_summary_v1",
+  "phase": "7",
+  "generated_date": "2026-07-26",
+  "measurement_context": {
+    "host": "local Windows development workspace",
+    "python": "3.12.10",
+    "node": "24.11.0",
+    "network_benchmark": false,
+    "load_test": false,
+    "note": "API values use the Flask in-process test client after one warm-up; only five repeated requests were made."
+  },
+  "frontend_build": {
+    "feature_enabled": {
+      "result": "PASS",
+      "vite_build_stage_ms": 586,
+      "total_uncompressed_bytes": 2018272
+    },
+    "feature_disabled": {
+      "result": "PASS",
+      "vite_build_stage_ms": 596,
+      "total_uncompressed_bytes": 2018272,
+      "left_as_final_dist_mode": true
+    },
+    "largest_chunk_bytes": 1567555,
+    "largest_chunk_gzip_bytes": 471800,
+    "large_chunk_warning": true
+  },
+  "runtime_smoke": {
+    "binding": "127.0.0.1:4174",
+    "http_status": 200,
+    "content_type": "text/html",
+    "body_bytes": 659,
+    "react_root_present": true,
+    "public_exposure": false
+  },
+  "api_v1": {
+    "path": "/api/ai/feed-recommendation",
+    "requests": 5,
+    "status_codes": [
+      200
+    ],
+    "mean_ms": 3.297,
+    "median_ms": 3.114,
+    "max_ms": 3.74,
+    "repeated_prediction_consistent": true
+  },
+  "api_v2": {
+    "path": "/api/v2/predict",
+    "feature_enabled": true,
+    "requests": 5,
+    "status_codes": [
+      200
+    ],
+    "mean_ms": 3.374,
+    "median_ms": 3.199,
+    "max_ms": 3.916,
+    "repeated_dmi_consistent": true
+  },
+  "pdf": {
+    "generator": "jsPDF",
+    "requests": 5,
+    "mean_ms": 6.564,
+    "max_ms": 21.559,
+    "acceptance_cases": [
+      {
+        "case": "complete",
+        "pages": 2,
+        "bytes": 38399
+      },
+      {
+        "case": "dmi_unavailable",
+        "pages": 2,
+        "bytes": 38392
+      },
+      {
+        "case": "long_animal_name",
+        "pages": 2,
+        "bytes": 38479
+      },
+      {
+        "case": "long_warning",
+        "pages": 2,
+        "bytes": 39810
+      },
+      {
+        "case": "missing_optional_values",
+        "pages": 2,
+        "bytes": 38418
+      }
+    ],
+    "visual_renderer_available": false
+  },
+  "reliability": {
+    "duplicate_candidate_request_controls": "PASS_BY_ABORT_AND_STALE_STATE_TESTS",
+    "request_cancellation": "PASS_BY_SOURCE_AND_TEST_CONTRACT",
+    "stale_response_protection": "PASS",
+    "batch_realtime_refresh": "PASS",
+    "batch_listener_ownership_filter": "PASS",
+    "runtime_errors_observed": 0,
+    "memory_or_crash_symptoms_observed": false
+  },
+  "limitations": [
+    "Local in-process timings are not a production latency SLA.",
+    "No destructive load or concurrency stress test was performed.",
+    "The existing Vite large-chunk warning remains."
+  ]
+}

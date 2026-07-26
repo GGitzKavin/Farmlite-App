@@ -1,0 +1,625 @@
+{
+  "contract_version": "1.0.0",
+  "contract_status": "DESIGN_ONLY_NO_TRAINING_AUTHORIZED",
+  "configuration_location": "backend/flask_api/config",
+  "project": {
+    "project_name": "FarmLite",
+    "module": "AI Feed Recommendation",
+    "intended_use": "Undergraduate prototype",
+    "deployment": "Flask backend and React frontend",
+    "data_type": "Synthetic tabular cattle data",
+    "approved_claim": "Prototype recommendation and ML pipeline demonstration",
+    "prohibited_claims": [
+      "Real farm observations",
+      "Veterinarian-validated records",
+      "Nutritionally validated feeding trials",
+      "Commercially safe feeding guidance",
+      "Proof of real-world model accuracy"
+    ]
+  },
+  "dataset": {
+    "dataset_name": "Cattle Health and Feeding Data",
+    "platform": "Kaggle",
+    "kaggle_publisher_account": "ShahHet2812",
+    "provenance_source": "https://www.kaggle.com/datasets/shahhet2812/cattle-health-and-feeding-data",
+    "synthetic_status": "SYNTHETIC_PUBLISHER_DECLARED",
+    "scientific_validation": "NOT_ESTABLISHED",
+    "real_world_representativeness": "NOT_ESTABLISHED",
+    "primary_csv": "datasets/raw/global_cattle_milk_yield_prediction_dataset.csv",
+    "secondary_csv": "datasets/raw/global_cattle_disease_detection_dataset.csv",
+    "primary_rows": 250000,
+    "primary_columns": 37,
+    "secondary_rows": 250000,
+    "secondary_columns": 40,
+    "license_status": "UNRESOLVED",
+    "detailed_generation_method": "NOT_PROVIDED",
+    "limitations": [
+      "Synthetic generation formulas and dependency structure are not documented.",
+      "Feed_Quantity_kg material basis and measurement period are not independently validated.",
+      "Milk_Yield_L measurement period is not independently validated.",
+      "Feed_Type is not an expert or veterinarian recommendation label.",
+      "The raw dataset is not verified dairy-only.",
+      "The secondary dataset must not be merged without a separately approved use."
+    ]
+  },
+  "scope": {
+    "supported_animal_category": "Dairy Cattle",
+    "application_scope": "DAIRY_CATTLE_ONLY",
+    "training_data_scope": "SYNTHETIC_CATTLE_WITH_UNRESOLVED_PRODUCTION_PURPOSE",
+    "current_dataset_filtering_status": "UNRESOLVED",
+    "production_use": "NOT_APPROVED",
+    "veterinary_use": "NOT_APPROVED",
+    "commercial_use": "NOT_APPROVED",
+    "prototype_use": "APPROVED_WITH_LIMITATIONS",
+    "required_scope_wording": "The FarmLite interface is scoped to dairy-cattle use, while the synthetic training dataset includes cattle records whose production purpose is not fully documented."
+  },
+  "models": {
+    "feed_type_classifier": {
+      "model_name": "feed_type_classifier",
+      "task": "multiclass_classification",
+      "target": {
+        "canonical_name": "feed_type",
+        "source_column": "Feed_Type",
+        "data_type": "categorical string",
+        "interpretation": "Synthetic feed-category label used for prototype classification",
+        "allowed_categories": [
+          "Concentrates",
+          "Crop_Residues",
+          "Dry_Fodder",
+          "Green_Fodder",
+          "Hay",
+          "Mixed_Feed",
+          "Pasture_Grass",
+          "Silage"
+        ],
+        "prohibited_interpretations": [
+          "Veterinarian-recommended feed",
+          "Nutritionist-recommended feed",
+          "Nutritionally optimal feed",
+          "Observed real-farm feeding practice"
+        ]
+      },
+      "selected_features": [
+        {
+          "canonical_name": "breed",
+          "feature_contract_ref": "shared_validation.feature_catalog.breed",
+          "role": "REQUIRED_FEATURE"
+        },
+        {
+          "canonical_name": "age_months",
+          "feature_contract_ref": "shared_validation.feature_catalog.age_months",
+          "role": "REQUIRED_FEATURE"
+        },
+        {
+          "canonical_name": "weight_kg",
+          "feature_contract_ref": "shared_validation.feature_catalog.weight_kg",
+          "role": "REQUIRED_FEATURE"
+        },
+        {
+          "canonical_name": "lactation_stage",
+          "feature_contract_ref": "shared_validation.feature_catalog.lactation_stage",
+          "role": "REQUIRED_FEATURE"
+        },
+        {
+          "canonical_name": "days_in_milk",
+          "feature_contract_ref": "shared_validation.feature_catalog.days_in_milk",
+          "role": "OPTIONAL_FEATURE"
+        },
+        {
+          "canonical_name": "previous_week_avg_yield_l",
+          "feature_contract_ref": "shared_validation.feature_catalog.previous_week_avg_yield_l",
+          "role": "OPTIONAL_FEATURE"
+        },
+        {
+          "canonical_name": "body_condition_score",
+          "feature_contract_ref": "shared_validation.feature_catalog.body_condition_score",
+          "role": "OPTIONAL_FEATURE"
+        },
+        {
+          "canonical_name": "ambient_temperature_c",
+          "feature_contract_ref": "shared_validation.feature_catalog.ambient_temperature_c",
+          "role": "OPTIONAL_FEATURE"
+        },
+        {
+          "canonical_name": "humidity_percent",
+          "feature_contract_ref": "shared_validation.feature_catalog.humidity_percent",
+          "role": "OPTIONAL_FEATURE"
+        }
+      ],
+      "excluded_features": [
+        {
+          "canonical_name": "cattle_id",
+          "dataset_column": "Cattle_ID",
+          "frontend_field": "animalId",
+          "data_type": "string",
+          "required": false,
+          "optional": false,
+          "missing_value_policy": "metadata only",
+          "allowed_range_or_categories": "not applicable",
+          "availability_status": "AVAILABLE_METADATA_ONLY",
+          "leakage_status": "POSSIBLE_LEAKAGE",
+          "inclusion_decision": "EXCLUDE",
+          "exclusion_reason": "Identifier may enable record or generated-batch memorisation."
+        },
+        {
+          "canonical_name": "feed_type",
+          "dataset_column": "Feed_Type",
+          "frontend_field": null,
+          "data_type": "categorical string",
+          "required": false,
+          "optional": false,
+          "missing_value_policy": "not applicable",
+          "allowed_range_or_categories": "target categories",
+          "availability_status": "TARGET_ONLY",
+          "leakage_status": "DEFINITE_LEAKAGE",
+          "inclusion_decision": "EXCLUDE",
+          "exclusion_reason": "This is the model target."
+        },
+        {
+          "canonical_name": "feed_quantity_kg",
+          "dataset_column": "Feed_Quantity_kg",
+          "frontend_field": null,
+          "data_type": "number",
+          "required": false,
+          "optional": false,
+          "missing_value_policy": "not applicable",
+          "allowed_range_or_categories": "observed 3.0-25.0",
+          "availability_status": "NOT_AVAILABLE_BEFORE_PREDICTION",
+          "leakage_status": "POSSIBLE_LEAKAGE",
+          "inclusion_decision": "EXCLUDE",
+          "exclusion_reason": "Same-record feed quantity may reveal or follow the feed label."
+        },
+        {
+          "canonical_name": "milk_yield_l",
+          "dataset_column": "Milk_Yield_L",
+          "frontend_field": null,
+          "data_type": "number",
+          "required": false,
+          "optional": false,
+          "missing_value_policy": "not applicable",
+          "allowed_range_or_categories": "observed 0.0-36.42",
+          "availability_status": "CURRENT_OR_FUTURE_OUTCOME",
+          "leakage_status": "POSSIBLE_LEAKAGE",
+          "inclusion_decision": "EXCLUDE",
+          "exclusion_reason": "Current synthetic outcome is unavailable before recommendation."
+        },
+        {
+          "canonical_name": "disease_status",
+          "dataset_column": null,
+          "frontend_field": null,
+          "data_type": "categorical string",
+          "required": false,
+          "optional": false,
+          "missing_value_policy": "not applicable",
+          "allowed_range_or_categories": "secondary dataset only",
+          "availability_status": "AVAILABILITY_MISMATCH",
+          "leakage_status": "AVAILABILITY_MISMATCH",
+          "inclusion_decision": "EXCLUDE",
+          "exclusion_reason": "Disease outcome is absent from the primary dataset and may be downstream."
+        }
+      ],
+      "output_contract": {
+        "recommended_feed_type": "string",
+        "class_probabilities": "optional object mapping class names to probabilities",
+        "model_version": "string",
+        "output_interpretation": "synthetic prototype feed-category prediction"
+      }
+    },
+    "feed_quantity_regressor": {
+      "model_name": "feed_quantity_regressor",
+      "task": "regression",
+      "target": {
+        "canonical_name": "feed_quantity_kg",
+        "source_column": "Feed_Quantity_kg",
+        "data_type": "number",
+        "observed_range": {
+          "minimum": 3.0,
+          "maximum": 25.0
+        },
+        "interpretation": "Synthetic feed-quantity target",
+        "material_basis": "NOT_INDEPENDENTLY_VALIDATED",
+        "measurement_period": "NOT_INDEPENDENTLY_VALIDATED",
+        "api_compatibility_mapping": "predicted_feed_quantity_kg may later map to totalFeedKg only with synthetic-target metadata and rule validation"
+      },
+      "design_a": {
+        "description": "Animal, production, and environment features available in FarmLite; unavailable management fields are excluded.",
+        "selected_features": [
+          "breed",
+          "age_months",
+          "weight_kg",
+          "lactation_stage",
+          "days_in_milk",
+          "previous_week_avg_yield_l",
+          "body_condition_score",
+          "ambient_temperature_c",
+          "humidity_percent"
+        ],
+        "additional_predicted_feature": null
+      },
+      "design_b": {
+        "description": "Design A plus feed type predicted by Model 1.",
+        "selected_features": [
+          "breed",
+          "age_months",
+          "weight_kg",
+          "lactation_stage",
+          "days_in_milk",
+          "previous_week_avg_yield_l",
+          "body_condition_score",
+          "ambient_temperature_c",
+          "humidity_percent",
+          "predicted_feed_type"
+        ],
+        "additional_predicted_feature": {
+          "canonical_name": "predicted_feed_type",
+          "training_source": "Out-of-fold predictions from Model 1 for every training and validation row",
+          "inference_source": "Model 1 prediction for the current request",
+          "ground_truth_feed_type_allowed_at_validation_or_test": false,
+          "leakage_status": "SAFE_ONLY_WITH_OUT_OF_FOLD_GENERATION"
+        }
+      },
+      "leakage_prevention": [
+        "Never use Feed_Quantity_kg as an input.",
+        "Do not use same-record Milk_Yield_L because its causal timing is undocumented.",
+        "Do not use ground-truth Feed_Type at validation, test, or inference in Design B.",
+        "Fit Model 1 only on the appropriate training fold before producing each out-of-fold feed-type value.",
+        "Exclude identifiers, dates as predictive values, disease outcomes, and post-outcome fields."
+      ],
+      "comparison_criteria": [
+        "Validation MAE and RMSE against a training-mean baseline",
+        "R-squared reported with synthetic-data limitations",
+        "Design B must improve consistently rather than only on one split",
+        "Stability across feed-type classes and major breed groups",
+        "No final-test use for design selection",
+        "Operational complexity and error propagation from Model 1"
+      ],
+      "output_contract": {
+        "predicted_feed_quantity_kg": "number",
+        "validated_total_feed_kg": "number after rule validation",
+        "model_version": "string",
+        "output_interpretation": "synthetic feed-quantity estimate"
+      }
+    },
+    "milk_yield_regressor": {
+      "model_name": "milk_yield_regressor",
+      "task": "regression",
+      "target": {
+        "canonical_name": "milk_yield_l",
+        "source_column": "Milk_Yield_L",
+        "data_type": "number",
+        "observed_range": {
+          "minimum": 0.0,
+          "maximum": 36.42
+        },
+        "interpretation": "Synthetic milk-yield target with measurement period not independently validated",
+        "measurement_period": "NOT_INDEPENDENTLY_VALIDATED",
+        "zero_meaning": "NOT_PROVIDED"
+      },
+      "selected_features": [
+        "breed",
+        "age_months",
+        "weight_kg",
+        "lactation_stage",
+        "days_in_milk",
+        "previous_week_avg_yield_l",
+        "body_condition_score",
+        "ambient_temperature_c",
+        "humidity_percent"
+      ],
+      "historical_feature_note": {
+        "feature": "previous_week_avg_yield_l",
+        "availability": "AVAILABLE_BEFORE_PREDICTION_IN_CURRENT_FORM",
+        "interpretation": "Historical synthetic production value",
+        "requirement": "Preserve its lagged meaning and never replace it with current Milk_Yield_L"
+      },
+      "excluded_features": [
+        {
+          "canonical_name": "milk_yield_l",
+          "reason": "DEFINITE_LEAKAGE_TARGET"
+        },
+        {
+          "canonical_name": "feed_quantity_kg",
+          "reason": "POSSIBLE_LEAKAGE_AND_NOT_AVAILABLE_BEFORE_PREDICTION"
+        },
+        {
+          "canonical_name": "feed_type",
+          "reason": "TIMING_UNJUSTIFIED_AND_NOT_CURRENTLY_AVAILABLE_FROM_FARMER"
+        },
+        {
+          "canonical_name": "cattle_id",
+          "reason": "IDENTIFIER_NOT_PREDICTIVE_FEATURE"
+        },
+        {
+          "canonical_name": "observation_date",
+          "reason": "POSSIBLE_GENERATED_BATCH_LEAKAGE"
+        },
+        {
+          "canonical_name": "disease_status",
+          "reason": "SECONDARY_DATASET_OUTCOME_AND_AVAILABILITY_MISMATCH"
+        }
+      ],
+      "output_contract": {
+        "predicted_milk_yield_l": "number",
+        "model_version": "string",
+        "output_interpretation": "synthetic milk-yield estimate"
+      }
+    }
+  },
+  "shared_validation": {
+    "feature_catalog": {
+      "breed": {
+        "canonical_name": "breed",
+        "dataset_column": "Breed",
+        "frontend_field": "breed",
+        "backend_field": "breed",
+        "data_type": "categorical string",
+        "unit": null,
+        "required": true,
+        "optional": false,
+        "missing_value_policy": "REJECT_REQUEST",
+        "allowed_range_or_categories": [
+          "Africander",
+          "Ankole",
+          "Australian_Friesian_Sahiwal",
+          "Australian_Milking_Zebu",
+          "Ayrshire",
+          "Boran",
+          "Brown_Swiss",
+          "Butana",
+          "Danish_Red",
+          "Deoni",
+          "Exotic_Local_Cross",
+          "Fleckvieh",
+          "Gangatiri",
+          "Gir",
+          "Girolando",
+          "Guernsey",
+          "Hariana",
+          "Holstein-Friesian",
+          "Holstein_Zebu_Cross",
+          "Illawarra_Shorthorn",
+          "Jersey",
+          "Jersey_Zebu_Cross",
+          "Kankrej",
+          "Kenana",
+          "Krishna_Valley",
+          "Milking_Shorthorn",
+          "Montbeliarde",
+          "NDama",
+          "Normande",
+          "Norwegian_Red",
+          "Ongole",
+          "Rathi",
+          "Red_Poll_Africa",
+          "Red_Sindhi",
+          "Sahiwal",
+          "Simmental",
+          "Tharparkar",
+          "Tipo_Carora",
+          "White_Fulani",
+          "Zebu_Cross_Brazil"
+        ],
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "age_months": {
+        "canonical_name": "age_months",
+        "dataset_column": "Age_Months",
+        "frontend_field": "ageMonths",
+        "backend_field": "ageMonths",
+        "data_type": "integer",
+        "unit": "months",
+        "required": true,
+        "optional": false,
+        "missing_value_policy": "REJECT_REQUEST",
+        "allowed_range_or_categories": {
+          "validation_minimum": 1,
+          "validation_maximum": 300,
+          "dataset_observed_minimum": 24,
+          "dataset_observed_maximum": 143
+        },
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "weight_kg": {
+        "canonical_name": "weight_kg",
+        "dataset_column": "Weight_kg",
+        "frontend_field": "weightKg",
+        "backend_field": "weightKg",
+        "data_type": "number",
+        "unit": "kg",
+        "required": true,
+        "optional": false,
+        "missing_value_policy": "REJECT_REQUEST",
+        "allowed_range_or_categories": {
+          "validation_minimum": 50,
+          "validation_maximum": 1200,
+          "dataset_observed_minimum": 250.0,
+          "dataset_observed_maximum": 750.0
+        },
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "lactation_stage": {
+        "canonical_name": "lactation_stage",
+        "dataset_column": "Lactation_Stage",
+        "frontend_field": "lactationStage",
+        "backend_field": "lactationStage",
+        "data_type": "categorical string",
+        "unit": null,
+        "required": true,
+        "optional": false,
+        "missing_value_policy": "REJECT_REQUEST",
+        "allowed_range_or_categories": [
+          "Early",
+          "Mid",
+          "Late"
+        ],
+        "application_to_dataset_mapping": {
+          "Early Lactation": "Early",
+          "Mid Lactation": "Mid",
+          "Late Lactation": "Late",
+          "Dry": "NOT_SUPPORTED_BY_DATASET"
+        },
+        "availability_status": "AVAILABLE_WITH_CATEGORY_MAPPING",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "days_in_milk": {
+        "canonical_name": "days_in_milk",
+        "dataset_column": "Days_in_Milk",
+        "frontend_field": "daysInMilk",
+        "backend_field": "daysInMilk",
+        "data_type": "integer",
+        "unit": "days",
+        "required": false,
+        "optional": true,
+        "missing_value_policy": "IMPUTE_TRAINING_MEDIAN_AND_EMIT_MISSING_FLAG",
+        "allowed_range_or_categories": {
+          "validation_minimum": 0,
+          "validation_maximum": 730,
+          "dataset_observed_minimum": 1,
+          "dataset_observed_maximum": 364
+        },
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "previous_week_avg_yield_l": {
+        "canonical_name": "previous_week_avg_yield_l",
+        "dataset_column": "Previous_Week_Avg_Yield",
+        "frontend_field": "previousWeekAvgYield",
+        "backend_field": "previousWeekAvgYield",
+        "data_type": "number",
+        "unit": "litres; historical window named previous week",
+        "required": false,
+        "optional": true,
+        "missing_value_policy": "IMPUTE_TRAINING_MEDIAN_AND_EMIT_MISSING_FLAG",
+        "allowed_range_or_categories": {
+          "validation_minimum": 0,
+          "validation_maximum": 100,
+          "dataset_observed_minimum": 0.0,
+          "dataset_observed_maximum": 38.67
+        },
+        "availability_status": "AVAILABLE_HISTORICAL_INPUT",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "body_condition_score": {
+        "canonical_name": "body_condition_score",
+        "dataset_column": "Body_Condition_Score",
+        "frontend_field": "bodyConditionScore",
+        "backend_field": "bodyConditionScore",
+        "data_type": "number",
+        "unit": "score on current 1-5 application scale",
+        "required": false,
+        "optional": true,
+        "missing_value_policy": "IMPUTE_TRAINING_MEDIAN_AND_EMIT_MISSING_FLAG",
+        "allowed_range_or_categories": {
+          "validation_minimum": 1,
+          "validation_maximum": 5,
+          "dataset_observed_minimum": 2.0,
+          "dataset_observed_maximum": 5.0
+        },
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "ambient_temperature_c": {
+        "canonical_name": "ambient_temperature_c",
+        "dataset_column": "Ambient_Temperature_C",
+        "frontend_field": "ambientTemperatureC",
+        "backend_field": "ambientTemperatureC",
+        "data_type": "number",
+        "unit": "degrees Celsius",
+        "required": false,
+        "optional": true,
+        "missing_value_policy": "IMPUTE_TRAINING_MEDIAN_AND_EMIT_MISSING_FLAG",
+        "allowed_range_or_categories": {
+          "validation_minimum": -20,
+          "validation_maximum": 55,
+          "dataset_observed_minimum": -10.0,
+          "dataset_observed_maximum": 45.0
+        },
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      },
+      "humidity_percent": {
+        "canonical_name": "humidity_percent",
+        "dataset_column": "Humidity_percent",
+        "frontend_field": "humidityPercent",
+        "backend_field": "humidityPercent",
+        "data_type": "number",
+        "unit": "percent",
+        "required": false,
+        "optional": true,
+        "missing_value_policy": "IMPUTE_TRAINING_MEDIAN_AND_EMIT_MISSING_FLAG",
+        "allowed_range_or_categories": {
+          "validation_minimum": 0,
+          "validation_maximum": 100,
+          "dataset_observed_minimum": 10.0,
+          "dataset_observed_maximum": 100.0
+        },
+        "availability_status": "AVAILABLE_CURRENT_REQUEST",
+        "leakage_status": "SAFE",
+        "inclusion_decision": "INCLUDE",
+        "exclusion_reason": null
+      }
+    },
+    "unavailable_candidate_features": {
+      "parity": {
+        "dataset_column": "Parity",
+        "frontend_field": null,
+        "decision": "EXCLUDE_AVAILABILITY_MISMATCH"
+      },
+      "season": {
+        "dataset_column": "Season",
+        "frontend_field": null,
+        "decision": "EXCLUDE_AVAILABILITY_MISMATCH"
+      },
+      "climate_zone": {
+        "dataset_column": "Climate_Zone",
+        "frontend_field": null,
+        "decision": "EXCLUDE_AVAILABILITY_MISMATCH"
+      },
+      "management_system": {
+        "dataset_column": "Management_System",
+        "frontend_field": null,
+        "decision": "EXCLUDE_AVAILABILITY_MISMATCH"
+      },
+      "health_status": {
+        "dataset_column": null,
+        "frontend_field": "healthStatus",
+        "decision": "EXCLUDE_PRIMARY_DATASET_MISMATCH_RULE_INPUT_ONLY"
+      }
+    },
+    "categorical_unknown_policy": "Use an explicit __UNKNOWN__ encoder category only for unseen valid values; do not silently map unsupported Dry lactation stage.",
+    "numeric_validation_policy": "Reject non-finite and out-of-contract required values; flag and impute missing optional values using training-only statistics.",
+    "feature_order_policy": "Persist and verify exact canonical feature order with every pipeline.",
+    "schema_validation_policy": "Reject unknown required-field mappings and report all imputation or category-normalization actions."
+  },
+  "limitations": {
+    "synthetic_training_data": true,
+    "prototype_only": true,
+    "feeding_breakdown_source": "RULE_DERIVED",
+    "total_feed_interface_mapping": "The user-facing Total Feed label may map to synthetic Feed_Quantity_kg only with synthetic-target metadata and rule validation.",
+    "milk_period": "NOT_INDEPENDENTLY_VALIDATED",
+    "feed_quantity_basis": "NOT_INDEPENDENTLY_VALIDATED",
+    "feed_type_expertise": "NOT_AN_EXPERT_RECOMMENDATION",
+    "dairy_only_training_data": false,
+    "license_status": "UNRESOLVED",
+    "required_disclaimer": "FarmLite is an undergraduate prototype using synthetic cattle data. Predictions demonstrate an ML pipeline and are not veterinary, nutritional, commercial, or real-world feeding guidance."
+  }
+}

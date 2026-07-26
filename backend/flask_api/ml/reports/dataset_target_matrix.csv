@@ -1,0 +1,9 @@
+Target,Dataset Column,Availability,Meaning/Unit Status,Training Readiness,Notes
+Recommended Feed Type,Feed_Type,PRESENT,UNCLEAR: broad category; observed/recommended/generated role undocumented,BLOCKED_PENDING_DEFINITION,Eight near-balanced categories; no explicit optimal/recommended label metadata.
+Total Feed Quantity,Feed_Quantity_kg,PRESENT,UNCLEAR: kg basis and time period undocumented,BLOCKED_PENDING_DEFINITION,"Could be fresh matter, dry matter, component intake, per meal, or another quantity."
+Milk Yield,Milk_Yield_L,PRESENT,PARTIAL: litres stated; time period UNCLEAR,BLOCKED_PENDING_DEFINITION,Provenance is absent and dataset is not reliably dairy-only.
+Roughage,NONE,ABSENT,NOT_AVAILABLE,NOT_SUPPORTED,Feed_Type category is not a numeric roughage target.
+Concentrate,NONE,ABSENT,NOT_AVAILABLE,NOT_SUPPORTED,"Concentrates is a Feed_Type class, not a quantity target."
+Mineral Mix,NONE,ABSENT,NOT_AVAILABLE,NOT_SUPPORTED,No direct label.
+Water Advice,NONE,ABSENT,NOT_AVAILABLE,NOT_SUPPORTED,"Water_Intake_L is an observation, not advice."
+Warnings,NONE,ABSENT,NOT_AVAILABLE,NOT_SUPPORTED,Disease_Status does not encode nutrition warning text or action.

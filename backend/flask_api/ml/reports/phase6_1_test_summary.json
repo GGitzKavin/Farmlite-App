@@ -1,0 +1,77 @@
+{
+  "report_version": "phase6_1_test_summary_v1",
+  "phase": "6.1",
+  "generated_date": "2026-07-26",
+  "frontend": {
+    "phase6": {
+      "command": "npm.cmd run test:phase6",
+      "tests_run": 25,
+      "passed": 25,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "phase6_1": {
+      "command": "npm.cmd run test:phase6.1",
+      "tests_run": 32,
+      "passed": 32,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "aggregate": {
+      "tests_run": 57,
+      "passed": 57,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "typecheck": {
+      "method": "tsc -b through both production builds",
+      "result": "PASS"
+    },
+    "builds": {
+      "feature_disabled_command": "npm.cmd run build",
+      "feature_disabled_result": "PASS",
+      "feature_enabled_command": "$env:VITE_BANGLADESH_CANDIDATE_UI_ENABLED='true'; npm.cmd run build",
+      "feature_enabled_result": "PASS",
+      "final_dist_mode": "DEFAULT_DISABLED",
+      "non_blocking_warning": "Vite reported a large output chunk."
+    },
+    "eslint": {
+      "phase6_1_scoped_result": "PASS",
+      "phase6_1_scoped_note": "The inherited react-hooks/set-state-in-effect rule is disabled only for the focused command; all other scoped rules pass.",
+      "repository_command": "npm.cmd run lint",
+      "repository_result": "FAIL_INHERITED_REPOSITORY_DEBT",
+      "repository_error_count": 7,
+      "affected_file_count": 6
+    }
+  },
+  "pdf": {
+    "data_shape_cases": 7,
+    "real_jspdf_buffer_cases": 3,
+    "with_candidate_dmi": "PASS_TWO_PAGES_BUFFER_GT_3000_BYTES",
+    "without_candidate_dmi": "PASS_TWO_PAGES_BUFFER_GT_2500_BYTES",
+    "candidate_milk_absent": true,
+    "result": "PASS"
+  },
+  "backend": {
+    "command": "venv\\Scripts\\python.exe -m unittest discover -s tests -v",
+    "tests_run": 307,
+    "passed": 307,
+    "failed": 0,
+    "errors": 0,
+    "result": "PASS",
+    "compileall_command": "venv\\Scripts\\python.exe -m compileall app.py ml",
+    "compileall_result": "PASS"
+  },
+  "runtime_smoke": {
+    "binding": "127.0.0.1",
+    "feature_enabled_http_status": 200,
+    "feature_enabled_flag_injected": true,
+    "public_exposure": false,
+    "result": "PASS"
+  },
+  "manual_validation_report": "ml/reports/phase6_1_manual_validation.csv",
+  "git_diff_check": "PASS_WITH_EXISTING_LINE_ENDING_NOTICES_ONLY",
+  "git_staged_files": 0,
+  "model_or_rule_logic_changed": false,
+  "production_approved": false
+}

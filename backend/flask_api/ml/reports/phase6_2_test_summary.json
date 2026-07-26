@@ -1,0 +1,78 @@
+{
+  "report_version": "phase6_2_test_summary_v1",
+  "phase": "6.2",
+  "generated_date": "2026-07-26",
+  "frontend": {
+    "phase6": {
+      "command": "npm.cmd run test:phase6",
+      "tests_run": 25,
+      "passed": 25,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "phase6_1": {
+      "command": "npm.cmd run test:phase6.1",
+      "tests_run": 32,
+      "passed": 32,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "phase6_2": {
+      "command": "npm.cmd run test:phase6.2",
+      "tests_run": 30,
+      "passed": 30,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "aggregate": {
+      "tests_run": 87,
+      "passed": 87,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "typecheck": {
+      "method": "tsc -b through npm.cmd run build",
+      "result": "PASS"
+    },
+    "build": {
+      "command": "npm.cmd run build",
+      "result": "PASS",
+      "non_blocking_warning": "Vite reported a large output chunk."
+    },
+    "eslint": {
+      "phase6_2_scoped_result": "PASS",
+      "repository_command": "npm.cmd run lint",
+      "repository_result": "FAIL_INHERITED_REPOSITORY_DEBT",
+      "repository_error_count": 6,
+      "affected_file_count": 5
+    }
+  },
+  "backend": {
+    "command": "venv\\Scripts\\python.exe -m unittest discover -s tests -v",
+    "tests_run": 307,
+    "passed": 307,
+    "failed": 0,
+    "errors": 0,
+    "result": "PASS",
+    "compileall_command": "venv\\Scripts\\python.exe -m compileall app.py ml",
+    "compileall_result": "PASS"
+  },
+  "runtime_smoke": {
+    "binding": "127.0.0.1:5182",
+    "root_http_status": 200,
+    "changed_module_http_status": 200,
+    "public_exposure": false,
+    "result": "PASS"
+  },
+  "manual_scenarios": {
+    "total": 10,
+    "pass": 5,
+    "pass_with_limitation": 5,
+    "report": "ml/reports/phase6_2_frontend_validation.md"
+  },
+  "git_diff_check": "PASS_WITH_LINE_ENDING_NOTICES_ONLY",
+  "git_staged_files": 0,
+  "model_or_rule_logic_changed": false,
+  "phase7_started": false,
+  "recommendation": "READY_FOR_PHASE_7_WITH_LIMITATIONS"
+}

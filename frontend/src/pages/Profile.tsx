@@ -4,6 +4,12 @@ import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Building2, Lock, Save, User } from 'lucide-react';
 import { auth, db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
+import {
+  FARM_TYPE_MAX_LENGTH,
+  loadFarmType,
+  normalizeFarmType,
+  validateFarmType,
+} from '../features/profileForm';
 
 interface OwnerFormState {
   fullName: string;
@@ -22,14 +28,6 @@ interface FeedbackState {
   type: 'success' | 'error';
   message: string;
 }
-
-const farmTypeOptions = [
-  'Dairy Farm',
-  'Poultry Farm',
-  'Goat Farm',
-  'Mixed Farm',
-  'Other',
-] as const;
 
 const getResetErrorMessage = (error: unknown) => {
   const errorCode =
@@ -58,6 +56,7 @@ const Profile: React.FC = () => {
   const [savingSection, setSavingSection] = useState<'owner' | 'farm' | 'security' | null>(null);
   const [loadError, setLoadError] = useState('');
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
+  const [farmTypeError, setFarmTypeError] = useState('');
   const [ownerForm, setOwnerForm] = useState<OwnerFormState>({
     fullName: '',
     email: '',
@@ -66,14 +65,15 @@ const Profile: React.FC = () => {
   const [farmForm, setFarmForm] = useState<FarmFormState>({
     farmName: '',
     farmLocation: '',
-    farmType: 'Mixed Farm',
+    farmType: '',
     farmContactNumber: '',
   });
 
+  const currentUserId = currentUser?.uid;
   const userDocRef = useMemo(() => {
-    if (!currentUser?.uid) return null;
-    return doc(db, 'users', currentUser.uid);
-  }, [currentUser?.uid]);
+    if (!currentUserId) return null;
+    return doc(db, 'users', currentUserId);
+  }, [currentUserId]);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -106,10 +106,7 @@ const Profile: React.FC = () => {
             (typeof data.farmLocation === 'string' && data.farmLocation) ||
             (typeof data.farmAddress === 'string' && data.farmAddress) ||
             '',
-          farmType:
-            typeof data.farmType === 'string' && data.farmType
-              ? data.farmType
-              : 'Mixed Farm',
+          farmType: loadFarmType(data.farmType),
           farmContactNumber:
             typeof data.farmContactNumber === 'string' ? data.farmContactNumber : '',
         });
@@ -124,7 +121,7 @@ const Profile: React.FC = () => {
         setFarmForm({
           farmName: '',
           farmLocation: '',
-          farmType: 'Mixed Farm',
+          farmType: '',
           farmContactNumber: '',
         });
       } finally {
@@ -144,10 +141,11 @@ const Profile: React.FC = () => {
   };
 
   const handleFarmChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
     setFarmForm((current) => ({ ...current, [name]: value }));
+    if (name === 'farmType' && farmTypeError) setFarmTypeError('');
     if (feedback) setFeedback(null);
   };
 
@@ -206,7 +204,18 @@ const Profile: React.FC = () => {
       return;
     }
 
+    const nextFarmTypeError = validateFarmType(farmForm.farmType);
+    if (nextFarmTypeError) {
+      setFarmTypeError(nextFarmTypeError);
+      setFeedback({
+        type: 'error',
+        message: nextFarmTypeError,
+      });
+      return;
+    }
+
     setSavingSection('farm');
+    setFarmTypeError('');
     setFeedback(null);
 
     try {
@@ -217,7 +226,7 @@ const Profile: React.FC = () => {
           email: currentUser.email || '',
           farmName: farmForm.farmName.trim(),
           farmLocation: farmForm.farmLocation.trim(),
-          farmType: farmForm.farmType,
+          farmType: normalizeFarmType(farmForm.farmType),
           farmContactNumber: farmForm.farmContactNumber.trim(),
           updatedAt: serverTimestamp(),
         },
@@ -277,15 +286,10 @@ const Profile: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="flex items-center gap-3 text-2xl font-bold text-gray-900">
-          <User className="h-7 w-7 text-green-600" />
-          Profile
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Manage your personal and farm information.
-        </p>
-      </div>
+      <h1 className="flex items-center gap-3 text-2xl font-bold text-gray-900">
+        <User className="h-7 w-7 text-[#606c38]" />
+        Profile
+      </h1>
 
       {loadError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4">
@@ -295,6 +299,7 @@ const Profile: React.FC = () => {
 
       {feedback ? (
         <div
+          role={feedback.type === 'error' ? 'alert' : 'status'}
           className={`rounded-xl border px-5 py-4 ${
             feedback.type === 'success'
               ? 'border-green-200 bg-green-50'
@@ -399,19 +404,31 @@ const Profile: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Farm Type</label>
-              <select
+              <label htmlFor="farm-type" className="block text-sm font-medium text-gray-700">
+                Farm Type
+              </label>
+              <input
+                id="farm-type"
+                type="text"
                 name="farmType"
                 value={farmForm.farmType}
                 onChange={handleFarmChange}
-                className="mt-1 block w-full rounded-md border border-gray-300 bg-white p-2 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-              >
-                {farmTypeOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                placeholder="Enter farm type"
+                maxLength={FARM_TYPE_MAX_LENGTH}
+                aria-invalid={Boolean(farmTypeError)}
+                aria-describedby={
+                  farmTypeError ? 'farm-type-help farm-type-error' : 'farm-type-help'
+                }
+                className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-[#606c38] focus:ring-[#606c38] sm:text-sm"
+              />
+              <p id="farm-type-help" className="mt-1 text-xs text-gray-500">
+                Enter the description your farm uses.
+              </p>
+              {farmTypeError ? (
+                <p id="farm-type-error" role="alert" className="mt-1 text-sm text-[#bc6c25]">
+                  {farmTypeError}
+                </p>
+              ) : null}
             </div>
 
             <div>
@@ -474,7 +491,7 @@ const Profile: React.FC = () => {
             <p>
               <span className="font-medium text-gray-900">FarmLite Version:</span> v1.0
             </p>
-            <p>AI-assisted livestock management system for small farms.</p>
+            <p>AI-assisted livestock management and decision-support system.</p>
             <p className="pt-2 text-xs text-gray-500">© 2026 FarmLite</p>
           </div>
         </section>

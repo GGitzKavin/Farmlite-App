@@ -1,0 +1,114 @@
+{
+  "contract_version": "bangladesh_thi_mapping_contract_v1",
+  "phase": "5",
+  "status": "IMPLEMENTED_BACKEND_PROTOTYPE_DISABLED_BY_DEFAULT",
+  "verification_status": "VERIFIED_WITH_LIMITATIONS",
+  "automatic_mapping_decision": "CONTROLLED_RUNTIME_BEHIND_DISABLED_DEFAULT_FLAG",
+  "formula": {
+    "expression": "(1.8 * T + 32) - ((0.55 - 0.0055 * RH) * (1.8 * T - 26))",
+    "temperature_symbol": "T",
+    "temperature_unit": "degrees Celsius",
+    "humidity_symbol": "RH",
+    "humidity_unit": "percent",
+    "article_doi": "10.1016/j.anopes.2026.100139",
+    "local_evidence": [
+      "backend/flask_api/ml/reports/bangladesh_dataset_inventory.json",
+      "documentation/bangladesh_dataset_methodology_summary.md",
+      "documentation/bangladesh_integration_approval_gate.md"
+    ],
+    "verified": true
+  },
+  "categories": [
+    {
+      "label": "T0",
+      "minimum": null,
+      "minimum_inclusive": false,
+      "maximum": 75.0,
+      "maximum_inclusive": true,
+      "rule": "THI <= 75"
+    },
+    {
+      "label": "T1",
+      "minimum": 75.0,
+      "minimum_inclusive": false,
+      "maximum": 80.0,
+      "maximum_inclusive": false,
+      "rule": "75 < THI < 80"
+    },
+    {
+      "label": "T2",
+      "minimum": 80.0,
+      "minimum_inclusive": true,
+      "maximum": null,
+      "maximum_inclusive": false,
+      "rule": "THI >= 80"
+    }
+  ],
+  "pipeline_category_labels_verified": [
+    "T0",
+    "T1",
+    "T2"
+  ],
+  "boundary_policy": {
+    "calculate_with_unrounded_numeric_inputs": true,
+    "round_before_category_assignment": false,
+    "thi_equal_75": "T0",
+    "thi_above_75_below_80": "T1",
+    "thi_equal_80": "T2",
+    "return_calculated_thi_for_traceability": true
+  },
+  "input_policy": {
+    "ambient_temperature_c": {
+      "required_for_bangladesh_prediction": true,
+      "type": "finite number",
+      "unit": "degrees Celsius",
+      "silent_default_allowed": false,
+      "study_observed_numeric_range": null,
+      "unrealistic_temperature_boundary": "UNRESOLVED",
+      "unrealistic_temperature_policy": "Do not invent a study range. Phase 5 must define product-level physical validation separately before enablement."
+    },
+    "humidity_percent": {
+      "required_for_bangladesh_prediction": true,
+      "type": "finite number",
+      "unit": "percent",
+      "minimum": 0.0,
+      "minimum_inclusive": true,
+      "maximum": 100.0,
+      "maximum_inclusive": true,
+      "silent_default_allowed": false
+    }
+  },
+  "invalid_input_policy": {
+    "missing_temperature": "MISSING_REQUIRED_INPUT",
+    "missing_humidity": "MISSING_REQUIRED_INPUT",
+    "non_finite_temperature": "INVALID_ENVIRONMENT_INPUT",
+    "non_finite_humidity": "INVALID_ENVIRONMENT_INPUT",
+    "humidity_below_0": "INVALID_ENVIRONMENT_INPUT",
+    "humidity_above_100": "INVALID_ENVIRONMENT_INPUT",
+    "calculation_failure": "INVALID_ENVIRONMENT_INPUT",
+    "unrealistic_temperature": "UNRESOLVED",
+    "unsupported_derived_category": "UNKNOWN_THI_CATEGORY",
+    "fallback_required_for_every_non_eligible_status": true
+  },
+  "unknown_category_policy": {
+    "client_supplied_thi_category_allowed": false,
+    "pipeline_handle_unknown_behavior": "ignore",
+    "runtime_decision": "REJECT_BEFORE_PIPELINE_AND_REQUIRE_FALLBACK"
+  },
+  "evidence_policy": {
+    "formula_missing": "BLOCKED",
+    "thresholds_missing": "BLOCKED",
+    "pipeline_categories_missing": "BLOCKED",
+    "evidence_conflict": "BLOCKED",
+    "missing_evidence_policy": "BLOCKED"
+  },
+  "limitations": [
+    "The source workbooks contain THI category only; numeric T, RH and THI are absent.",
+    "The formula and thresholds cannot be reproduced against stored source rows.",
+    "The study's observed numeric temperature and humidity ranges are UNRESOLVED.",
+    "This contract must not be connected to runtime in Phase 4.5E."
+  ],
+  "runtime_integration_performed": true,
+  "frontend_integration_performed": false,
+  "production_approved": false
+}

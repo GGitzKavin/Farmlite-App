@@ -1,0 +1,3137 @@
+{
+  "phase_status": "PHASE_4_COMPLETED_NO_INTEGRATION",
+  "runner_version": "phase4_runner_v1",
+  "configuration_hash": "11866658AA41B96CAF6F2C4702C6DE671F8797A1EF51F774780E3EE6C7399DEE",
+  "dataset_metadata": {
+    "dataset_path": "D:\\UOB\\FarmLite\\datasets\\raw\\global_cattle_milk_yield_prediction_dataset.csv",
+    "dataset_sha256": "26D6D08FE463893253A9923FEFEFC99642438934817F554BFE9E08DEEA2AD1B3",
+    "existing_model_path": "D:\\UOB\\FarmLite\\backend\\flask_api\\ml\\models\\milk_yield_model.joblib",
+    "existing_model_sha256_before": "B9AD64E0EC62C75D70568D9D4F9136F240CD223DCC8851EC545D67B909C52BFA",
+    "row_count": 250000,
+    "column_count": 37,
+    "contract_version": "1.0.0",
+    "split_manifest_sha256": "A7C206B058CBD04AED428F9C44228653AF4CBEB6F86D90317A0A847BC02DADFB",
+    "fold_manifest_sha256": "B1B546A11903F65E9A91824B6E25E2897E15F80A1619E08A5918652CAB377EB1",
+    "manifest_checks": {
+      "split_counts": {
+        "train": 175000,
+        "validation": 37500,
+        "test": 37500
+      },
+      "fold_counts": {
+        "1": 35000,
+        "2": 35000,
+        "3": 35000,
+        "4": 35000,
+        "5": 35000
+      },
+      "duplicate_split_assignments": 0,
+      "missing_split_assignments": 0,
+      "cattle_id_overlap_count": 0,
+      "all_training_rows_have_one_fold": true
+    },
+    "feature_order_checks": {
+      "feed_type_classifier": [
+        "breed",
+        "age_months",
+        "weight_kg",
+        "lactation_stage",
+        "days_in_milk",
+        "previous_week_avg_yield_l",
+        "body_condition_score",
+        "ambient_temperature_c",
+        "humidity_percent"
+      ],
+      "feed_quantity_regressor_design_a": [
+        "breed",
+        "age_months",
+        "weight_kg",
+        "lactation_stage",
+        "days_in_milk",
+        "previous_week_avg_yield_l",
+        "body_condition_score",
+        "ambient_temperature_c",
+        "humidity_percent"
+      ],
+      "milk_yield_regressor": [
+        "breed",
+        "age_months",
+        "weight_kg",
+        "lactation_stage",
+        "days_in_milk",
+        "previous_week_avg_yield_l",
+        "body_condition_score",
+        "ambient_temperature_c",
+        "humidity_percent"
+      ]
+    },
+    "library_versions": {
+      "python": "3.12.10",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scikit_learn": "1.8.0",
+      "joblib": "1.5.3"
+    },
+    "random_seed": 42,
+    "configuration_hash": "4DFBB3946768D56F2D1650F2A6481D189B1E4850B3A220BD3FE32E8AC7464521",
+    "cleaning_issue_count": 0
+  },
+  "split_metadata": {
+    "split_counts": {
+      "train": 175000,
+      "validation": 37500,
+      "test": 37500
+    },
+    "fold_counts": {
+      "1": 35000,
+      "2": 35000,
+      "3": 35000,
+      "4": 35000,
+      "5": 35000
+    },
+    "duplicate_split_assignments": 0,
+    "missing_split_assignments": 0,
+    "cattle_id_overlap_count": 0,
+    "all_training_rows_have_one_fold": true
+  },
+  "candidate_configurations": {
+    "feed_type": [
+      {
+        "configuration_id": "feed_type_dummy_most_frequent",
+        "task": "feed_type",
+        "algorithm": "DummyClassifier",
+        "estimator_name": "dummy_classifier",
+        "parameters": {
+          "strategy": "most_frequent"
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": true,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_type_dummy_stratified",
+        "task": "feed_type",
+        "algorithm": "DummyClassifier",
+        "estimator_name": "dummy_classifier",
+        "parameters": {
+          "strategy": "stratified",
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": true,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_type_logistic_c1",
+        "task": "feed_type",
+        "algorithm": "LogisticRegression",
+        "estimator_name": "logistic_regression",
+        "parameters": {
+          "C": 1.0,
+          "max_iter": 300,
+          "solver": "lbfgs",
+          "random_state": 42
+        },
+        "preprocessor_kind": "linear",
+        "is_baseline": false,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_type_decision_tree",
+        "task": "feed_type",
+        "algorithm": "DecisionTreeClassifier",
+        "estimator_name": "decision_tree_classifier",
+        "parameters": {
+          "max_depth": 14,
+          "min_samples_leaf": 20,
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": false,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_type_random_forest",
+        "task": "feed_type",
+        "algorithm": "RandomForestClassifier",
+        "estimator_name": "random_forest_classifier",
+        "parameters": {
+          "n_estimators": 60,
+          "max_depth": 18,
+          "min_samples_leaf": 5,
+          "n_jobs": 2,
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      },
+      {
+        "configuration_id": "feed_type_hist_gradient_boosting",
+        "task": "feed_type",
+        "algorithm": "HistGradientBoostingClassifier",
+        "estimator_name": "hist_gradient_boosting_classifier",
+        "parameters": {
+          "max_iter": 80,
+          "learning_rate": 0.08,
+          "max_leaf_nodes": 31,
+          "l2_regularization": 0.1,
+          "random_state": 42
+        },
+        "preprocessor_kind": "dense_tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      }
+    ],
+    "feed_quantity": [
+      {
+        "configuration_id": "feed_quantity_dummy_mean",
+        "task": "feed_quantity",
+        "algorithm": "DummyRegressor",
+        "estimator_name": "dummy_regressor",
+        "parameters": {
+          "strategy": "mean"
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": true,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_quantity_dummy_median",
+        "task": "feed_quantity",
+        "algorithm": "DummyRegressor",
+        "estimator_name": "dummy_regressor",
+        "parameters": {
+          "strategy": "median"
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": true,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_quantity_ridge",
+        "task": "feed_quantity",
+        "algorithm": "Ridge",
+        "estimator_name": "ridge",
+        "parameters": {
+          "alpha": 1.0
+        },
+        "preprocessor_kind": "linear",
+        "is_baseline": false,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_quantity_decision_tree",
+        "task": "feed_quantity",
+        "algorithm": "DecisionTreeRegressor",
+        "estimator_name": "decision_tree_regressor",
+        "parameters": {
+          "max_depth": 14,
+          "min_samples_leaf": 20,
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": false,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "feed_quantity_random_forest",
+        "task": "feed_quantity",
+        "algorithm": "RandomForestRegressor",
+        "estimator_name": "random_forest_regressor",
+        "parameters": {
+          "n_estimators": 60,
+          "max_depth": 18,
+          "min_samples_leaf": 5,
+          "max_features": 0.8,
+          "n_jobs": 2,
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      },
+      {
+        "configuration_id": "feed_quantity_hist_gradient_boosting",
+        "task": "feed_quantity",
+        "algorithm": "HistGradientBoostingRegressor",
+        "estimator_name": "hist_gradient_boosting_regressor",
+        "parameters": {
+          "max_iter": 100,
+          "learning_rate": 0.08,
+          "max_leaf_nodes": 31,
+          "l2_regularization": 0.1,
+          "random_state": 42
+        },
+        "preprocessor_kind": "dense_tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      }
+    ],
+    "milk_yield": [
+      {
+        "configuration_id": "milk_yield_dummy_mean",
+        "task": "milk_yield",
+        "algorithm": "DummyRegressor",
+        "estimator_name": "dummy_regressor",
+        "parameters": {
+          "strategy": "mean"
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": true,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "milk_yield_dummy_median",
+        "task": "milk_yield",
+        "algorithm": "DummyRegressor",
+        "estimator_name": "dummy_regressor",
+        "parameters": {
+          "strategy": "median"
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": true,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "milk_yield_ridge",
+        "task": "milk_yield",
+        "algorithm": "Ridge",
+        "estimator_name": "ridge",
+        "parameters": {
+          "alpha": 1.0
+        },
+        "preprocessor_kind": "linear",
+        "is_baseline": false,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "milk_yield_decision_tree",
+        "task": "milk_yield",
+        "algorithm": "DecisionTreeRegressor",
+        "estimator_name": "decision_tree_regressor",
+        "parameters": {
+          "max_depth": 14,
+          "min_samples_leaf": 20,
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": false,
+        "resource_class": "STANDARD"
+      },
+      {
+        "configuration_id": "milk_yield_random_forest",
+        "task": "milk_yield",
+        "algorithm": "RandomForestRegressor",
+        "estimator_name": "random_forest_regressor",
+        "parameters": {
+          "n_estimators": 60,
+          "max_depth": 18,
+          "min_samples_leaf": 5,
+          "max_features": 0.8,
+          "n_jobs": 2,
+          "random_state": 42
+        },
+        "preprocessor_kind": "tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      },
+      {
+        "configuration_id": "milk_yield_hist_gradient_boosting",
+        "task": "milk_yield",
+        "algorithm": "HistGradientBoostingRegressor",
+        "estimator_name": "hist_gradient_boosting_regressor",
+        "parameters": {
+          "max_iter": 100,
+          "learning_rate": 0.08,
+          "max_leaf_nodes": 31,
+          "l2_regularization": 0.1,
+          "random_state": 42
+        },
+        "preprocessor_kind": "dense_tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      }
+    ]
+  },
+  "validation_metrics": {
+    "feed_type": [
+      {
+        "configuration": {
+          "configuration_id": "feed_type_dummy_most_frequent",
+          "task": "feed_type",
+          "algorithm": "DummyClassifier",
+          "estimator_name": "dummy_classifier",
+          "parameters": {
+            "strategy": "most_frequent"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "accuracy": 0.12629333333333334,
+          "balanced_accuracy": 0.125,
+          "macro_precision": 0.015786666666666668,
+          "macro_recall": 0.125,
+          "macro_f1": 0.028032957666445688,
+          "weighted_f1": 0.028323005335101178,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4693,
+              "predicted_count": 0
+            },
+            "Crop_Residues": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4691,
+              "predicted_count": 0
+            },
+            "Dry_Fodder": {
+              "precision": 0.12629333333333334,
+              "recall": 1.0,
+              "f1": 0.2242636613315655,
+              "support": 4736,
+              "predicted_count": 37500
+            },
+            "Green_Fodder": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4683,
+              "predicted_count": 0
+            },
+            "Hay": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4670,
+              "predicted_count": 0
+            },
+            "Mixed_Feed": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4672,
+              "predicted_count": 0
+            },
+            "Pasture_Grass": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4693,
+              "predicted_count": 0
+            },
+            "Silage": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 4662,
+              "predicted_count": 0
+            }
+          },
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              4693,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4691,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4736,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4683,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4670,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4672,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4693,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4662,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 0,
+            "Crop_Residues": 0,
+            "Dry_Fodder": 37500,
+            "Green_Fodder": 0,
+            "Hay": 0,
+            "Mixed_Feed": 0,
+            "Pasture_Grass": 0,
+            "Silage": 0
+          },
+          "predicted_class_count": 1
+        },
+        "training_seconds": 0.221396,
+        "prediction_seconds": 0.018682
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_type_dummy_stratified",
+          "task": "feed_type",
+          "algorithm": "DummyClassifier",
+          "estimator_name": "dummy_classifier",
+          "parameters": {
+            "strategy": "stratified",
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "accuracy": 0.12392,
+          "balanced_accuracy": 0.12392214422091186,
+          "macro_precision": 0.12396070099173911,
+          "macro_recall": 0.12392214422091186,
+          "macro_f1": 0.1239371343518743,
+          "weighted_f1": 0.12393471781362454,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.12516018795386588,
+              "recall": 0.12486682292776476,
+              "f1": 0.12501333333333334,
+              "support": 4693,
+              "predicted_count": 4682
+            },
+            "Crop_Residues": {
+              "precision": 0.12489270386266095,
+              "recall": 0.12406736303560008,
+              "f1": 0.12447866538338145,
+              "support": 4691,
+              "predicted_count": 4660
+            },
+            "Dry_Fodder": {
+              "precision": 0.12505263157894736,
+              "recall": 0.12542229729729729,
+              "f1": 0.1252371916508539,
+              "support": 4736,
+              "predicted_count": 4750
+            },
+            "Green_Fodder": {
+              "precision": 0.11423771524569509,
+              "recall": 0.11616485159086055,
+              "f1": 0.11519322392800424,
+              "support": 4683,
+              "predicted_count": 4762
+            },
+            "Hay": {
+              "precision": 0.13008307826847398,
+              "recall": 0.12740899357601712,
+              "f1": 0.1287321505841627,
+              "support": 4670,
+              "predicted_count": 4574
+            },
+            "Mixed_Feed": {
+              "precision": 0.12305427008834666,
+              "recall": 0.1252140410958904,
+              "f1": 0.12412476129853596,
+              "support": 4672,
+              "predicted_count": 4754
+            },
+            "Pasture_Grass": {
+              "precision": 0.12130304329189884,
+              "recall": 0.12060515661623696,
+              "f1": 0.1209530932791965,
+              "support": 4693,
+              "predicted_count": 4666
+            },
+            "Silage": {
+              "precision": 0.12790197764402408,
+              "recall": 0.12762762762762764,
+              "f1": 0.1277646553575263,
+              "support": 4662,
+              "predicted_count": 4652
+            }
+          },
+          "confusion_matrix": [
+            [
+              586,
+              582,
+              602,
+              598,
+              551,
+              614,
+              587,
+              573
+            ],
+            [
+              565,
+              582,
+              587,
+              631,
+              594,
+              599,
+              549,
+              584
+            ],
+            [
+              597,
+              565,
+              594,
+              599,
+              583,
+              577,
+              610,
+              611
+            ],
+            [
+              600,
+              625,
+              604,
+              544,
+              554,
+              613,
+              560,
+              583
+            ],
+            [
+              550,
+              582,
+              595,
+              642,
+              595,
+              554,
+              584,
+              568
+            ],
+            [
+              612,
+              563,
+              600,
+              572,
+              545,
+              585,
+              604,
+              591
+            ],
+            [
+              588,
+              597,
+              589,
+              609,
+              576,
+              621,
+              566,
+              547
+            ],
+            [
+              584,
+              564,
+              579,
+              567,
+              576,
+              591,
+              606,
+              595
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 4682,
+            "Crop_Residues": 4660,
+            "Dry_Fodder": 4750,
+            "Green_Fodder": 4762,
+            "Hay": 4574,
+            "Mixed_Feed": 4754,
+            "Pasture_Grass": 4666,
+            "Silage": 4652
+          },
+          "predicted_class_count": 8
+        },
+        "training_seconds": 0.179935,
+        "prediction_seconds": 0.023625
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_type_logistic_c1",
+          "task": "feed_type",
+          "algorithm": "LogisticRegression",
+          "estimator_name": "logistic_regression",
+          "parameters": {
+            "C": 1.0,
+            "max_iter": 300,
+            "solver": "lbfgs",
+            "random_state": 42
+          },
+          "preprocessor_kind": "linear",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "accuracy": 0.12541333333333332,
+          "balanced_accuracy": 0.12539492567790503,
+          "macro_precision": 0.12567600335516121,
+          "macro_recall": 0.12539492567790503,
+          "macro_f1": 0.12480908416932024,
+          "weighted_f1": 0.12481951198199448,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.12669226106284098,
+              "recall": 0.13360323886639677,
+              "f1": 0.13005600497822029,
+              "support": 4693,
+              "predicted_count": 4949
+            },
+            "Crop_Residues": {
+              "precision": 0.12119603680113235,
+              "recall": 0.1460243018546152,
+              "f1": 0.13245673402301072,
+              "support": 4691,
+              "predicted_count": 5652
+            },
+            "Dry_Fodder": {
+              "precision": 0.12568652302492606,
+              "recall": 0.12563344594594594,
+              "f1": 0.12565997888067582,
+              "support": 4736,
+              "predicted_count": 4734
+            },
+            "Green_Fodder": {
+              "precision": 0.12885154061624648,
+              "recall": 0.09822763185991885,
+              "f1": 0.11147461529140919,
+              "support": 4683,
+              "predicted_count": 3570
+            },
+            "Hay": {
+              "precision": 0.12466692044156832,
+              "recall": 0.14025695931477516,
+              "f1": 0.1320032245062475,
+              "support": 4670,
+              "predicted_count": 5254
+            },
+            "Mixed_Feed": {
+              "precision": 0.12492192379762648,
+              "recall": 0.1284246575342466,
+              "f1": 0.1266490765171504,
+              "support": 4672,
+              "predicted_count": 4803
+            },
+            "Pasture_Grass": {
+              "precision": 0.12616067823980623,
+              "recall": 0.13317707223524397,
+              "f1": 0.12957396081683425,
+              "support": 4693,
+              "predicted_count": 4954
+            },
+            "Silage": {
+              "precision": 0.12723214285714285,
+              "recall": 0.0978120978120978,
+              "f1": 0.11059907834101383,
+              "support": 4662,
+              "predicted_count": 3584
+            }
+          },
+          "confusion_matrix": [
+            [
+              627,
+              682,
+              568,
+              426,
+              700,
+              622,
+              612,
+              456
+            ],
+            [
+              612,
+              685,
+              561,
+              443,
+              652,
+              644,
+              650,
+              444
+            ],
+            [
+              615,
+              736,
+              595,
+              472,
+              647,
+              577,
+              639,
+              455
+            ],
+            [
+              587,
+              722,
+              619,
+              460,
+              605,
+              613,
+              630,
+              447
+            ],
+            [
+              628,
+              675,
+              576,
+              441,
+              655,
+              614,
+              638,
+              443
+            ],
+            [
+              678,
+              711,
+              583,
+              417,
+              675,
+              600,
+              572,
+              436
+            ],
+            [
+              602,
+              698,
+              601,
+              486,
+              665,
+              569,
+              625,
+              447
+            ],
+            [
+              600,
+              743,
+              631,
+              425,
+              655,
+              564,
+              588,
+              456
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 4949,
+            "Crop_Residues": 5652,
+            "Dry_Fodder": 4734,
+            "Green_Fodder": 3570,
+            "Hay": 5254,
+            "Mixed_Feed": 4803,
+            "Pasture_Grass": 4954,
+            "Silage": 3584
+          },
+          "predicted_class_count": 8
+        },
+        "training_seconds": 0.618518,
+        "prediction_seconds": 0.02157
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_type_decision_tree",
+          "task": "feed_type",
+          "algorithm": "DecisionTreeClassifier",
+          "estimator_name": "decision_tree_classifier",
+          "parameters": {
+            "max_depth": 14,
+            "min_samples_leaf": 20,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "accuracy": 0.12717333333333333,
+          "balanced_accuracy": 0.12738474449871706,
+          "macro_precision": 0.12610582527022324,
+          "macro_recall": 0.12738474449871706,
+          "macro_f1": 0.10217949892326006,
+          "weighted_f1": 0.10211734434634122,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.12460298069875397,
+              "recall": 0.10867249094395909,
+              "f1": 0.11609378556794901,
+              "support": 4693,
+              "predicted_count": 4093
+            },
+            "Crop_Residues": {
+              "precision": 0.1321092700403045,
+              "recall": 0.06288637817096568,
+              "f1": 0.085210860774119,
+              "support": 4691,
+              "predicted_count": 2233
+            },
+            "Dry_Fodder": {
+              "precision": 0.13822166034555414,
+              "recall": 0.06925675675675676,
+              "f1": 0.09227739485159657,
+              "support": 4736,
+              "predicted_count": 2373
+            },
+            "Green_Fodder": {
+              "precision": 0.12547528517110265,
+              "recall": 0.035233824471492634,
+              "f1": 0.05501833944648216,
+              "support": 4683,
+              "predicted_count": 1315
+            },
+            "Hay": {
+              "precision": 0.12528768699654774,
+              "recall": 0.18650963597430406,
+              "f1": 0.14988814317673377,
+              "support": 4670,
+              "predicted_count": 6952
+            },
+            "Mixed_Feed": {
+              "precision": 0.1280839289831681,
+              "recall": 0.4755993150684932,
+              "f1": 0.20181653042688466,
+              "support": 4672,
+              "predicted_count": 17348
+            },
+            "Pasture_Grass": {
+              "precision": 0.11457286432160804,
+              "recall": 0.024291497975708502,
+              "f1": 0.04008438818565401,
+              "support": 4693,
+              "predicted_count": 995
+            },
+            "Silage": {
+              "precision": 0.1204929256047467,
+              "recall": 0.05662805662805663,
+              "f1": 0.07704654895666131,
+              "support": 4662,
+              "predicted_count": 2191
+            }
+          },
+          "confusion_matrix": [
+            [
+              510,
+              292,
+              309,
+              156,
+              861,
+              2176,
+              121,
+              268
+            ],
+            [
+              538,
+              295,
+              270,
+              161,
+              860,
+              2173,
+              115,
+              279
+            ],
+            [
+              500,
+              268,
+              328,
+              163,
+              902,
+              2170,
+              116,
+              289
+            ],
+            [
+              488,
+              266,
+              293,
+              165,
+              864,
+              2222,
+              132,
+              253
+            ],
+            [
+              491,
+              287,
+              315,
+              173,
+              871,
+              2123,
+              152,
+              258
+            ],
+            [
+              501,
+              262,
+              266,
+              161,
+              862,
+              2222,
+              109,
+              289
+            ],
+            [
+              548,
+              277,
+              287,
+              167,
+              875,
+              2134,
+              114,
+              291
+            ],
+            [
+              517,
+              286,
+              305,
+              169,
+              857,
+              2128,
+              136,
+              264
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 4093,
+            "Crop_Residues": 2233,
+            "Dry_Fodder": 2373,
+            "Green_Fodder": 1315,
+            "Hay": 6952,
+            "Mixed_Feed": 17348,
+            "Pasture_Grass": 995,
+            "Silage": 2191
+          },
+          "predicted_class_count": 8
+        },
+        "training_seconds": 1.898512,
+        "prediction_seconds": 0.022553
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_type_random_forest",
+          "task": "feed_type",
+          "algorithm": "RandomForestClassifier",
+          "estimator_name": "random_forest_classifier",
+          "parameters": {
+            "n_estimators": 60,
+            "max_depth": 18,
+            "min_samples_leaf": 5,
+            "n_jobs": 2,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "accuracy": 0.12696,
+          "balanced_accuracy": 0.12693082757259153,
+          "macro_precision": 0.12716236188078034,
+          "macro_recall": 0.12693082757259153,
+          "macro_f1": 0.12688909988368033,
+          "weighted_f1": 0.12689923538323464,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.13479013414106447,
+              "recall": 0.1327509056040912,
+              "f1": 0.13376274825550188,
+              "support": 4693,
+              "predicted_count": 4622
+            },
+            "Crop_Residues": {
+              "precision": 0.12408759124087591,
+              "recall": 0.1268386271583884,
+              "f1": 0.12544802867383512,
+              "support": 4691,
+              "predicted_count": 4795
+            },
+            "Dry_Fodder": {
+              "precision": 0.12172489082969433,
+              "recall": 0.14125844594594594,
+              "f1": 0.13076622361219703,
+              "support": 4736,
+              "predicted_count": 5496
+            },
+            "Green_Fodder": {
+              "precision": 0.12683982683982684,
+              "recall": 0.12513346145633142,
+              "f1": 0.12598086638718692,
+              "support": 4683,
+              "predicted_count": 4620
+            },
+            "Hay": {
+              "precision": 0.12916962384669978,
+              "recall": 0.11691648822269807,
+              "f1": 0.12273800157356413,
+              "support": 4670,
+              "predicted_count": 4227
+            },
+            "Mixed_Feed": {
+              "precision": 0.12316099201345103,
+              "recall": 0.1254280821917808,
+              "f1": 0.12428419936373276,
+              "support": 4672,
+              "predicted_count": 4758
+            },
+            "Pasture_Grass": {
+              "precision": 0.12722210323409724,
+              "recall": 0.12657148945237587,
+              "f1": 0.12689596240119633,
+              "support": 4693,
+              "predicted_count": 4669
+            },
+            "Silage": {
+              "precision": 0.13030373290053326,
+              "recall": 0.12054912054912055,
+              "f1": 0.12523676880222842,
+              "support": 4662,
+              "predicted_count": 4313
+            }
+          },
+          "confusion_matrix": [
+            [
+              623,
+              584,
+              700,
+              568,
+              537,
+              603,
+              558,
+              520
+            ],
+            [
+              551,
+              595,
+              684,
+              590,
+              532,
+              591,
+              580,
+              568
+            ],
+            [
+              579,
+              600,
+              669,
+              558,
+              562,
+              603,
+              625,
+              540
+            ],
+            [
+              540,
+              609,
+              682,
+              586,
+              539,
+              607,
+              563,
+              557
+            ],
+            [
+              579,
+              622,
+              705,
+              577,
+              546,
+              576,
+              568,
+              497
+            ],
+            [
+              593,
+              580,
+              677,
+              578,
+              509,
+              586,
+              604,
+              545
+            ],
+            [
+              598,
+              616,
+              682,
+              570,
+              502,
+              607,
+              594,
+              524
+            ],
+            [
+              559,
+              589,
+              697,
+              593,
+              500,
+              585,
+              577,
+              562
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 4622,
+            "Crop_Residues": 4795,
+            "Dry_Fodder": 5496,
+            "Green_Fodder": 4620,
+            "Hay": 4227,
+            "Mixed_Feed": 4758,
+            "Pasture_Grass": 4669,
+            "Silage": 4313
+          },
+          "predicted_class_count": 8
+        },
+        "training_seconds": 14.400607,
+        "prediction_seconds": 0.115772
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_type_hist_gradient_boosting",
+          "task": "feed_type",
+          "algorithm": "HistGradientBoostingClassifier",
+          "estimator_name": "hist_gradient_boosting_classifier",
+          "parameters": {
+            "max_iter": 80,
+            "learning_rate": 0.08,
+            "max_leaf_nodes": 31,
+            "l2_regularization": 0.1,
+            "random_state": 42
+          },
+          "preprocessor_kind": "dense_tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "accuracy": 0.12565333333333334,
+          "balanced_accuracy": 0.12539739557838134,
+          "macro_precision": 0.12439027165536273,
+          "macro_recall": 0.12539739557838134,
+          "macro_f1": 0.1112443159565433,
+          "weighted_f1": 0.11130951195381242,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.12019914651493599,
+              "recall": 0.036011080332409975,
+              "f1": 0.055418921134612234,
+              "support": 4693,
+              "predicted_count": 1406
+            },
+            "Crop_Residues": {
+              "precision": 0.12515829463908823,
+              "recall": 0.12641227883180559,
+              "f1": 0.1257821614169053,
+              "support": 4691,
+              "predicted_count": 4738
+            },
+            "Dry_Fodder": {
+              "precision": 0.12732894632522002,
+              "recall": 0.3391047297297297,
+              "f1": 0.18514035391088823,
+              "support": 4736,
+              "predicted_count": 12613
+            },
+            "Green_Fodder": {
+              "precision": 0.12845070422535212,
+              "recall": 0.04868673926969891,
+              "f1": 0.07061009600495509,
+              "support": 4683,
+              "predicted_count": 1775
+            },
+            "Hay": {
+              "precision": 0.12522080471050048,
+              "recall": 0.1366167023554604,
+              "f1": 0.13067076292882746,
+              "support": 4670,
+              "predicted_count": 5095
+            },
+            "Mixed_Feed": {
+              "precision": 0.12605832549388524,
+              "recall": 0.1720890410958904,
+              "f1": 0.14552036199095023,
+              "support": 4672,
+              "predicted_count": 6378
+            },
+            "Pasture_Grass": {
+              "precision": 0.11715039577836411,
+              "recall": 0.04730449605795866,
+              "f1": 0.06739526411657559,
+              "support": 4693,
+              "predicted_count": 1895
+            },
+            "Silage": {
+              "precision": 0.12555555555555556,
+              "recall": 0.09695409695409696,
+              "f1": 0.10941660614863229,
+              "support": 4662,
+              "predicted_count": 3600
+            }
+          },
+          "confusion_matrix": [
+            [
+              169,
+              602,
+              1571,
+              200,
+              632,
+              793,
+              240,
+              486
+            ],
+            [
+              163,
+              593,
+              1581,
+              222,
+              629,
+              832,
+              244,
+              427
+            ],
+            [
+              198,
+              595,
+              1606,
+              209,
+              649,
+              793,
+              259,
+              427
+            ],
+            [
+              185,
+              589,
+              1616,
+              228,
+              634,
+              760,
+              215,
+              456
+            ],
+            [
+              170,
+              564,
+              1529,
+              215,
+              638,
+              837,
+              256,
+              461
+            ],
+            [
+              181,
+              602,
+              1560,
+              225,
+              618,
+              804,
+              223,
+              459
+            ],
+            [
+              177,
+              564,
+              1612,
+              255,
+              629,
+              802,
+              222,
+              432
+            ],
+            [
+              163,
+              629,
+              1538,
+              221,
+              666,
+              757,
+              236,
+              452
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 1406,
+            "Crop_Residues": 4738,
+            "Dry_Fodder": 12613,
+            "Green_Fodder": 1775,
+            "Hay": 5095,
+            "Mixed_Feed": 6378,
+            "Pasture_Grass": 1895,
+            "Silage": 3600
+          },
+          "predicted_class_count": 8
+        },
+        "training_seconds": 1.091822,
+        "prediction_seconds": 0.048101
+      }
+    ],
+    "feed_quantity_design_a": [
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_dummy_mean",
+          "task": "feed_quantity",
+          "algorithm": "DummyRegressor",
+          "estimator_name": "dummy_regressor",
+          "parameters": {
+            "strategy": "mean"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.180753838506667,
+          "rmse": 3.965386285952648,
+          "r2": -5.7056540051725335e-05,
+          "median_absolute_error": 2.723848000000002,
+          "mean_residual": -0.02995200000000276,
+          "residual_standard_deviation": 3.965326036548911,
+          "minimum_prediction": 12.023848000000003,
+          "maximum_prediction": 12.023848000000003,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.170054,
+        "prediction_seconds": 0.020446
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_dummy_median",
+          "task": "feed_quantity",
+          "algorithm": "DummyRegressor",
+          "estimator_name": "dummy_regressor",
+          "parameters": {
+            "strategy": "median"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.1803226666666666,
+          "rmse": 3.965277863319711,
+          "r2": -2.3696424868990817e-06,
+          "median_absolute_error": 2.6999999999999993,
+          "mean_residual": -0.006103999999999992,
+          "residual_standard_deviation": 3.965326036548911,
+          "minimum_prediction": 12.0,
+          "maximum_prediction": 12.0,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.16498,
+        "prediction_seconds": 0.019469
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_ridge",
+          "task": "feed_quantity",
+          "algorithm": "Ridge",
+          "estimator_name": "ridge",
+          "parameters": {
+            "alpha": 1.0
+          },
+          "preprocessor_kind": "linear",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.1794138277428634,
+          "rmse": 3.958409578435896,
+          "r2": 0.0034588520322855754,
+          "median_absolute_error": 2.7086085424618505,
+          "mean_residual": -0.028211338803381017,
+          "residual_standard_deviation": 3.958361825440553,
+          "minimum_prediction": 10.678650612039178,
+          "maximum_prediction": 13.114971959681913,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.215792,
+        "prediction_seconds": 0.020398
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_decision_tree",
+          "task": "feed_quantity",
+          "algorithm": "DecisionTreeRegressor",
+          "estimator_name": "decision_tree_regressor",
+          "parameters": {
+            "max_depth": 14,
+            "min_samples_leaf": 20,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.235620144441971,
+          "rmse": 4.029588224302924,
+          "r2": -0.032702231595343134,
+          "median_absolute_error": 2.7631838074398516,
+          "mean_residual": -0.029489751421139323,
+          "residual_standard_deviation": 4.029534042854664,
+          "minimum_prediction": 7.366666666666666,
+          "maximum_prediction": 16.62608695652174,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 2.234285,
+        "prediction_seconds": 0.023274
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_random_forest",
+          "task": "feed_quantity",
+          "algorithm": "RandomForestRegressor",
+          "estimator_name": "random_forest_regressor",
+          "parameters": {
+            "n_estimators": 60,
+            "max_depth": 18,
+            "min_samples_leaf": 5,
+            "max_features": 0.8,
+            "n_jobs": 2,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "mae": 3.185162249550987,
+          "rmse": 3.9671737779518352,
+          "r2": -0.000958858664017237,
+          "median_absolute_error": 2.721687818393118,
+          "mean_residual": -0.02718746250398275,
+          "residual_standard_deviation": 3.967133513042657,
+          "minimum_prediction": 9.019316044877161,
+          "maximum_prediction": 14.70775764560846,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 75.046545,
+        "prediction_seconds": 0.114221
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_hist_gradient_boosting",
+          "task": "feed_quantity",
+          "algorithm": "HistGradientBoostingRegressor",
+          "estimator_name": "hist_gradient_boosting_regressor",
+          "parameters": {
+            "max_iter": 100,
+            "learning_rate": 0.08,
+            "max_leaf_nodes": 31,
+            "l2_regularization": 0.1,
+            "random_state": 42
+          },
+          "preprocessor_kind": "dense_tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "mae": 3.178907013974234,
+          "rmse": 3.9595673674084475,
+          "r2": 0.0028758132823899496,
+          "median_absolute_error": 2.710618515349972,
+          "mean_residual": -0.029976805441610705,
+          "residual_standard_deviation": 3.9595066864446693,
+          "minimum_prediction": 10.87404456473557,
+          "maximum_prediction": 13.26171838261149,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.614628,
+        "prediction_seconds": 0.042405
+      }
+    ],
+    "feed_quantity_design_b": [
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_dummy_mean",
+          "task": "feed_quantity",
+          "algorithm": "DummyRegressor",
+          "estimator_name": "dummy_regressor",
+          "parameters": {
+            "strategy": "mean"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.180753838506667,
+          "rmse": 3.965386285952648,
+          "r2": -5.7056540051725335e-05,
+          "median_absolute_error": 2.723848000000002,
+          "mean_residual": -0.02995200000000276,
+          "residual_standard_deviation": 3.965326036548911,
+          "minimum_prediction": 12.023848000000003,
+          "maximum_prediction": 12.023848000000003,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.194046,
+        "prediction_seconds": 0.022841
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_dummy_median",
+          "task": "feed_quantity",
+          "algorithm": "DummyRegressor",
+          "estimator_name": "dummy_regressor",
+          "parameters": {
+            "strategy": "median"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.1803226666666666,
+          "rmse": 3.965277863319711,
+          "r2": -2.3696424868990817e-06,
+          "median_absolute_error": 2.6999999999999993,
+          "mean_residual": -0.006103999999999992,
+          "residual_standard_deviation": 3.965326036548911,
+          "minimum_prediction": 12.0,
+          "maximum_prediction": 12.0,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.170427,
+        "prediction_seconds": 0.023283
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_ridge",
+          "task": "feed_quantity",
+          "algorithm": "Ridge",
+          "estimator_name": "ridge",
+          "parameters": {
+            "alpha": 1.0
+          },
+          "preprocessor_kind": "linear",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.179527422481443,
+          "rmse": 3.95850981062248,
+          "r2": 0.003408383903144685,
+          "median_absolute_error": 2.7118432409820317,
+          "mean_residual": -0.02835122530059559,
+          "residual_standard_deviation": 3.958461062061599,
+          "minimum_prediction": 10.707697787134506,
+          "maximum_prediction": 13.117846909935595,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.23381,
+        "prediction_seconds": 0.023387
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_decision_tree",
+          "task": "feed_quantity",
+          "algorithm": "DecisionTreeRegressor",
+          "estimator_name": "decision_tree_regressor",
+          "parameters": {
+            "max_depth": 14,
+            "min_samples_leaf": 20,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 3.2366963075651984,
+          "rmse": 4.031446483512464,
+          "r2": -0.03365491996407233,
+          "median_absolute_error": 2.7631340490495546,
+          "mean_residual": -0.0275913838663474,
+          "residual_standard_deviation": 4.031405816565426,
+          "minimum_prediction": 7.366666666666666,
+          "maximum_prediction": 16.62608695652174,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 2.602336,
+        "prediction_seconds": 0.025678
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_random_forest",
+          "task": "feed_quantity",
+          "algorithm": "RandomForestRegressor",
+          "estimator_name": "random_forest_regressor",
+          "parameters": {
+            "n_estimators": 60,
+            "max_depth": 18,
+            "min_samples_leaf": 5,
+            "max_features": 0.8,
+            "n_jobs": 2,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "mae": 3.1838034095749537,
+          "rmse": 3.964970724151786,
+          "r2": 0.00015253904801582063,
+          "median_absolute_error": 2.715632833803829,
+          "mean_residual": -0.027206091547634842,
+          "residual_standard_deviation": 3.9649302503172112,
+          "minimum_prediction": 9.595045135977506,
+          "maximum_prediction": 14.52440217684129,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 89.567934,
+        "prediction_seconds": 0.119619
+      },
+      {
+        "configuration": {
+          "configuration_id": "feed_quantity_hist_gradient_boosting",
+          "task": "feed_quantity",
+          "algorithm": "HistGradientBoostingRegressor",
+          "estimator_name": "hist_gradient_boosting_regressor",
+          "parameters": {
+            "max_iter": 100,
+            "learning_rate": 0.08,
+            "max_leaf_nodes": 31,
+            "l2_regularization": 0.1,
+            "random_state": 42
+          },
+          "preprocessor_kind": "dense_tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "mae": 3.1787966561520804,
+          "rmse": 3.9598853514371775,
+          "r2": 0.0027156532102458053,
+          "median_absolute_error": 2.7102508107338634,
+          "mean_residual": -0.0307723592771675,
+          "residual_standard_deviation": 3.95981858121259,
+          "minimum_prediction": 11.033998922548328,
+          "maximum_prediction": 13.13987359358888,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.527209,
+        "prediction_seconds": 0.038387
+      }
+    ],
+    "milk_yield": [
+      {
+        "configuration": {
+          "configuration_id": "milk_yield_dummy_mean",
+          "task": "milk_yield",
+          "algorithm": "DummyRegressor",
+          "estimator_name": "dummy_regressor",
+          "parameters": {
+            "strategy": "mean"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 4.653788866188191,
+          "rmse": 5.7559273645120435,
+          "r2": -1.2205675228305068e-05,
+          "median_absolute_error": 4.140252457142855,
+          "mean_residual": -0.020109142857143842,
+          "residual_standard_deviation": 5.7559689841083514,
+          "minimum_prediction": 8.729747542857144,
+          "maximum_prediction": 8.729747542857144,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.144277,
+        "prediction_seconds": 0.018865
+      },
+      {
+        "configuration": {
+          "configuration_id": "milk_yield_dummy_median",
+          "task": "milk_yield",
+          "algorithm": "DummyRegressor",
+          "estimator_name": "dummy_regressor",
+          "parameters": {
+            "strategy": "median"
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": true,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 4.573894933333333,
+          "rmse": 5.858123188416804,
+          "r2": -0.035837647286341534,
+          "median_absolute_error": 3.8000000000000003,
+          "mean_residual": 1.0896383999999997,
+          "residual_standard_deviation": 5.7559689841083514,
+          "minimum_prediction": 7.62,
+          "maximum_prediction": 7.62,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 0.148659,
+        "prediction_seconds": 0.019848
+      },
+      {
+        "configuration": {
+          "configuration_id": "milk_yield_ridge",
+          "task": "milk_yield",
+          "algorithm": "Ridge",
+          "estimator_name": "ridge",
+          "parameters": {
+            "alpha": 1.0
+          },
+          "preprocessor_kind": "linear",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 1.1016672990036904,
+          "rmse": 1.3816476464718825,
+          "r2": 0.9423805253411468,
+          "median_absolute_error": 0.9255610549964014,
+          "mean_residual": -0.006534008427451675,
+          "residual_standard_deviation": 1.381650618388502,
+          "minimum_prediction": -0.22404123640049178,
+          "maximum_prediction": 35.92423319156081,
+          "negative_prediction_count": 45
+        },
+        "training_seconds": 0.187924,
+        "prediction_seconds": 0.019639
+      },
+      {
+        "configuration": {
+          "configuration_id": "milk_yield_decision_tree",
+          "task": "milk_yield",
+          "algorithm": "DecisionTreeRegressor",
+          "estimator_name": "decision_tree_regressor",
+          "parameters": {
+            "max_depth": 14,
+            "min_samples_leaf": 20,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "STANDARD"
+        },
+        "metrics": {
+          "mae": 1.136374218159198,
+          "rmse": 1.424039376806866,
+          "r2": 0.9387905202993206,
+          "median_absolute_error": 0.9597510548523336,
+          "mean_residual": -0.003718286757413187,
+          "residual_standard_deviation": 1.424053509925354,
+          "minimum_prediction": 0.12,
+          "maximum_prediction": 33.09400000000001,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 3.40906,
+        "prediction_seconds": 0.02287
+      },
+      {
+        "configuration": {
+          "configuration_id": "milk_yield_random_forest",
+          "task": "milk_yield",
+          "algorithm": "RandomForestRegressor",
+          "estimator_name": "random_forest_regressor",
+          "parameters": {
+            "n_estimators": 60,
+            "max_depth": 18,
+            "min_samples_leaf": 5,
+            "max_features": 0.8,
+            "n_jobs": 2,
+            "random_state": 42
+          },
+          "preprocessor_kind": "tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "mae": 1.101515102532237,
+          "rmse": 1.3780888543623824,
+          "r2": 0.9426769708859476,
+          "median_absolute_error": 0.9280546948704411,
+          "mean_residual": -0.0077275580091603025,
+          "residual_standard_deviation": 1.378085562858925,
+          "minimum_prediction": 0.2662154892175725,
+          "maximum_prediction": 33.561530101148854,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 122.420874,
+        "prediction_seconds": 0.14831
+      },
+      {
+        "configuration": {
+          "configuration_id": "milk_yield_hist_gradient_boosting",
+          "task": "milk_yield",
+          "algorithm": "HistGradientBoostingRegressor",
+          "estimator_name": "hist_gradient_boosting_regressor",
+          "parameters": {
+            "max_iter": 100,
+            "learning_rate": 0.08,
+            "max_leaf_nodes": 31,
+            "l2_regularization": 0.1,
+            "random_state": 42
+          },
+          "preprocessor_kind": "dense_tree",
+          "is_baseline": false,
+          "resource_class": "EXPENSIVE"
+        },
+        "metrics": {
+          "mae": 1.0809263037904226,
+          "rmse": 1.3525559677178034,
+          "r2": 0.9447814267553013,
+          "median_absolute_error": 0.9127717689180184,
+          "mean_residual": -0.004076437474686489,
+          "residual_standard_deviation": 1.3525678591214019,
+          "minimum_prediction": 0.5126322505266452,
+          "maximum_prediction": 29.566704862011818,
+          "negative_prediction_count": 0
+        },
+        "training_seconds": 1.121684,
+        "prediction_seconds": 0.060652
+      }
+    ],
+    "milk_yield_ablation": {
+      "configuration": {
+        "configuration_id": "milk_yield_hist_gradient_boosting",
+        "task": "milk_yield",
+        "algorithm": "HistGradientBoostingRegressor",
+        "estimator_name": "hist_gradient_boosting_regressor",
+        "parameters": {
+          "max_iter": 100,
+          "learning_rate": 0.08,
+          "max_leaf_nodes": 31,
+          "l2_regularization": 0.1,
+          "random_state": 42
+        },
+        "preprocessor_kind": "dense_tree",
+        "is_baseline": false,
+        "resource_class": "EXPENSIVE"
+      },
+      "metrics": {
+        "mae": 2.6163949101849164,
+        "rmse": 3.4031363652588427,
+        "r2": 0.6504306115001148,
+        "median_absolute_error": 2.1202442681038205,
+        "mean_residual": 3.2986306816580205e-05,
+        "residual_standard_deviation": 3.4031817411580336,
+        "minimum_prediction": 1.8518259959727914,
+        "maximum_prediction": 25.06276228218702,
+        "negative_prediction_count": 0
+      },
+      "training_seconds": 1.059851,
+      "prediction_seconds": 0.070144
+    }
+  },
+  "locked_selections": {
+    "lock_version": "phase4_selection_lock_v1",
+    "selected_classifier_configuration": "feed_type_random_forest",
+    "selected_feed_quantity_design": "A",
+    "selected_feed_quantity_configuration": "feed_quantity_hist_gradient_boosting",
+    "selected_feed_quantity_design_a_configuration": "feed_quantity_hist_gradient_boosting",
+    "selected_feed_quantity_design_b_configuration": "feed_quantity_hist_gradient_boosting",
+    "selected_milk_yield_configuration": "milk_yield_hist_gradient_boosting",
+    "selected_milk_yield_feature_version": "FULL_NINE_FEATURES",
+    "selected_milk_yield_ablation_configuration": "milk_yield_hist_gradient_boosting",
+    "validation_selections": {
+      "feed_type": {
+        "task": "feed_type",
+        "selected_configuration_id": "feed_type_random_forest",
+        "selected_algorithm": "RandomForestClassifier",
+        "validation_metrics": {
+          "accuracy": 0.12696,
+          "balanced_accuracy": 0.12693082757259153,
+          "macro_precision": 0.12716236188078034,
+          "macro_recall": 0.12693082757259153,
+          "macro_f1": 0.12688909988368033,
+          "weighted_f1": 0.12689923538323464,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.13479013414106447,
+              "recall": 0.1327509056040912,
+              "f1": 0.13376274825550188,
+              "support": 4693,
+              "predicted_count": 4622
+            },
+            "Crop_Residues": {
+              "precision": 0.12408759124087591,
+              "recall": 0.1268386271583884,
+              "f1": 0.12544802867383512,
+              "support": 4691,
+              "predicted_count": 4795
+            },
+            "Dry_Fodder": {
+              "precision": 0.12172489082969433,
+              "recall": 0.14125844594594594,
+              "f1": 0.13076622361219703,
+              "support": 4736,
+              "predicted_count": 5496
+            },
+            "Green_Fodder": {
+              "precision": 0.12683982683982684,
+              "recall": 0.12513346145633142,
+              "f1": 0.12598086638718692,
+              "support": 4683,
+              "predicted_count": 4620
+            },
+            "Hay": {
+              "precision": 0.12916962384669978,
+              "recall": 0.11691648822269807,
+              "f1": 0.12273800157356413,
+              "support": 4670,
+              "predicted_count": 4227
+            },
+            "Mixed_Feed": {
+              "precision": 0.12316099201345103,
+              "recall": 0.1254280821917808,
+              "f1": 0.12428419936373276,
+              "support": 4672,
+              "predicted_count": 4758
+            },
+            "Pasture_Grass": {
+              "precision": 0.12722210323409724,
+              "recall": 0.12657148945237587,
+              "f1": 0.12689596240119633,
+              "support": 4693,
+              "predicted_count": 4669
+            },
+            "Silage": {
+              "precision": 0.13030373290053326,
+              "recall": 0.12054912054912055,
+              "f1": 0.12523676880222842,
+              "support": 4662,
+              "predicted_count": 4313
+            }
+          },
+          "confusion_matrix": [
+            [
+              623,
+              584,
+              700,
+              568,
+              537,
+              603,
+              558,
+              520
+            ],
+            [
+              551,
+              595,
+              684,
+              590,
+              532,
+              591,
+              580,
+              568
+            ],
+            [
+              579,
+              600,
+              669,
+              558,
+              562,
+              603,
+              625,
+              540
+            ],
+            [
+              540,
+              609,
+              682,
+              586,
+              539,
+              607,
+              563,
+              557
+            ],
+            [
+              579,
+              622,
+              705,
+              577,
+              546,
+              576,
+              568,
+              497
+            ],
+            [
+              593,
+              580,
+              677,
+              578,
+              509,
+              586,
+              604,
+              545
+            ],
+            [
+              598,
+              616,
+              682,
+              570,
+              502,
+              607,
+              594,
+              524
+            ],
+            [
+              559,
+              589,
+              697,
+              593,
+              500,
+              585,
+              577,
+              562
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 4622,
+            "Crop_Residues": 4795,
+            "Dry_Fodder": 5496,
+            "Green_Fodder": 4620,
+            "Hay": 4227,
+            "Mixed_Feed": 4758,
+            "Pasture_Grass": 4669,
+            "Silage": 4313
+          },
+          "predicted_class_count": 8
+        },
+        "baseline_configuration_id": "feed_type_dummy_stratified",
+        "baseline_metrics": {
+          "accuracy": 0.12392,
+          "balanced_accuracy": 0.12392214422091186,
+          "macro_precision": 0.12396070099173911,
+          "macro_recall": 0.12392214422091186,
+          "macro_f1": 0.1239371343518743,
+          "weighted_f1": 0.12393471781362454,
+          "labels": [
+            "Concentrates",
+            "Crop_Residues",
+            "Dry_Fodder",
+            "Green_Fodder",
+            "Hay",
+            "Mixed_Feed",
+            "Pasture_Grass",
+            "Silage"
+          ],
+          "per_class": {
+            "Concentrates": {
+              "precision": 0.12516018795386588,
+              "recall": 0.12486682292776476,
+              "f1": 0.12501333333333334,
+              "support": 4693,
+              "predicted_count": 4682
+            },
+            "Crop_Residues": {
+              "precision": 0.12489270386266095,
+              "recall": 0.12406736303560008,
+              "f1": 0.12447866538338145,
+              "support": 4691,
+              "predicted_count": 4660
+            },
+            "Dry_Fodder": {
+              "precision": 0.12505263157894736,
+              "recall": 0.12542229729729729,
+              "f1": 0.1252371916508539,
+              "support": 4736,
+              "predicted_count": 4750
+            },
+            "Green_Fodder": {
+              "precision": 0.11423771524569509,
+              "recall": 0.11616485159086055,
+              "f1": 0.11519322392800424,
+              "support": 4683,
+              "predicted_count": 4762
+            },
+            "Hay": {
+              "precision": 0.13008307826847398,
+              "recall": 0.12740899357601712,
+              "f1": 0.1287321505841627,
+              "support": 4670,
+              "predicted_count": 4574
+            },
+            "Mixed_Feed": {
+              "precision": 0.12305427008834666,
+              "recall": 0.1252140410958904,
+              "f1": 0.12412476129853596,
+              "support": 4672,
+              "predicted_count": 4754
+            },
+            "Pasture_Grass": {
+              "precision": 0.12130304329189884,
+              "recall": 0.12060515661623696,
+              "f1": 0.1209530932791965,
+              "support": 4693,
+              "predicted_count": 4666
+            },
+            "Silage": {
+              "precision": 0.12790197764402408,
+              "recall": 0.12762762762762764,
+              "f1": 0.1277646553575263,
+              "support": 4662,
+              "predicted_count": 4652
+            }
+          },
+          "confusion_matrix": [
+            [
+              586,
+              582,
+              602,
+              598,
+              551,
+              614,
+              587,
+              573
+            ],
+            [
+              565,
+              582,
+              587,
+              631,
+              594,
+              599,
+              549,
+              584
+            ],
+            [
+              597,
+              565,
+              594,
+              599,
+              583,
+              577,
+              610,
+              611
+            ],
+            [
+              600,
+              625,
+              604,
+              544,
+              554,
+              613,
+              560,
+              583
+            ],
+            [
+              550,
+              582,
+              595,
+              642,
+              595,
+              554,
+              584,
+              568
+            ],
+            [
+              612,
+              563,
+              600,
+              572,
+              545,
+              585,
+              604,
+              591
+            ],
+            [
+              588,
+              597,
+              589,
+              609,
+              576,
+              621,
+              566,
+              547
+            ],
+            [
+              584,
+              564,
+              579,
+              567,
+              576,
+              591,
+              606,
+              595
+            ]
+          ],
+          "predicted_class_distribution": {
+            "Concentrates": 4682,
+            "Crop_Residues": 4660,
+            "Dry_Fodder": 4750,
+            "Green_Fodder": 4762,
+            "Hay": 4574,
+            "Mixed_Feed": 4754,
+            "Pasture_Grass": 4666,
+            "Silage": 4652
+          },
+          "predicted_class_count": 8
+        },
+        "selection_reason": "Highest validation Macro F1 within the controlled candidate set, then balanced accuracy and class coverage; simplicity breaks near-ties. It does not clear the documented baseline margin and remains research-only despite being the strongest candidate.",
+        "beats_baseline_on_validation": false,
+        "release_status": "RESEARCH_ONLY"
+      },
+      "feed_quantity_design_a": {
+        "task": "feed_quantity_design_a",
+        "selected_configuration_id": "feed_quantity_hist_gradient_boosting",
+        "selected_algorithm": "HistGradientBoostingRegressor",
+        "validation_metrics": {
+          "mae": 3.178907013974234,
+          "rmse": 3.9595673674084475,
+          "r2": 0.0028758132823899496,
+          "median_absolute_error": 2.710618515349972,
+          "mean_residual": -0.029976805441610705,
+          "residual_standard_deviation": 3.9595066864446693,
+          "minimum_prediction": 10.87404456473557,
+          "maximum_prediction": 13.26171838261149,
+          "negative_prediction_count": 0
+        },
+        "baseline_configuration_id": "feed_quantity_dummy_median",
+        "baseline_metrics": {
+          "mae": 3.1803226666666666,
+          "rmse": 3.965277863319711,
+          "r2": -2.3696424868990817e-06,
+          "median_absolute_error": 2.6999999999999993,
+          "mean_residual": -0.006103999999999992,
+          "residual_standard_deviation": 3.965326036548911,
+          "minimum_prediction": 12.0,
+          "maximum_prediction": 12.0,
+          "negative_prediction_count": 0
+        },
+        "selection_reason": "Lowest validation MAE, then RMSE and higher R² within the controlled Design A candidate set. It does not clear the baseline rule and remains research-only.",
+        "beats_baseline_on_validation": false,
+        "release_status": "RESEARCH_ONLY"
+      },
+      "feed_quantity_design_b": {
+        "task": "feed_quantity_design_b",
+        "selected_configuration_id": "feed_quantity_hist_gradient_boosting",
+        "selected_algorithm": "HistGradientBoostingRegressor",
+        "validation_metrics": {
+          "mae": 3.1787966561520804,
+          "rmse": 3.9598853514371775,
+          "r2": 0.0027156532102458053,
+          "median_absolute_error": 2.7102508107338634,
+          "mean_residual": -0.0307723592771675,
+          "residual_standard_deviation": 3.95981858121259,
+          "minimum_prediction": 11.033998922548328,
+          "maximum_prediction": 13.13987359358888,
+          "negative_prediction_count": 0
+        },
+        "baseline_configuration_id": "feed_quantity_dummy_median",
+        "baseline_metrics": {
+          "mae": 3.1803226666666666,
+          "rmse": 3.965277863319711,
+          "r2": -2.3696424868990817e-06,
+          "median_absolute_error": 2.6999999999999993,
+          "mean_residual": -0.006103999999999992,
+          "residual_standard_deviation": 3.965326036548911,
+          "minimum_prediction": 12.0,
+          "maximum_prediction": 12.0,
+          "negative_prediction_count": 0
+        },
+        "selection_reason": "Lowest validation MAE, then RMSE and higher R² within the controlled Design B candidate set. It does not clear the baseline rule and remains research-only.",
+        "beats_baseline_on_validation": false,
+        "release_status": "RESEARCH_ONLY"
+      },
+      "milk_yield": {
+        "task": "milk_yield",
+        "selected_configuration_id": "milk_yield_hist_gradient_boosting",
+        "selected_algorithm": "HistGradientBoostingRegressor",
+        "validation_metrics": {
+          "mae": 1.0809263037904226,
+          "rmse": 1.3525559677178034,
+          "r2": 0.9447814267553013,
+          "median_absolute_error": 0.9127717689180184,
+          "mean_residual": -0.004076437474686489,
+          "residual_standard_deviation": 1.3525678591214019,
+          "minimum_prediction": 0.5126322505266452,
+          "maximum_prediction": 29.566704862011818,
+          "negative_prediction_count": 0
+        },
+        "baseline_configuration_id": "milk_yield_dummy_median",
+        "baseline_metrics": {
+          "mae": 4.573894933333333,
+          "rmse": 5.858123188416804,
+          "r2": -0.035837647286341534,
+          "median_absolute_error": 3.8000000000000003,
+          "mean_residual": 1.0896383999999997,
+          "residual_standard_deviation": 5.7559689841083514,
+          "minimum_prediction": 7.62,
+          "maximum_prediction": 7.62,
+          "negative_prediction_count": 0
+        },
+        "selection_reason": "Lowest validation MAE, then RMSE and higher R² within the controlled candidate set. The full nine-feature contract remains selected; the previous-week-yield removal is a transparency ablation only. The candidate clears the validation baseline rule.",
+        "beats_baseline_on_validation": true,
+        "release_status": "CANDIDATE_ACCEPTED_WITH_LIMITATIONS"
+      },
+      "milk_yield_ablation_validation_metrics": {
+        "mae": 2.6163949101849164,
+        "rmse": 3.4031363652588427,
+        "r2": 0.6504306115001148,
+        "median_absolute_error": 2.1202442681038205,
+        "mean_residual": 3.2986306816580205e-05,
+        "residual_standard_deviation": 3.4031817411580336,
+        "minimum_prediction": 1.8518259959727914,
+        "maximum_prediction": 25.06276228218702,
+        "negative_prediction_count": 0
+      }
+    },
+    "selection_reasons": {
+      "feed_type": "Highest validation Macro F1 within the controlled candidate set, then balanced accuracy and class coverage; simplicity breaks near-ties. It does not clear the documented baseline margin and remains research-only despite being the strongest candidate.",
+      "feed_quantity_design": "Design B validation changes versus A: MAE +0.00%, RMSE -0.01%, R2 -0.000160. It does not clear all 1% MAE/RMSE and +0.01 R2 requirements; Design A is locked to avoid unjustified classifier dependency.",
+      "feed_quantity": "Lowest validation MAE, then RMSE and higher R² within the controlled Design A candidate set. It does not clear the baseline rule and remains research-only.",
+      "milk_yield": "Lowest validation MAE, then RMSE and higher R² within the controlled candidate set. The full nine-feature contract remains selected; the previous-week-yield removal is a transparency ablation only. The candidate clears the validation baseline rule.",
+      "milk_yield_feature_version": "The full nine-feature contract remains locked; ablation is a predeclared transparency comparison, not a selection search."
+    },
+    "random_seed": 42,
+    "contract_version": "1.0.0",
+    "split_manifest_sha256": "A7C206B058CBD04AED428F9C44228653AF4CBEB6F86D90317A0A847BC02DADFB",
+    "dataset_sha256": "26D6D08FE463893253A9923FEFEFC99642438934817F554BFE9E08DEEA2AD1B3",
+    "configuration_hash": "11866658AA41B96CAF6F2C4702C6DE671F8797A1EF51F774780E3EE6C7399DEE",
+    "selection_timestamp": "2026-07-25T16:54:00.136229+00:00",
+    "test_targets_inspected_before_lock": false
+  },
+  "locked_selection_sha256": "3395628D6C05DF7630C6140F847548F94FCE812EDBEC136D200F1B5B08A8AB4D",
+  "test_metrics": {
+    "feed_type": {
+      "accuracy": 0.12290666666666666,
+      "balanced_accuracy": 0.1228683796924512,
+      "macro_precision": 0.12298265635796264,
+      "macro_recall": 0.1228683796924512,
+      "macro_f1": 0.12273523688125287,
+      "weighted_f1": 0.12275211904421808,
+      "labels": [
+        "Concentrates",
+        "Crop_Residues",
+        "Dry_Fodder",
+        "Green_Fodder",
+        "Hay",
+        "Mixed_Feed",
+        "Pasture_Grass",
+        "Silage"
+      ],
+      "per_class": {
+        "Concentrates": {
+          "precision": 0.11947661947661947,
+          "recall": 0.11871270247229326,
+          "f1": 0.11909343596322429,
+          "support": 4692,
+          "predicted_count": 4662
+        },
+        "Crop_Residues": {
+          "precision": 0.12163550441750565,
+          "recall": 0.12619910466851417,
+          "f1": 0.12387528771709563,
+          "support": 4691,
+          "predicted_count": 4867
+        },
+        "Dry_Fodder": {
+          "precision": 0.12387143373058866,
+          "recall": 0.14487856388595566,
+          "f1": 0.13355397644310327,
+          "support": 4735,
+          "predicted_count": 5538
+        },
+        "Green_Fodder": {
+          "precision": 0.12145922746781115,
+          "recall": 0.12086269485372625,
+          "f1": 0.12116022690784545,
+          "support": 4683,
+          "predicted_count": 4660
+        },
+        "Hay": {
+          "precision": 0.12574280960304254,
+          "recall": 0.11327623126338329,
+          "f1": 0.11918440914723442,
+          "support": 4670,
+          "predicted_count": 4207
+        },
+        "Mixed_Feed": {
+          "precision": 0.12178938356164383,
+          "recall": 0.12176332120693345,
+          "f1": 0.12177635098983414,
+          "support": 4673,
+          "predicted_count": 4672
+        },
+        "Pasture_Grass": {
+          "precision": 0.12244463373083475,
+          "recall": 0.12249680443118875,
+          "f1": 0.12247071352502663,
+          "support": 4694,
+          "predicted_count": 4696
+        },
+        "Silage": {
+          "precision": 0.12744163887565507,
+          "recall": 0.11475761475761476,
+          "f1": 0.12076749435665914,
+          "support": 4662,
+          "predicted_count": 4198
+        }
+      },
+      "confusion_matrix": [
+        [
+          557,
+          637,
+          665,
+          585,
+          529,
+          587,
+          619,
+          513
+        ],
+        [
+          592,
+          592,
+          655,
+          600,
+          544,
+          584,
+          617,
+          507
+        ],
+        [
+          594,
+          655,
+          686,
+          557,
+          512,
+          583,
+          598,
+          550
+        ],
+        [
+          565,
+          642,
+          714,
+          566,
+          540,
+          571,
+          571,
+          514
+        ],
+        [
+          588,
+          547,
+          707,
+          562,
+          529,
+          604,
+          590,
+          543
+        ],
+        [
+          580,
+          589,
+          715,
+          635,
+          518,
+          569,
+          557,
+          510
+        ],
+        [
+          587,
+          601,
+          721,
+          565,
+          513,
+          606,
+          575,
+          526
+        ],
+        [
+          599,
+          604,
+          675,
+          590,
+          522,
+          568,
+          569,
+          535
+        ]
+      ],
+      "predicted_class_distribution": {
+        "Concentrates": 4662,
+        "Crop_Residues": 4867,
+        "Dry_Fodder": 5538,
+        "Green_Fodder": 4660,
+        "Hay": 4207,
+        "Mixed_Feed": 4672,
+        "Pasture_Grass": 4696,
+        "Silage": 4198
+      },
+      "predicted_class_count": 8
+    },
+    "feed_type_baseline_most_frequent": {
+      "accuracy": 0.12626666666666667,
+      "balanced_accuracy": 0.125,
+      "macro_precision": 0.015783333333333333,
+      "macro_recall": 0.125,
+      "macro_f1": 0.028027702142772584,
+      "weighted_f1": 0.02831171619115268,
+      "labels": [
+        "Concentrates",
+        "Crop_Residues",
+        "Dry_Fodder",
+        "Green_Fodder",
+        "Hay",
+        "Mixed_Feed",
+        "Pasture_Grass",
+        "Silage"
+      ],
+      "per_class": {
+        "Concentrates": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4692,
+          "predicted_count": 0
+        },
+        "Crop_Residues": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4691,
+          "predicted_count": 0
+        },
+        "Dry_Fodder": {
+          "precision": 0.12626666666666667,
+          "recall": 1.0,
+          "f1": 0.22422161714218067,
+          "support": 4735,
+          "predicted_count": 37500
+        },
+        "Green_Fodder": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4683,
+          "predicted_count": 0
+        },
+        "Hay": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4670,
+          "predicted_count": 0
+        },
+        "Mixed_Feed": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4673,
+          "predicted_count": 0
+        },
+        "Pasture_Grass": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4694,
+          "predicted_count": 0
+        },
+        "Silage": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4662,
+          "predicted_count": 0
+        }
+      },
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          4692,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4691,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4735,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4683,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4670,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4673,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4694,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4662,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "predicted_class_distribution": {
+        "Concentrates": 0,
+        "Crop_Residues": 0,
+        "Dry_Fodder": 37500,
+        "Green_Fodder": 0,
+        "Hay": 0,
+        "Mixed_Feed": 0,
+        "Pasture_Grass": 0,
+        "Silage": 0
+      },
+      "predicted_class_count": 1
+    },
+    "feed_type_baseline_stratified": {
+      "accuracy": 0.12616,
+      "balanced_accuracy": 0.12616008167769696,
+      "macro_precision": 0.12613945949430483,
+      "macro_recall": 0.12616008167769696,
+      "macro_f1": 0.12614545950185524,
+      "weighted_f1": 0.12614513318589407,
+      "labels": [
+        "Concentrates",
+        "Crop_Residues",
+        "Dry_Fodder",
+        "Green_Fodder",
+        "Hay",
+        "Mixed_Feed",
+        "Pasture_Grass",
+        "Silage"
+      ],
+      "per_class": {
+        "Concentrates": {
+          "precision": 0.1277231952157198,
+          "recall": 0.12745098039215685,
+          "f1": 0.12758694260721143,
+          "support": 4692,
+          "predicted_count": 4682
+        },
+        "Crop_Residues": {
+          "precision": 0.11974248927038626,
+          "recall": 0.11895118311660627,
+          "f1": 0.11934552454282965,
+          "support": 4691,
+          "predicted_count": 4660
+        },
+        "Dry_Fodder": {
+          "precision": 0.12926315789473683,
+          "recall": 0.12967265047518478,
+          "f1": 0.12946758039008963,
+          "support": 4735,
+          "predicted_count": 4750
+        },
+        "Green_Fodder": {
+          "precision": 0.12158756824863502,
+          "recall": 0.1236386931454196,
+          "f1": 0.12260455267337216,
+          "support": 4683,
+          "predicted_count": 4762
+        },
+        "Hay": {
+          "precision": 0.12177525142107565,
+          "recall": 0.11927194860813704,
+          "f1": 0.12051060147122458,
+          "support": 4670,
+          "predicted_count": 4574
+        },
+        "Mixed_Feed": {
+          "precision": 0.13251998317206562,
+          "recall": 0.13481703402525144,
+          "f1": 0.13365864007637637,
+          "support": 4673,
+          "predicted_count": 4754
+        },
+        "Pasture_Grass": {
+          "precision": 0.12451778825546507,
+          "recall": 0.1237750319556881,
+          "f1": 0.12414529914529915,
+          "support": 4694,
+          "predicted_count": 4666
+        },
+        "Silage": {
+          "precision": 0.13198624247635427,
+          "recall": 0.1317031317031317,
+          "f1": 0.1318445351084389,
+          "support": 4662,
+          "predicted_count": 4652
+        }
+      },
+      "confusion_matrix": [
+        [
+          598,
+          547,
+          600,
+          567,
+          567,
+          640,
+          591,
+          582
+        ],
+        [
+          598,
+          558,
+          575,
+          580,
+          586,
+          585,
+          604,
+          605
+        ],
+        [
+          586,
+          599,
+          614,
+          583,
+          598,
+          592,
+          567,
+          596
+        ],
+        [
+          527,
+          590,
+          620,
+          579,
+          611,
+          591,
+          591,
+          574
+        ],
+        [
+          587,
+          598,
+          589,
+          614,
+          557,
+          597,
+          590,
+          538
+        ],
+        [
+          570,
+          599,
+          598,
+          608,
+          550,
+          630,
+          555,
+          563
+        ],
+        [
+          566,
+          581,
+          617,
+          662,
+          535,
+          572,
+          581,
+          580
+        ],
+        [
+          650,
+          588,
+          537,
+          569,
+          570,
+          547,
+          587,
+          614
+        ]
+      ],
+      "predicted_class_distribution": {
+        "Concentrates": 4682,
+        "Crop_Residues": 4660,
+        "Dry_Fodder": 4750,
+        "Green_Fodder": 4762,
+        "Hay": 4574,
+        "Mixed_Feed": 4754,
+        "Pasture_Grass": 4666,
+        "Silage": 4652
+      },
+      "predicted_class_count": 8
+    },
+    "feed_quantity_design_a": {
+      "mae": 3.179454853319791,
+      "rmse": 3.9502540140664344,
+      "r2": 0.00274632424519472,
+      "median_absolute_error": 2.7144213662861434,
+      "mean_residual": -0.028485085937071646,
+      "residual_standard_deviation": 3.950203980197319,
+      "minimum_prediction": 10.539716165668484,
+      "maximum_prediction": 13.357388134134371,
+      "negative_prediction_count": 0
+    },
+    "feed_quantity_design_b": {
+      "mae": 3.1790930023716024,
+      "rmse": 3.950619564214847,
+      "r2": 0.002561747205267806,
+      "median_absolute_error": 2.71244917732398,
+      "mean_residual": -0.028804764343432945,
+      "residual_standard_deviation": 3.950567226725706,
+      "minimum_prediction": 11.054352189231874,
+      "maximum_prediction": 13.16370214744359,
+      "negative_prediction_count": 0
+    },
+    "milk_yield": {
+      "mae": 1.0758821757269925,
+      "rmse": 1.3471877976312587,
+      "r2": 0.9452182112415201,
+      "median_absolute_error": 0.9088906440821973,
+      "mean_residual": 0.013168569645332452,
+      "residual_standard_deviation": 1.3471413976485904,
+      "minimum_prediction": 0.5126322505266452,
+      "maximum_prediction": 29.477271547003102,
+      "negative_prediction_count": 0
+    },
+    "milk_yield_ablation": {
+      "mae": 2.621518119162251,
+      "rmse": 3.393895018930794,
+      "r2": 0.6523223793599449,
+      "median_absolute_error": 2.14119239645403,
+      "mean_residual": 0.021988360421016536,
+      "residual_standard_deviation": 3.393869040998937,
+      "minimum_prediction": 1.7183337564205603,
+      "maximum_prediction": 25.03289183699293,
+      "negative_prediction_count": 0
+    }
+  },
+  "baseline_comparisons": {
+    "feed_type": {
+      "status": "DOES_NOT_BEAT_BASELINE",
+      "beats_validation_and_test": false
+    },
+    "feed_quantity": {
+      "status": "DOES_NOT_BEAT_BASELINE",
+      "beats_validation_and_test": false
+    },
+    "milk_yield": {
+      "status": "BEATS_BASELINE",
+      "beats_validation_and_test": true
+    }
+  },
+  "artifact_paths": {
+    "milk_yield": {
+      "artifact_path": "D:\\UOB\\FarmLite\\backend\\flask_api\\ml\\models\\candidates\\phase4\\milk_yield_regressor_candidate_v1.joblib",
+      "metadata_path": "D:\\UOB\\FarmLite\\backend\\flask_api\\ml\\models\\candidates\\phase4\\milk_yield_regressor_candidate_v1.metadata.json",
+      "artifact_sha256": "5FDA66E3D9879FD6CF49D83B3235781545E5784781509BCC340FBFE03BBA286E",
+      "reload_predictions_identical": true
+    }
+  },
+  "artifact_checksums": {
+    "milk_yield": "5FDA66E3D9879FD6CF49D83B3235781545E5784781509BCC340FBFE03BBA286E"
+  },
+  "failed_experiments": [
+    {
+      "task": "feed_type",
+      "reason": "DOES_NOT_BEAT_BASELINE",
+      "artifact_saved": false
+    },
+    {
+      "task": "feed_quantity",
+      "reason": "DOES_NOT_BEAT_BASELINE",
+      "artifact_saved": false
+    }
+  ],
+  "skipped_experiments": [],
+  "warnings": [
+    "FarmLite is an undergraduate prototype using publisher-declared synthetic cattle data. Predictions demonstrate an ML pipeline and are not veterinary, nutritional, commercial, or real-world feeding guidance.",
+    "Test metrics were inspected once after the selection lock.",
+    "No task is production-ready or automatically released."
+  ],
+  "limitations": [
+    "Synthetic generation formulas and dependency structure are not documented.",
+    "Feed_Quantity_kg material basis and measurement period are not independently validated.",
+    "Milk_Yield_L measurement period is not independently validated.",
+    "Feed_Type is not an expert or veterinarian recommendation label.",
+    "The raw dataset is not verified dairy-only.",
+    "The secondary dataset must not be merged without a separately approved use."
+  ],
+  "integration_readiness_decisions": {
+    "feed_type": "DOES_NOT_BEAT_BASELINE",
+    "feed_quantity": "DOES_NOT_BEAT_BASELINE",
+    "milk_yield": "BEATS_BASELINE",
+    "complete_option_b_supported": false,
+    "phase_5_recommendation": "READY_FOR_PARTIAL_INTEGRATION_REVIEW",
+    "integration_performed": false
+  },
+  "existing_model_sha256_before": "B9AD64E0EC62C75D70568D9D4F9136F240CD223DCC8851EC545D67B909C52BFA",
+  "existing_model_sha256_after": "B9AD64E0EC62C75D70568D9D4F9136F240CD223DCC8851EC545D67B909C52BFA",
+  "existing_model_unchanged": true,
+  "completed_at": "2026-07-25T16:54:21.842551+00:00"
+}

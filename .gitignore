@@ -29,6 +29,19 @@ backend/.env
 # Local datasets
 # ===========================
 datasets/*.csv
+datasets/raw/*.csv
+
+# ===========================
+# Generated ML artifacts
+# ===========================
+backend/flask_api/ml/models/*.joblib
+!backend/flask_api/ml/models/milk_yield_model.joblib
+
+backend/flask_api/ml/reports/*.txt
+!backend/flask_api/ml/reports/candidate_model_evaluation_report.txt
+!backend/flask_api/ml/reports/dataset_inspection_report.txt
+!backend/flask_api/ml/reports/feed_model_report.txt
+!backend/flask_api/ml/reports/milk_yield_model_report.txt
 
 # ===========================
 # OS

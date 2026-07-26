@@ -1,0 +1,147 @@
+{
+  "report_version": "phase7_test_summary_v1",
+  "phase": "7",
+  "generated_date": "2026-07-26",
+  "frontend": {
+    "phase6": {
+      "command": "npm.cmd run test:phase6",
+      "tests_run": 25,
+      "passed": 25,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "phase6_1": {
+      "command": "npm.cmd run test:phase6.1",
+      "tests_run": 32,
+      "passed": 32,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "phase6_2": {
+      "command": "npm.cmd run test:phase6.2",
+      "tests_run": 30,
+      "passed": 30,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "phase6_3": {
+      "command": "npm.cmd run test:phase6.3",
+      "tests_run": 18,
+      "passed": 18,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "aggregate": {
+      "tests_run": 105,
+      "passed": 105,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "result": "PASS"
+    },
+    "typecheck": {
+      "command": "npm.cmd exec tsc -- -b",
+      "result": "PASS"
+    },
+    "phase_scoped_eslint": {
+      "result": "PASS",
+      "note": "The inherited react-hooks/set-state-in-effect rule was excluded for the focused Phase 6/7 command, consistent with prior approval reports."
+    },
+    "repository_eslint": {
+      "command": "npm.cmd run lint",
+      "result": "FAIL_INHERITED_NON_BLOCKING_DEBT",
+      "error_count": 6,
+      "warning_count": 0,
+      "affected_files": [
+        "frontend/src/components/ErrorBoundary.tsx",
+        "frontend/src/pages/FeedRecommendation.tsx",
+        "frontend/src/pages/HealthTracking.tsx",
+        "frontend/src/pages/Livestock/LivestockTable.tsx",
+        "frontend/src/pages/Notifications.tsx"
+      ]
+    },
+    "builds": {
+      "feature_enabled": {
+        "command": "$env:VITE_BANGLADESH_CANDIDATE_UI_ENABLED='true'; npm.cmd run build",
+        "result": "PASS"
+      },
+      "feature_disabled": {
+        "command": "Remove-Item Env:/VITE_BANGLADESH_CANDIDATE_UI_ENABLED; npm.cmd run build",
+        "result": "PASS",
+        "final_dist_mode": true
+      },
+      "non_blocking_warning": "Vite reported a 1,567,555-byte minified main chunk."
+    },
+    "runtime_smoke": {
+      "binding": "127.0.0.1:4174",
+      "http_status": 200,
+      "result": "PASS"
+    }
+  },
+  "backend": {
+    "command": "python -m unittest discover -s tests",
+    "tests_run": 308,
+    "passed": 308,
+    "failed": 0,
+    "errors": 0,
+    "result": "PASS",
+    "affected_snapshot_tests_before_final_full_run": {
+      "tests_run": 124,
+      "passed": 124,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "compileall": {
+      "command": "python -m compileall -q app.py config api ml tests",
+      "result": "PASS"
+    },
+    "pip_check": {
+      "command": "python -m pip check",
+      "result": "PASS"
+    },
+    "api_v1": "PASS",
+    "api_v2": "PASS",
+    "feature_disabled": "PASS",
+    "feature_enabled": "PASS",
+    "eligibility": "PASS",
+    "fallbacks": "PASS",
+    "malformed_json": "PASS",
+    "private_exception_non_disclosure": "PASS"
+  },
+  "pdf": {
+    "data_shape_tests": "PASS",
+    "real_jspdf_buffers": "PASS",
+    "complete_result": "PASS_TWO_PAGES_38399_BYTES",
+    "dmi_unavailable": "PASS_TWO_PAGES_38392_BYTES",
+    "feature_disabled": "PASS_COMPATIBLE_V1_PATH",
+    "warning_scenario": "PASS_TWO_PAGES_39810_BYTES",
+    "long_animal_name": "PASS_TWO_PAGES_38479_BYTES",
+    "missing_optional_values": "PASS_TWO_PAGES_38418_BYTES",
+    "visual_inspection": "NOT_RUN_NO_RENDERER"
+  },
+  "integrity": {
+    "artifact_hash_verification": "PASS",
+    "metadata_hash_verification": "PASS",
+    "feature_order_verification": "PASS",
+    "nutrition_rule_hash_verification": "PASS",
+    "models_retrained": false,
+    "model_or_rule_logic_changed": false
+  },
+  "dependency_checks": {
+    "npm_local_tree": "PASS",
+    "npm_external_advisory": "NOT_RUN_EGRESS_NOT_AUTHORIZED",
+    "python_requirements_integrity": "PASS"
+  },
+  "git": {
+    "staged_file_count": 0,
+    "git_diff_check": "PASS_WITH_LINE_ENDING_NOTICES_ONLY",
+    "porcelain_entry_count": 54,
+    "modified_tracked_count": 21,
+    "deleted_tracked_count": 11,
+    "untracked_entry_count": 22,
+    "git_add_run": false,
+    "git_commit_run": false,
+    "destructive_git_command_run": false
+  },
+  "final_decision": "SYSTEM_READY_WITH_DOCUMENTED_LIMITATIONS"
+}

@@ -1,0 +1,204 @@
+{
+  "inventory_version": "bangladesh_candidate_integration_inventory_v1",
+  "phase": "4.5E",
+  "purpose": "DESIGN_REVIEW_ONLY",
+  "contains_full_training_records": false,
+  "prediction_generation_performed": false,
+  "training_performed": false,
+  "runtime_integration_performed": false,
+  "dataset_merge_performed": false,
+  "training_dataset": {
+    "name": "Bangladesh HF Cross",
+    "version": "Mendeley Data V2",
+    "doi": "10.17632/954f6g36sb.2",
+    "licence": "CC BY 4.0",
+    "source_workbook": "datasets/external/raw/bangladesh_hf_cross/DMI, milk yield and composition.xlsx",
+    "source_sheet": "Sheet1",
+    "sha256": "EC3FECE684C40343C2A4F8F527F2BBE274E7B5B6EBD2B200FCDA623DBDC6A508",
+    "records": 750,
+    "unique_cows": 50,
+    "observations_per_cow": 15,
+    "genetic_groups": [
+      "Local",
+      "HF50",
+      "HF62.5",
+      "HF75",
+      "HF87.5"
+    ],
+    "thi_categories": [
+      "T0",
+      "T1",
+      "T2"
+    ],
+    "observed_target_ranges": {
+      "dry_matter_intake_kg_day": {
+        "minimum": 4.48,
+        "maximum": 14.82,
+        "unit": "kg dry matter/cow/day"
+      },
+      "milk_yield_l_day": {
+        "minimum": 0.3,
+        "maximum": 10.47,
+        "unit": "L/cow/day"
+      }
+    }
+  },
+  "serialization_review_environment": {
+    "python": "3.12.10",
+    "pandas": "3.0.2",
+    "scikit_learn": "1.8.0",
+    "joblib": "1.5.3",
+    "both_artifacts_loaded_for_structure_review": true,
+    "prediction_called": false
+  },
+  "shared_pipeline_contract": {
+    "object_type": "sklearn.pipeline.Pipeline",
+    "pipeline_steps": [
+      {
+        "name": "preprocessing",
+        "type": "sklearn.compose.ColumnTransformer"
+      },
+      {
+        "name": "estimator",
+        "type": "sklearn.linear_model.Ridge"
+      }
+    ],
+    "feature_order": [
+      "genetic_group",
+      "thi_category"
+    ],
+    "expected_input_container": "pandas.DataFrame",
+    "expected_input_data_types": {
+      "genetic_group": "string categorical",
+      "thi_category": "string categorical"
+    },
+    "categorical_encoder": {
+      "type": "sklearn.preprocessing.OneHotEncoder",
+      "handle_unknown": "ignore",
+      "encoded_categories_by_feature": {
+        "genetic_group": [
+          "HF50",
+          "HF62.5",
+          "HF75",
+          "HF87.5",
+          "Local"
+        ],
+        "thi_category": [
+          "T0",
+          "T1",
+          "T2"
+        ]
+      },
+      "runtime_policy": "REJECT_UNKNOWN_BEFORE_PIPELINE",
+      "reason": "handle_unknown=ignore prevents a crash but does not provide validation evidence for unseen categories"
+    },
+    "excluded_inference_fields": [
+      "cow_id",
+      "blood_variables",
+      "physiology_variables",
+      "milk_composition",
+      "same_day_dmi",
+      "same_day_milk"
+    ]
+  },
+  "candidates": {
+    "dmi": {
+      "model_name": "bangladesh_dmi_regressor",
+      "model_task": "dmi",
+      "algorithm": "Ridge",
+      "hyperparameters": {
+        "alpha": 0.1
+      },
+      "artifact_status": "CANDIDATE_ONLY",
+      "artifact_path": "ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.joblib",
+      "artifact_sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
+      "artifact_size_bytes": 1269,
+      "metadata_path": "ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.metadata.json",
+      "metadata_sha256": "0016C843FAA9A5BA7C8533F987FA748E8BC021A1ED24F65D9AA53E27D9EAF0DF",
+      "contract_version": "bangladesh_hf_model_contract_v1",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "target": "dry_matter_intake_kg_day",
+      "target_semantics": "Dry-matter intake per cow per day",
+      "output_unit": "kg dry matter/cow/day",
+      "group_validation": {
+        "method": "GroupKFold(n_splits=5) by cow_id on 40 development cows",
+        "mae": 0.33014758715336323,
+        "rmse": 0.40817618590416915,
+        "r2": 0.9749925791166477
+      },
+      "locked_holdout": {
+        "method": "GroupShuffleSplit(test_size=0.20, random_state=42) by cow_id",
+        "cows": 10,
+        "rows": 150,
+        "mae": 0.3234513160149721,
+        "rmse": 0.400799407550868,
+        "r2": 0.9413281486683943,
+        "negative_predictions": 0,
+        "decision": "BEATS_BASELINE"
+      },
+      "reload_compatible": true,
+      "reload_predictions_identical_in_phase_4_5d": true,
+      "production_approved": false,
+      "commercial_use_approved": false,
+      "veterinary_use_approved": false
+    },
+    "milk": {
+      "model_name": "bangladesh_milk_yield_regressor",
+      "model_task": "milk",
+      "algorithm": "Ridge",
+      "hyperparameters": {
+        "alpha": 0.1
+      },
+      "artifact_status": "CANDIDATE_ONLY",
+      "artifact_path": "ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.joblib",
+      "artifact_sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
+      "artifact_size_bytes": 1267,
+      "metadata_path": "ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.metadata.json",
+      "metadata_sha256": "1D5D2D019B2AE0595D421298386DB4527C1C2D5771BAD69724E6E2727708F303",
+      "contract_version": "bangladesh_hf_model_contract_v1",
+      "feature_order": [
+        "genetic_group",
+        "thi_category"
+      ],
+      "target": "milk_yield_l_day",
+      "target_semantics": "Observed milk yield per cow per day",
+      "output_unit": "L/cow/day",
+      "group_validation": {
+        "method": "GroupKFold(n_splits=5) by cow_id on 40 development cows",
+        "mae": 0.4631435533824558,
+        "rmse": 0.5764546971894028,
+        "r2": 0.9549006984109062
+      },
+      "locked_holdout": {
+        "method": "GroupShuffleSplit(test_size=0.20, random_state=42) by cow_id",
+        "cows": 10,
+        "rows": 150,
+        "mae": 0.4838789028843907,
+        "rmse": 0.60305841667845,
+        "r2": 0.8590290149820388,
+        "negative_predictions": 0,
+        "weakest_cow_id": "510",
+        "weakest_cow_r2": -0.01101052906512101,
+        "decision": "BEATS_BASELINE"
+      },
+      "reload_compatible": true,
+      "reload_predictions_identical_in_phase_4_5d": true,
+      "production_approved": false,
+      "commercial_use_approved": false,
+      "veterinary_use_approved": false
+    }
+  },
+  "holdout_scope_note": {
+    "holdout_genetic_groups": [
+      "HF50",
+      "HF62.5",
+      "HF75",
+      "HF87.5"
+    ],
+    "trained_group_absent_from_locked_holdout": "Local",
+    "decision": "Local is a known pipeline category with grouped development evidence but only LIMITED_SUPPORT because it has no locked final-holdout cows."
+  }
+}

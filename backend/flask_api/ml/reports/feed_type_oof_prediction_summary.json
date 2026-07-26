@@ -1,0 +1,224 @@
+{
+  "model_configuration_id": "feed_type_random_forest",
+  "training_row_count": 175000,
+  "prediction_row_count": 175000,
+  "every_training_row_has_one_prediction": true,
+  "duplicate_prediction_rows": 0,
+  "true_feed_type_in_output": false,
+  "validation_rows_used_in_oof_fit": false,
+  "test_rows_used_in_oof_fit": false,
+  "fold_audit": [
+    {
+      "training_fold": 1,
+      "fit_row_count": 140000,
+      "heldout_row_count": 35000,
+      "heldout_rows_in_fit_count": 0,
+      "validation_rows_used_for_fit": false,
+      "test_rows_used_for_fit": false
+    },
+    {
+      "training_fold": 2,
+      "fit_row_count": 140000,
+      "heldout_row_count": 35000,
+      "heldout_rows_in_fit_count": 0,
+      "validation_rows_used_for_fit": false,
+      "test_rows_used_for_fit": false
+    },
+    {
+      "training_fold": 3,
+      "fit_row_count": 140000,
+      "heldout_row_count": 35000,
+      "heldout_rows_in_fit_count": 0,
+      "validation_rows_used_for_fit": false,
+      "test_rows_used_for_fit": false
+    },
+    {
+      "training_fold": 4,
+      "fit_row_count": 140000,
+      "heldout_row_count": 35000,
+      "heldout_rows_in_fit_count": 0,
+      "validation_rows_used_for_fit": false,
+      "test_rows_used_for_fit": false
+    },
+    {
+      "training_fold": 5,
+      "fit_row_count": 140000,
+      "heldout_row_count": 35000,
+      "heldout_rows_in_fit_count": 0,
+      "validation_rows_used_for_fit": false,
+      "test_rows_used_for_fit": false
+    }
+  ],
+  "oof_metrics": {
+    "accuracy": 0.12578285714285714,
+    "balanced_accuracy": 0.12573332117089858,
+    "macro_precision": 0.12562737425913173,
+    "macro_recall": 0.12573332117089858,
+    "macro_f1": 0.12552368041262696,
+    "weighted_f1": 0.12555220549090582,
+    "labels": [
+      "Concentrates",
+      "Crop_Residues",
+      "Dry_Fodder",
+      "Green_Fodder",
+      "Hay",
+      "Mixed_Feed",
+      "Pasture_Grass",
+      "Silage"
+    ],
+    "per_class": {
+      "Concentrates": {
+        "precision": 0.12575043871801977,
+        "recall": 0.12435493446590858,
+        "f1": 0.12504879336869418,
+        "support": 21897,
+        "predicted_count": 21654
+      },
+      "Crop_Residues": {
+        "precision": 0.12792272275886973,
+        "recall": 0.1294595952674615,
+        "f1": 0.1286865705528437,
+        "support": 21891,
+        "predicted_count": 22154
+      },
+      "Dry_Fodder": {
+        "precision": 0.13052403268910492,
+        "recall": 0.15250248891302381,
+        "f1": 0.1406598910616274,
+        "support": 22098,
+        "predicted_count": 25819
+      },
+      "Green_Fodder": {
+        "precision": 0.12548280301636933,
+        "recall": 0.12486273792093704,
+        "f1": 0.1251720025685717,
+        "support": 21856,
+        "predicted_count": 21748
+      },
+      "Hay": {
+        "precision": 0.12309507423065578,
+        "recall": 0.11489400752500688,
+        "f1": 0.11885323713689007,
+        "support": 21794,
+        "predicted_count": 20342
+      },
+      "Mixed_Feed": {
+        "precision": 0.12309859154929577,
+        "recall": 0.12024213519214895,
+        "f1": 0.12165359810699207,
+        "support": 21806,
+        "predicted_count": 21300
+      },
+      "Pasture_Grass": {
+        "precision": 0.12460339044510924,
+        "recall": 0.1255079212893211,
+        "f1": 0.12505402024337542,
+        "support": 21903,
+        "predicted_count": 22062
+      },
+      "Silage": {
+        "precision": 0.12454194066562924,
+        "recall": 0.11404274879338083,
+        "f1": 0.1190613302620213,
+        "support": 21755,
+        "predicted_count": 19921
+      }
+    },
+    "confusion_matrix": [
+      [
+        2723,
+        2796,
+        3206,
+        2678,
+        2558,
+        2617,
+        2780,
+        2539
+      ],
+      [
+        2659,
+        2834,
+        3134,
+        2765,
+        2540,
+        2749,
+        2738,
+        2472
+      ],
+      [
+        2730,
+        2767,
+        3370,
+        2798,
+        2503,
+        2656,
+        2768,
+        2506
+      ],
+      [
+        2668,
+        2782,
+        3277,
+        2729,
+        2598,
+        2577,
+        2786,
+        2439
+      ],
+      [
+        2663,
+        2769,
+        3206,
+        2702,
+        2504,
+        2646,
+        2786,
+        2518
+      ],
+      [
+        2782,
+        2755,
+        3175,
+        2694,
+        2588,
+        2622,
+        2752,
+        2438
+      ],
+      [
+        2756,
+        2720,
+        3197,
+        2702,
+        2563,
+        2688,
+        2749,
+        2528
+      ],
+      [
+        2673,
+        2731,
+        3254,
+        2680,
+        2488,
+        2745,
+        2703,
+        2481
+      ]
+    ],
+    "predicted_class_distribution": {
+      "Concentrates": 21654,
+      "Crop_Residues": 22154,
+      "Dry_Fodder": 25819,
+      "Green_Fodder": 21748,
+      "Hay": 20342,
+      "Mixed_Feed": 21300,
+      "Pasture_Grass": 22062,
+      "Silage": 19921
+    },
+    "predicted_class_count": 8
+  },
+  "cross_fit_training_seconds": 57.700866,
+  "cross_fit_prediction_seconds": 0.599523,
+  "full_training_classifier_fit_seconds": 14.762463
+}

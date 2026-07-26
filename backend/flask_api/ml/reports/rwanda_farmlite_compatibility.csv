@@ -1,0 +1,16 @@
+farmlite_feature,available_in_rwanda,exact_source_column,unit_compatibility,missing_percentage,available_at_prediction_time,safe_for_ml,mapping_required,farmlite_form_change_required,notes
+breed,YES,cowbreed,category compatible only after vocabulary mapping,0,YES,YES_WITH_LIMITATIONS,YES,NO,Cross/exotic only; detailed breeds are misplaced in age column.
+age_months,PARTIAL,cowageinyears,"years, not months",33.333333,YES,UNCLEAR,YES,NO,30 text breed values and 2 missing; no conversion applied.
+weight_kg,YES,Bodyweight,kg,0,YES,YES,NO,NO,Tape-estimated before morning feeding.
+lactation_stage,YES,lactationperiod,Peak/Mid/Late; mapping required,0,YES,YES,YES,NO,FarmLite Early differs from Rwanda Peak.
+days_in_milk,YES,daysinmilk,days,0,YES,YES,NO,NO,Range 1-540.
+previous_week_avg_yield_l,NO,NOT_AVAILABLE,NOT_AVAILABLE,100,NO,NO,NO,NO,Only current daily milk fields are present.
+body_condition_score,NO,NOT_AVAILABLE,NOT_AVAILABLE,100,NO,NO,NO,NO,Not collected.
+ambient_temperature_c,NO,NOT_AVAILABLE,NOT_AVAILABLE,100,NO,NO,NO,NO,Not collected.
+humidity_percent,NO,NOT_AVAILABLE,NOT_AVAILABLE,100,NO,NO,NO,NO,Not collected.
+NEW: parity,YES,parity,birth count,3.125,YES,YES_WITH_LIMITATIONS,NO,YES,Useful Rwanda feature not currently collected by FarmLite.
+NEW: site_category,YES,sites,1=lowlands; 2=highlands,0,YES,YES,YES,YES,Study region category; not a farm identifier.
+NEW: water_intake_l_day,YES,waterday,L/cow/day,0,NO_FOR_PRE_INTAKE_PREDICTION,TARGET_ONLY,NO,YES,"Candidate target and rule input, not a pre-target feature."
+NEW: dry_matter_served_kg_day,YES,DM served,kg DM/cow/day,0,NO_FOR_RECOMMENDATION_TIME,TARGET_OR_RULE_INPUT,NO,YES,"Observed feed offering, not optimized recommendation."
+NEW: dry_matter_leftover_kg_day,YES,leftover,kg DM/cow/day,0,NO,BLOCKED_NEGATIVE_VALUES,NO,YES,Twenty-eight negative values require clarification.
+NEW: feed_ingredient_list,YES,SAMPLE ID (fodder workbook),ingredient-list text,0,NO_FOR_RECOMMENDATION_TIME,SUPPORTING_ONLY,YES,YES,Observed composite fodders; no recommendation label.
