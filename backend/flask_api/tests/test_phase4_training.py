@@ -72,7 +72,7 @@ EXPECTED_NUTRITION_HASH = (
 # Phase 7 establishes the next authorized route/frontend security snapshot.
 # Model, dataset and nutrition hashes remain frozen.
 EXPECTED_FRONTEND_AGGREGATE_HASH = (
-    "DCA5E5B5C3F1A7FEBE06196A70FDA4639C4166E17055C7293A8DF4616B5FBA58"
+    "D69C32E8ED0CC45940BF8595CCEAC9A0E2A834DF67848AEDF565EF0D6E9BC95C"
 )
 
 
@@ -401,6 +401,12 @@ class Phase4ProtectedFileTests(unittest.TestCase):
         )
 
     def test_raw_dataset_checksums_remain_unchanged(self) -> None:
+        if not MILK_YIELD_DATASET_PATH.exists() or not DISEASE_DATASET_PATH.exists():
+            self.skipTest(
+                "Raw dataset CSVs are gitignored local files and are not "
+                "present in this checkout."
+            )
+
         self.assertEqual(
             sha256_file(MILK_YIELD_DATASET_PATH),
             EXPECTED_PRIMARY_HASH,

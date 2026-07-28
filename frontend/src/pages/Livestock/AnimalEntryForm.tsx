@@ -77,7 +77,7 @@ const AnimalEntryForm: React.FC<AnimalEntryFormProps> = ({ onSave, saving }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 sm:p-5">
+    <form onSubmit={handleSubmit} className="p-5 sm:p-6">
       <div className="space-y-5">
         <section className="rounded-xl border border-gray-200 bg-gray-50/40 p-4">
           <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">

@@ -142,6 +142,9 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
   }, [currentUser?.uid]);
 
   useEffect(() => {
+    // Mount-time Firestore fetches; each sets loading/error state before its
+    // network await, the standard fetch-on-mount pattern.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchLivestock();
     void fetchHealthStatuses();
     void fetchVaccinationStatuses();
@@ -192,16 +195,16 @@ const LivestockTable: React.FC<LivestockTableProps> = ({ searchTerm, filterSpeci
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8 rounded-xl bg-[#fefae0]/50 p-1 sm:p-3">
       {/* Persistent Inline Entry Card */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 sm:px-5">
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-green-600" /> Add New Animal
+      <section className="overflow-hidden rounded-xl border border-[#dda15e]/70 bg-white shadow-sm">
+        <div className="border-b border-[#dda15e]/40 bg-[#fefae0] p-4">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-[#283618]">
+            <Plus className="w-5 h-5 text-[#606c38]" /> Add New Animal
           </h2>
         </div>
         <AnimalEntryForm onSave={handleSave} saving={saving} />
-      </div>
+      </section>
 
       {/* Livestock Grid */}
       {filteredList.length > 0 ? (

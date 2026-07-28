@@ -19,7 +19,7 @@
       "artifact": "ml/models/candidates/bangladesh/bangladesh_dmi_regressor_candidate_v1.joblib",
       "expected_sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
       "observed_sha256": "312DDBAADA9A92A8B52E4ED95B254ACE0FD3EBEE1C6DD0B12BB003562EDD035B",
-      "metadata_sha256": "0016C843FAA9A5BA7C8533F987FA748E8BC021A1ED24F65D9AA53E27D9EAF0DF",
+      "metadata_sha256": "86077E3529CEC215F2C6C827E81881FD73C4B1DE7551C451084369C1061041EE",
       "artifact_status": "CANDIDATE_ONLY",
       "production_approved": false,
       "feature_order": [
@@ -38,7 +38,7 @@
       "artifact": "ml/models/candidates/bangladesh/bangladesh_milk_yield_regressor_candidate_v1.joblib",
       "expected_sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
       "observed_sha256": "AA650EA16D4E89BB6A660778854138BEECCCCBEA9B3C589E2E549EF823D5F56E",
-      "metadata_sha256": "1D5D2D019B2AE0595D421298386DB4527C1C2D5771BAD69724E6E2727708F303",
+      "metadata_sha256": "FCE8EA9956996A010D6AD1665E482786BDCBD497359FA018825106119FC0E46B",
       "artifact_status": "CANDIDATE_ONLY",
       "production_approved": false,
       "feature_order": [

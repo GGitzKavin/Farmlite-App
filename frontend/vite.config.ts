@@ -8,4 +8,17 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('firebase')) return 'firebase';
+          if (id.includes('recharts')) return 'charts';
+          if (id.includes('jspdf') || id.includes('html2canvas')) return 'pdf';
+          if (id.includes('framer-motion')) return 'motion';
+          return undefined;
+        },
+      },
+    },
+  },
 })

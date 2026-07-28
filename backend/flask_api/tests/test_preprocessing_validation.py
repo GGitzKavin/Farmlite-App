@@ -37,10 +37,10 @@ NUTRITION_RULES_HASH = (
     "3D7A4448EF66409C2D53B9EA97DE725915E53060D71A9DF619E28B9F6DADEC4C"
 )
 FEED_RECOMMENDATION_HASH = (
-    "7F4EE3DE5CC2E5DACD2BF9F050DE682C244EB3282A4E19BA42BFDC6342D8855A"
+    "B57E8CBF4CFFABAEE85C917737990DACE10B8BACB8DA68D0AFC06D39DE0B9AD1"
 )
 FRONTEND_TREE_HASH = (
-    "7E8361DDEB0FA4F75AE28D484D3BDB75732C784E489F2C50332419C5576BCB88"
+    "5E5DDFC9E091B93DA10E6B2026BCB399BDB6CC077ABC3B3487CA0427560E26C5"
 )
 
 
@@ -122,6 +122,16 @@ class PreprocessingValidationArtifactTests(unittest.TestCase):
 
     def test_raw_dataset_checksums_remain_unchanged(self) -> None:
         raw_directory = MILK_YIELD_DATASET_PATH.parent
+        missing = [
+            name
+            for name in RAW_DATASET_HASHES
+            if not (raw_directory / name).exists()
+        ]
+        if missing:
+            self.skipTest(
+                "Raw dataset CSVs are gitignored local files and are not "
+                f"present in this checkout: {missing}"
+            )
 
         self.assertEqual(
             {

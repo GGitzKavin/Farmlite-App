@@ -15,6 +15,10 @@
   --color-primary-dark: #4f5a2f;
   --color-background: #fefae0;
   --color-surface: #ffffff;
+  --color-forest: #283618;
+  --color-wheat: #dda15e;
+  --color-terracotta: #bc6c25;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
 }
 
 body {
