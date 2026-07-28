@@ -335,12 +335,11 @@ const NotificationRow: React.FC<{
 
 const NotificationSection: React.FC<{
   title: string;
-  subtitle: string;
   icon: React.ReactNode;
   notifications: FarmNotification[];
   emptyMessage: string;
   onAction: (path?: string) => void;
-}> = ({ title, subtitle, icon, notifications, emptyMessage, onAction }) => (
+}> = ({ title, icon, notifications, emptyMessage, onAction }) => (
   <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
     <div className="flex flex-col gap-3 border-b border-gray-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -348,7 +347,6 @@ const NotificationSection: React.FC<{
           <div className="rounded-lg bg-green-50 p-2 text-green-600">{icon}</div>
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         </div>
-        <p className="mt-2 text-sm text-gray-500">{subtitle}</p>
       </div>
       <span className="inline-flex w-fit items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600">
         {notifications.length} item{notifications.length === 1 ? '' : 's'}
@@ -385,6 +383,9 @@ const Notifications: React.FC = () => {
     if (authLoading) return;
 
     if (!currentUser) {
+      // Clears stale data when the user logs out; there is no render-time
+      // alternative for reacting to an external auth-state change.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setData(emptyNotifications);
       setLoading(false);
       return;
@@ -759,7 +760,6 @@ const Notifications: React.FC = () => {
         <div className="space-y-6">
           <NotificationSection
             title="Urgent Alerts"
-            subtitle="Overdue vaccinations, low feed stock, and critical health issues that need fast action."
             icon={<AlertTriangle className="h-5 w-5" />}
             notifications={data.urgentAlerts}
             emptyMessage={sectionEmptyMessages.urgent}
@@ -768,7 +768,6 @@ const Notifications: React.FC = () => {
 
           <NotificationSection
             title="Upcoming Reminders"
-            subtitle="Vaccinations due soon and active treatment follow-ups to keep on track."
             icon={<Calendar className="h-5 w-5" />}
             notifications={data.upcomingReminders}
             emptyMessage={sectionEmptyMessages.upcoming}
@@ -777,7 +776,6 @@ const Notifications: React.FC = () => {
 
           <NotificationSection
             title="Recent Health Updates"
-            subtitle="Latest non-recovered health records so you can monitor progress at a glance."
             icon={<Activity className="h-5 w-5" />}
             notifications={data.recentHealthUpdates}
             emptyMessage={sectionEmptyMessages.recent}

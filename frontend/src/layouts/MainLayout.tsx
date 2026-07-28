@@ -32,7 +32,7 @@ const MainLayout: React.FC = () => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Livestock', path: '/livestock', icon: Tractor },
     { name: 'Vaccinations', path: '/vaccinations', icon: Syringe },
     { name: 'Feed Inventory', path: '/feed', icon: Wheat },

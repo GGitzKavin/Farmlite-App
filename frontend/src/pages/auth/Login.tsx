@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to login');
     } finally {
@@ -29,12 +29,18 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
         <div className="flex flex-col items-center">
-          <div className="mb-4">
-            <img src={logo} alt="FarmLite Logo" className="h-12 w-12 object-contain" />
-          </div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Sign in to FarmLite
-          </h2>
+          <Link
+            to="/"
+            className="inline-flex cursor-pointer flex-col items-center rounded-lg text-inherit no-underline transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#dda15e]"
+            aria-label="Return to the FarmLite landing page"
+          >
+            <div className="mb-4">
+              <img src={logo} alt="FarmLite Logo" className="h-12 w-12 object-contain" />
+            </div>
+            <h2 className="text-center text-3xl font-extrabold text-gray-900">
+              Sign in to FarmLite
+            </h2>
+          </Link>
           <p className="mt-2 text-center text-sm text-gray-600">
             Manage your farm efficiently
           </p>

@@ -37,7 +37,7 @@ const Register: React.FC = () => {
         createdAt: serverTimestamp()
       });
 
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create an account');
     } finally {

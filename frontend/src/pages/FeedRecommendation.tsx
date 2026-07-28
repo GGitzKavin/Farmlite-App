@@ -412,6 +412,10 @@ const FeedRecommendation: React.FC = () => {
   }, [currentUser?.uid]);
 
   useEffect(() => {
+    // Intentional mount/user-change data fetch; fetchPageData sets
+    // loading/error state before its network await, the standard
+    // fetch-on-mount pattern.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchPageData();
   }, [fetchPageData]);
 
@@ -423,6 +427,9 @@ const FeedRecommendation: React.FC = () => {
     );
     if (!requestedAnimal) return;
 
+    // Syncs the form's selected animal to the ?id= URL param; guarded so it
+    // only fires when the derived selection actually changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData((previous) => {
       if (previous.selectedAnimalId === requestedAnimal.id) return previous;
 
@@ -960,7 +967,7 @@ const FeedRecommendation: React.FC = () => {
                       </option>
                     </select>
                     <p id="genetic-group-help" className="mt-2 text-xs text-gray-600">
-                      Select the cow’s verified genetic group for the dry-matter intake model. Do not estimate this value from the breed name.
+                      Select the cow’s verified genetic group for the dry-matter intake model.
                     </p>
                     {candidateFieldError?.field === 'geneticGroup' ? (
                       <p
@@ -987,7 +994,7 @@ const FeedRecommendation: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="ambient-temperature-c" className="block text-sm font-medium text-gray-700">Ambient Temperature (C)</label>
-                  <input id="ambient-temperature-c" type="number" step="0.1" name="ambientTemperatureC" value={formData.ambientTemperatureC} onChange={handleChange} aria-describedby={BANGLADESH_CANDIDATE_UI_ENABLED ? candidateFieldError?.field === 'ambientTemperatureC' ? 'candidate-weather-help ambient-temperature-error' : 'candidate-weather-help' : undefined} aria-invalid={candidateFieldError?.field === 'ambientTemperatureC'} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
+                  <input id="ambient-temperature-c" type="number" step="0.1" name="ambientTemperatureC" value={formData.ambientTemperatureC} onChange={handleChange} aria-describedby={candidateFieldError?.field === 'ambientTemperatureC' ? 'ambient-temperature-error' : undefined} aria-invalid={candidateFieldError?.field === 'ambientTemperatureC'} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
                   {candidateFieldError?.field === 'ambientTemperatureC' ? (
                     <p id="ambient-temperature-error" role="alert" className="mt-2 text-xs font-medium text-red-700">
                       {candidateFieldError.message}
@@ -996,7 +1003,7 @@ const FeedRecommendation: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="humidity-percent" className="block text-sm font-medium text-gray-700">Humidity (%)</label>
-                  <input id="humidity-percent" type="number" min="0" max="100" step="0.1" name="humidityPercent" value={formData.humidityPercent} onChange={handleChange} aria-describedby={BANGLADESH_CANDIDATE_UI_ENABLED ? candidateFieldError?.field === 'humidityPercent' ? 'candidate-weather-help humidity-error' : 'candidate-weather-help' : undefined} aria-invalid={candidateFieldError?.field === 'humidityPercent'} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
+                  <input id="humidity-percent" type="number" min="0" max="100" step="0.1" name="humidityPercent" value={formData.humidityPercent} onChange={handleChange} aria-describedby={candidateFieldError?.field === 'humidityPercent' ? 'humidity-error' : undefined} aria-invalid={candidateFieldError?.field === 'humidityPercent'} className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:border-green-500 focus:ring-green-500" />
                   {candidateFieldError?.field === 'humidityPercent' ? (
                     <p id="humidity-error" role="alert" className="mt-2 text-xs font-medium text-red-700">
                       {candidateFieldError.message}
@@ -1004,12 +1011,6 @@ const FeedRecommendation: React.FC = () => {
                   ) : null}
                 </div>
               </div>
-              {BANGLADESH_CANDIDATE_UI_ENABLED ? (
-                <p id="candidate-weather-help" className="mt-3 text-xs text-gray-500">
-                  Temperature and humidity are sent to the backend THI
-                  calculation. FarmLite does not calculate THI in the browser.
-                </p>
-              ) : null}
             </div>
 
             {validationMessage ? (

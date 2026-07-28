@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Building2, Lock, Save, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -487,7 +488,13 @@ const Profile: React.FC = () => {
 
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">About FarmLite</h2>
-          <div className="mt-5 space-y-3 text-sm text-gray-600">
+          <Link
+            to="/"
+            className="mt-4 inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-[#606c38] px-4 py-2.5 text-sm font-medium text-white no-underline shadow-sm transition-all hover:-translate-y-px hover:bg-[#283618] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#dda15e] sm:w-fit"
+          >
+            Visit FarmLite Landing Page
+          </Link>
+          <div className="mt-4 space-y-3 text-sm text-gray-600">
             <p>
               <span className="font-medium text-gray-900">FarmLite Version:</span> v1.0
             </p>

@@ -4,6 +4,7 @@ firebase-admin
 requests
 python-dotenv
 pandas
-scikit-learn
+scikit-learn==1.8.0
 joblib
 huggingface_hub
+click>=8.4.2,<9.0.0

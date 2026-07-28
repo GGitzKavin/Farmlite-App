@@ -233,6 +233,9 @@ const HealthTracking: React.FC = () => {
   useEffect(() => {
     const currentUserId = currentUser?.uid;
     if (!currentUserId) {
+      // Clears stale data when the user logs out; there is no render-time
+      // alternative for reacting to an external auth-state change.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHealthRecords([]);
       setLivestockList([]);
       setLoading(false);

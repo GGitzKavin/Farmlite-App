@@ -24,11 +24,13 @@ from ml.data_integration.rwanda_formula_audit import (
     audit_all_formulas,
     negative_leftover_analysis,
 )
+from config.settings import PROJECT_ROOT
 from ml.data_integration.validate_rwanda_clarification import (
     AUTHOR_QUESTIONS_PATH,
     IDENTIFIER_PATH,
     NUTRIENT_PATH,
     OPTION_B_PATH,
+    SYNTHETIC_SOURCE_HASHES,
     TARGET_REPAIR_PATH,
     TRAINING_GATE_PATH,
     WATER_PATH,
@@ -43,6 +45,16 @@ class RwandaClarificationTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
+        missing = [
+            relative
+            for relative in SYNTHETIC_SOURCE_HASHES
+            if not (PROJECT_ROOT / relative).exists()
+        ]
+        if missing:
+            raise unittest.SkipTest(
+                "Raw synthetic dataset CSVs are gitignored local files and "
+                f"are not present in this checkout: {missing}"
+            )
         cls.files = discover_rwanda_files()
         cls.raw_before = {
             name: sha256_file(path) for name, path in cls.files.items()
